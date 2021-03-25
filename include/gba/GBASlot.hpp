@@ -42,11 +42,29 @@ public:
 	uint32_t Simoleons() const;
 	void Simoleons(const uint32_t V);
 
+	uint16_t Ratings() const;
+	void Ratings(const uint16_t V);
+
 	std::string Name() const;
 	void Name(const std::string &V);
 
-	uint16_t Ratings() const;
-	void Ratings(const uint16_t V);
+	uint8_t Confidence() const;
+	void Confidence(const uint8_t V);
+
+	uint8_t Mechanical() const;
+	void Mechanical(const uint8_t V);
+
+	uint8_t Strength() const;
+	void Strength(const uint8_t V);
+
+	uint8_t Personality() const;
+	void Personality(const uint8_t V);
+
+	uint8_t Hotness() const;
+	void Hotness(const uint8_t V);
+
+	uint8_t Intellect() const;
+	void Intellect(const uint8_t V);
 
 	uint8_t Cans() const;
 	void Cans(const uint8_t V);

@@ -34,6 +34,7 @@ namespace Strings {
 	extern const std::vector<std::string> GBACastNames_DE, GBACastNames_EN; // GBA Casts.
 	extern const std::vector<std::string> GBASocialMoveNames_DE, GBASocialMoveNames_EN; // GBA Social Moves.
 	extern const std::vector<std::string> GBAEpisodeNames_DE, GBAEpisodeNames_EN; // GBA Episodes.
+	extern const std::vector<std::string> GBASkillPointNames_DE, GBASkillPointNames_EN; // GBA Skill Points.
 };
 
 #endif

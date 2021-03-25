@@ -27,33 +27,15 @@
 #include "Strings.hpp"
 
 const std::vector<std::string> Strings::GBAEpisodeNames_DE = {
-	"Wie alles begann",
-	"Von Gangstern vergraben",
-	"Plan eines Maulwurfs",
-	"Ankunft der Außerirdischen",
-	"Blackout!",
-	"Ein brandneuer Duft",
-	"Die neue Cola",
-	"Da war diese Mumie",
-	"Trias-Tumult",
-	"Weltuntergangsstimmung",
-	"Und alles ging zu Ende",
-	"Eine ganz besondere Reunion",
+	"Wie alles begann", "Von Gangstern vergraben", "Plan eines Maulwurfs", "Ankunft der Außerirdischen",
+	"Blackout!", "Ein brandneuer Duft", "Die neue Cola", "Da war diese Mumie",
+	"Trias-Tumult", "Weltuntergangsstimmung", "Und alles ging zu Ende", "Eine ganz besondere Reunion",
 	"Inoffizielle Folge"
 };
 
 const std::vector<std::string> Strings::GBAEpisodeNames_EN = {
-	"It All Began",
-	"Buried By the Mob",
-	"What Digs Beneath",
-	"Aliens Arrived",
-	"Blackout!",
-	"A Brand New Scent",
-	"The New Cola",
-	"There Was This Mummy",
-	"Triassic Trouble",
-	"The Doomed Earth",
-	"It All Came to an End",
-	"A Very Special Reunion",
+	"It All Began", "Buried By the Mob", "What Digs Beneath", "Aliens Arrived",
+	"Blackout!", "A Brand New Scent", "The New Cola", "There Was This Mummy",
+	"Triassic Trouble", "The Doomed Earth", "It All Came to an End", "A Very Special Reunion",
 	"Unofficial episode"
 };

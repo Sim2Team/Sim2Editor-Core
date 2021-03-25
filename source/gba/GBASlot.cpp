@@ -36,13 +36,37 @@ void GBASlot::Time(const uint16_t V) { GBASAVUtils::Write<uint16_t>(this->Offs +
 uint32_t GBASlot::Simoleons() const { return GBASAVUtils::Read<uint32_t>(this->Offs + 0x5) >> 8; };
 void GBASlot::Simoleons(uint32_t V) { GBASAVUtils::Write<uint32_t>(this->Offs + 0x5, (std::min<uint32_t>(999999, V) << 8)); };
 
+/* Get and Set Ratings. */
+uint16_t GBASlot::Ratings() const { return GBASAVUtils::Read<uint16_t>(this->Offs + 0xA); };
+void GBASlot::Ratings(const uint16_t V) { GBASAVUtils::Write<uint16_t>(this->Offs + 0xA, std::min<uint16_t>(9999, V)); };
+
 /* Get and Set Name. */
 std::string GBASlot::Name() const { return SAVUtils::ReadString(GBASAVUtils::SAV->GetData(), this->Offs + 0xD, 0x8); };
 void GBASlot::Name(const std::string &V) { SAVUtils::WriteString(GBASAVUtils::SAV->GetData(), this->Offs + 0xD, 0x8, V); };
 
-/* Get and Set Ratings. */
-uint16_t GBASlot::Ratings() const { return GBASAVUtils::Read<uint16_t>(this->Offs + 0xA); };
-void GBASlot::Ratings(const uint16_t V) { GBASAVUtils::Write<uint16_t>(this->Offs + 0xA, std::min<uint16_t>(9999, V)); };
+/* Get and Set the Confidence Skill Points. */
+uint8_t GBASlot::Confidence() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x22); };
+void GBASlot::Confidence(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x22, std::min<uint8_t>(5, V)); };
+
+/* Get and Set the Mechanical Skill Points. */
+uint8_t GBASlot::Mechanical() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x23); };
+void GBASlot::Mechanical(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x23, std::min<uint8_t>(5, V)); };
+
+/* Get and Set the Strength Skill Points. */
+uint8_t GBASlot::Strength() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x24); };
+void GBASlot::Strength(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x24, std::min<uint8_t>(5, V)); };
+
+/* Get and Set the Personality Skill Points. */
+uint8_t GBASlot::Personality() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x25); };
+void GBASlot::Personality(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x25, std::min<uint8_t>(5, V)); };
+
+/* Get and Set the Hotness Skill Points. */
+uint8_t GBASlot::Hotness() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x26); };
+void GBASlot::Hotness(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x26, std::min<uint8_t>(5, V)); };
+
+/* Get and Set the Intellect Skill Points. */
+uint8_t GBASlot::Intellect() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x27); };
+void GBASlot::Intellect(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x27, std::min<uint8_t>(5, V)); };
 
 /* Get and Set Empty Chug-Chug Cola Cans Amount. */
 uint8_t GBASlot::Cans() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xF6, 0xFC, 0x102)); };
@@ -113,7 +137,7 @@ std::unique_ptr<GBACast> GBASlot::Cast(const uint8_t CST) const {
 
 /* Get a Social Move class. */
 std::unique_ptr<GBASocialMove> GBASlot::SocialMove(const uint8_t Move) const {
-	return std::make_unique<GBASocialMove>(this->Offset(0x0, 0x3F0, 0x3F6) + (std::min<uint8_t>(14, Move)) * 0x8, Move);
+	return std::make_unique<GBASocialMove>(this->Offset(0x3EA, 0x3F0, 0x3F6) + (std::min<uint8_t>(14, Move)) * 0x8, Move);
 };
 
 /*
