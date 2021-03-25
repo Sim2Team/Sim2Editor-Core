@@ -75,7 +75,7 @@ void GBASlot::FuelrodsPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this-
 /* Get the Current Episode you are in. */
 uint8_t GBASlot::CurrentEpisode() const {
 	for (uint8_t Idx = 0; Idx < 12; Idx++) {
-		if (GBASAVUtils::Read<uint8_t>(this->Offset(0x1A4, 0x1A9, 0x1AE)) == this->EPVals[Idx]) return Idx;
+		if (GBASAVUtils::Read<uint8_t>(this->Offset(0x1A3, 0x1A9, 0x1AF)) == this->EPVals[Idx]) return Idx;
 	}
 
 	return 12; // 12 -> "Unofficial Episode". ;P
@@ -89,14 +89,14 @@ uint8_t GBASlot::CurrentEpisode() const {
 */
 void GBASlot::CurrentEpisode(const uint8_t V, const bool ValidCheck) {
 	if (!ValidCheck) { // In case we're not checking for validateness, Set it without checks.
-		GBASAVUtils::Write<uint8_t>(this->Offset(0x1A4, 0x1A9, 0x1AE), V);
+		GBASAVUtils::Write<uint8_t>(this->Offset(0x1A3, 0x1A9, 0x1AF), V);
 		GBASAVUtils::Write<uint8_t>(this->Offs + 0x9, V); // It's better to set that to 0x9 as well for display.
 		return;
 	}
 
 	for (uint8_t Idx = 0; Idx < 12; Idx++) {
 		if (V == this->EPVals[Idx]) {
-			GBASAVUtils::Write<uint8_t>(this->Offset(0x1A4, 0x1A9, 0x1AE), V);
+			GBASAVUtils::Write<uint8_t>(this->Offset(0x1A3, 0x1A9, 0x1AF), V);
 			GBASAVUtils::Write<uint8_t>(this->Offs + 0x9, V); // It's better to set that to 0x9 as well for display.
 			break;
 		}
