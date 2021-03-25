@@ -37,8 +37,8 @@ enum class SocialMoveFlag : uint8_t {
 
 class GBASocialMove {
 public:
-	GBASocialMove(const uint8_t Slot, const uint8_t Move)
-		: Move(Move), Offs((Slot * 0x1000) + 0x3F0 + (std::min<uint8_t>(14, Move)) * 0x8) { };
+	GBASocialMove(const uint32_t Offs, const uint8_t Move)
+		: Move(Move), Offs(Offs) { };
 
 	uint8_t Index() const { return this->Move; };
 

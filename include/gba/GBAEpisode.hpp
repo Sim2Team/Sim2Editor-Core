@@ -31,8 +31,8 @@
 
 class GBAEpisode {
 public:
-	GBAEpisode(const uint8_t Slot, const uint8_t Episode)
-		: Episode(Episode), Offs((Slot * 0x1000) + EPOffs[std::min<uint8_t>(10, Episode)]) { };
+	GBAEpisode(const uint8_t Slot, const uint8_t Episode, const uint8_t Move = 0x0)
+		: Episode(Episode), Offs((Slot * 0x1000) + this->SetOffset(std::min<uint8_t>(Move, 10))) { };
 
 	uint8_t Index() const { return this->Episode; };
 
@@ -46,6 +46,19 @@ private:
 	uint32_t Offs = 0;
 
 	static constexpr uint32_t EPOffs[11] = { 0x10A, 0x114, 0x128, 0x123, 0x137, 0x12D, 0x150, 0x146, 0x11E, 0x173, 0x16E }; // 11 Episodes.
+
+	/* Sets the base offset for the Episodes. */
+	uint32_t SetOffset(const uint8_t Move) const {
+		switch(Move) {
+			case 1:
+				return this->EPOffs[this->Episode];
+
+			case 2:
+				return this->EPOffs[this->Episode] + 0x6;
+		}
+
+		return this->EPOffs[this->Episode] - 0x6;
+	};
 };
 
 #endif

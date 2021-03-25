@@ -34,7 +34,7 @@
 
 class GBASlot {
 public:
-	GBASlot(const uint8_t Slot) : Slot(Slot), Offs(Slot * 0x1000) { };
+	GBASlot(const uint8_t Slot, const uint8_t AddOffs = 0) : Move(AddOffs), Slot(Slot), Offs(Slot * 0x1000) { };
 
 	uint16_t Time() const;
 	void Time(const uint16_t V);
@@ -68,14 +68,38 @@ public:
     uint8_t FuelrodsPrice() const;
     void FuelrodsPrice(const uint8_t V);
 
+	uint8_t CurrentEpisode() const;
+	void CurrentEpisode(const uint8_t V, const bool ValidCheck = true);
+
 	std::unique_ptr<GBAEpisode> Episode(const uint8_t EP) const;
 	std::unique_ptr<GBACast> Cast(const uint8_t CST) const;
 	std::unique_ptr<GBASocialMove> SocialMove(const uint8_t Move) const;
 
 	bool FixChecksum();
 private:
+	uint8_t Move = 0;
 	uint8_t Slot = 0;
 	uint32_t Offs = 0;
+
+	/* The Sims 2 GBA is annoying and their movement crap, so this is necessary. */
+	uint32_t Offset(const uint32_t DefaultOffs = 0x0, const uint32_t MoveOffs1 = 0x0, const uint32_t MoveOffs2 = 0x0) const {
+		switch(this->Move) {
+			case 1:
+				return this->Offs + MoveOffs1;
+
+			case 2:
+				return this->Offs + MoveOffs2;
+		}
+
+		return this->Offs + DefaultOffs;
+	};
+
+	/* This contains all official Episode Values found at offset (Slot * 0x1000) + 0x1A9. */
+	static constexpr uint8_t EPVals[12] = {
+		0x0, 0x1, 0x3, 0x7, // Tutorial + Season 1.
+		0x6, 0xA, 0x8, 0xF, // Season 2.
+		0xD, 0x5, 0x16, 0x15 // Season 3.
+	};
 };
 
 #endif

@@ -30,9 +30,13 @@
 #include "CoreCommon.hpp"
 
 namespace Checksum {
-	/* GBA Checksum. */
+	/* GBA Main Slot Checksum. */
 	uint16_t CalcGBASlot(const uint8_t *Buffer, const uint8_t Slot);
 	bool GBASlotChecksumValid(const uint8_t *Buffer, const uint8_t Slot, const uint16_t CHKS);
+
+	/* GBA Settings Checksum Calculation. */
+	uint16_t CalcGBASettings(const uint8_t *Buffer);
+	bool GBASettingsValid(const uint8_t *Buffer, const uint16_t CHKS);
 
 	/* NDS Checksum. The NDS version has multiple ones though. */
 	uint16_t CalcNDSSlot(const uint8_t *Buffer, const uint8_t Slot);

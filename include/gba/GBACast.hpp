@@ -31,8 +31,8 @@
 
 class GBACast {
 public:
-	GBACast(const uint8_t Slot, const uint8_t Cast)
-		: Cast(Cast), Offs((Slot * 0x1000) + 0x46C + (std::min<uint8_t>(25, Cast)) * 0xA) { };
+	GBACast(const uint32_t Offs, const uint8_t Cast)
+		: Cast(Cast), Offs(Offs) { };
 
 	uint8_t Index() const { return this->Cast; };
 

@@ -27,6 +27,34 @@
 #include "Checksum.hpp"
 
 /*
+	The GBA Version uses the same method for all Checksums, so just have it like this, so no need for duplicate code.
+	The checksum places are the following:
+
+	-    0x0 -   0x18 (Settings Checksum, 0xE - 0xF).
+	- 0x1000 - 0x1FFF (SAVSlot 1 Checksum, 0x1FFE - 0x1FFF).
+	- 0x2000 - 0x2FFF (SAVSlot 2 Checksum, 0x2FFE - 0x2FFF).
+	- 0x3000 - 0x3FFF (SAVSlot 3 Checksum, 0x3FFE - 0x3FFF).
+	- 0x4000 - 0x4FFF (SAVSlot 4 Checksum, 0x4FFE - 0x4FFF).
+*/
+static uint16_t GBACommonCalc(const uint8_t *Buffer, const uint16_t StartIndex, const uint16_t EndIndex, const bool isSetting) {
+	uint8_t Byte1 = 0, Byte2 = 0;
+	for (uint16_t Idx = StartIndex; Idx < EndIndex; Idx++) {
+		if (isSetting) {
+			if (Idx == 0xE / 2) continue; // The Settings have their checksum at 0xE, but the whole content is stored until 0x18 it seems.
+		}
+
+		if (Buffer[(Idx * 2)] + Byte1 > 255) Byte2++;
+
+		Byte1 += Buffer[(Idx * 2)];
+		Byte2 += Buffer[(Idx * 2) + 1];
+	}
+
+	Byte2++;
+	return (256 * (uint8_t)-Byte2) + (uint8_t)-Byte1;
+};
+
+
+/*
 	Calculates the GBASlot Checksum (0xFFE - 0xFFF).
 
 	const uint8_t *Buffer: The SAVBuffer.
@@ -35,16 +63,7 @@
 uint16_t Checksum::CalcGBASlot(const uint8_t *Buffer, const uint8_t Slot) {
 	if (Slot > 4 || Slot < 1) return 0; // Return 0, because invalid Slot.
 
-	uint8_t Byte1 = 0, Byte2 = 0;
-	for (uint16_t Idx = 0; Idx < (0xFFE / 2); Idx++) {
-		if (Buffer[(Slot * 0x1000) + (Idx * 2)] + Byte1 > 255) Byte2++;
-
-		Byte1 += Buffer[(Slot * 0x1000) + (Idx * 2)];
-		Byte2 += Buffer[(Slot * 0x1000) + (Idx * 2) + 1];
-	}
-
-	Byte2++;
-	return (256 * (uint8_t)-Byte2) + (uint8_t)-Byte1;
+	return GBACommonCalc(Buffer, (Slot * 0x1000) / 2, ((Slot * 0x1000) + 0xFFE) / 2, false);
 };
 /*
 	Return if the Checksum is valid of a GBASlot.
@@ -54,6 +73,20 @@ uint16_t Checksum::CalcGBASlot(const uint8_t *Buffer, const uint8_t Slot) {
 	const uint16_t CHKS: The current Checksum.
 */
 bool Checksum::GBASlotChecksumValid(const uint8_t *Buffer, const uint8_t Slot, const uint16_t CHKS) { return Checksum::CalcGBASlot(Buffer, Slot) == CHKS; };
+
+/*
+	Calculates the GBA Settings Checksum (0xE - 0xF).
+
+	const uint8_t *Buffer: The SAVBuffer.
+*/
+uint16_t Checksum::CalcGBASettings(const uint8_t *Buffer) { return (GBACommonCalc(Buffer, 0x0, 0x18 / 2, true)); };
+/*
+	Return if the Checksum is valid of the GBASettings at 0xE - 0xF.
+
+	const uint8_t *Buffer: The SAVBuffer.
+	const uint16_t CHKS: The current Checksum.
+*/
+bool Checksum::GBASettingsValid(const uint8_t *Buffer, const uint16_t CHKS) { return Checksum::CalcGBASettings(Buffer) == CHKS; };
 
 
 /*

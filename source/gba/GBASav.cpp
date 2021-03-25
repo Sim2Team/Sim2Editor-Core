@@ -45,33 +45,9 @@ GBASAV::GBASAV(const std::string &SAVFile) {
 		fclose(SAV);
 
 		this->SAVValid = true;
-	}
-};
-
-/*
-	Return a GBASlot class.
-
-	const uint8_t Slot: The GBASAV Slot ( 1 - 4 ).
-*/
-std::unique_ptr<GBASlot> GBASAV::GetSlot(const uint8_t Slot) {
-	if (!this->SlotExist(Slot)) return nullptr;
-
-	return std::make_unique<GBASlot>(Slot);
-};
-
-/*
-	Finish call before writting to file.
-
-	Fix the Checksum of all existing Slots, if invalid.
-*/
-void GBASAV::Finish() {
-	if (!this->GetValid()) return;
-
-	for (uint8_t Slot = 1; Slot < 5; Slot++) {
-		if (this->SlotExist(Slot)) {
-			if (!Checksum::GBASlotChecksumValid(this->SAVData.get(), Slot, *reinterpret_cast<uint16_t *>(this->SAVData.get() + (Slot * 0x1000) + 0xFFE))) {
-				*reinterpret_cast<uint16_t *>(this->SAVData.get() + (Slot * 0x1000) + 0xFFE) = Checksum::CalcGBASlot(this->SAVData.get(), Slot);
-			}
+		if (this->SAVData.get()[0xA] > 5) { // Language Index is 6 or larger, which is "blank" and can break the game.
+			this->SAVData.get()[0xA] = 0; // English.
+			this->SetChangesMade(true);
 		}
 	}
 };
@@ -89,4 +65,38 @@ bool GBASAV::SlotExist(const uint8_t Slot) {
 	}
 
 	return false;
+};
+
+/*
+	Return a GBASlot class.
+
+	const uint8_t Slot: The GBASAV Slot ( 1 - 4 ).
+*/
+std::unique_ptr<GBASlot> GBASAV::Slot(const uint8_t Slot) {
+	if (!this->SlotExist(Slot)) return nullptr;
+
+	return std::make_unique<GBASlot>(Slot, this->SAVData.get()[(Slot * 0x1000) + 0xD6]);
+};
+
+/* Get a Settings class. */
+std::unique_ptr<GBASettings> GBASAV::Settings() const { return std::make_unique<GBASettings>(); };
+
+/*
+	Finish call before writting to file.
+
+	Fix the Checksum of all existing Slots and the Settings, if invalid.
+*/
+void GBASAV::Finish() {
+	if (!this->GetValid()) return;
+
+	for (uint8_t Slot = 1; Slot < 5; Slot++) {
+		if (this->SlotExist(Slot)) {
+			if (!Checksum::GBASlotChecksumValid(this->SAVData.get(), Slot, *reinterpret_cast<uint16_t *>(this->SAVData.get() + (Slot * 0x1000) + 0xFFE))) {
+				*reinterpret_cast<uint16_t *>(this->SAVData.get() + (Slot * 0x1000) + 0xFFE) = Checksum::CalcGBASlot(this->SAVData.get(), Slot);
+			}
+		}
+	}
+
+	/* Do the same with the Settings. */
+	this->Settings()->UpdateChecksum();
 };

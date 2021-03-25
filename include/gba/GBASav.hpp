@@ -27,16 +27,19 @@
 #ifndef _SIM2EDITOR_CPP_CORE_GBA_SAV_HPP
 #define _SIM2EDITOR_CPP_CORE_GBA_SAV_HPP
 
+#include "GBASettings.hpp"
 #include "GBASlot.hpp"
 
 class GBASAV {
 public:
 	GBASAV(const std::string &SAVFile);
 
-	/* Core Returns and Actions. */
-	std::unique_ptr<GBASlot> GetSlot(const uint8_t Slot);
-	void Finish();
 	bool SlotExist(const uint8_t Slot);
+
+	/* Core Returns and Actions. */
+	std::unique_ptr<GBASlot> Slot(const uint8_t Slot);
+	std::unique_ptr<GBASettings> Settings() const;
+	void Finish();
 
 	/* Some Returns. */
 	uint32_t GetSize() const { return this->SAVSize; };

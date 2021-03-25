@@ -45,41 +45,76 @@ uint16_t GBASlot::Ratings() const { return GBASAVUtils::Read<uint16_t>(this->Off
 void GBASlot::Ratings(const uint16_t V) { GBASAVUtils::Write<uint16_t>(this->Offs + 0xA, std::min<uint16_t>(9999, V)); };
 
 /* Get and Set Empty Chug-Chug Cola Cans Amount. */
-uint8_t GBASlot::Cans() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0xFC); };
-void GBASlot::Cans(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0xFC, std::min<uint8_t>(250, V)); };
+uint8_t GBASlot::Cans() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xF6, 0xFC, 0x102)); };
+void GBASlot::Cans(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xF6, 0xFC, 0x102), std::min<uint8_t>(250, V)); };
 /* Get and Set Empty Chug-Chug Cola Cans Sell price. */
-uint8_t GBASlot::CansPrice() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x100); };
-void GBASlot::CansPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x100, V); };
+uint8_t GBASlot::CansPrice() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xFA, 0x100, 0x106)); };
+void GBASlot::CansPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xFA, 0x100, 0x106), V); };
 
 /* Get and Set Cowbells Amount. */
-uint8_t GBASlot::Cowbells() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0xFD); };
-void GBASlot::Cowbells(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0xFD, std::min<uint8_t>(250, V)); };
+uint8_t GBASlot::Cowbells() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xF7, 0xFD, 0x103)); };
+void GBASlot::Cowbells(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xF7, 0xFD, 0x103), std::min<uint8_t>(250, V)); };
 /* Get and Set the Cowbells Sell price. */
-uint8_t GBASlot::CowbellsPrice() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x101); };
-void GBASlot::CowbellsPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x101, V); };
+uint8_t GBASlot::CowbellsPrice() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xFB, 0x101, 0x107)); };
+void GBASlot::CowbellsPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xFB, 0x101, 0x107), V); };
 
 /* Get and Set Alien Spaceship Parts Amount. */
-uint8_t GBASlot::Spaceship() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0xFE); };
-void GBASlot::Spaceship(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0xFE, std::min<uint8_t>(250, V)); };
+uint8_t GBASlot::Spaceship() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xF8, 0xFE, 0x104)); };
+void GBASlot::Spaceship(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xF8, 0xFE, 0x104), std::min<uint8_t>(250, V)); };
 /* Get and Set Alien Spaceship Parts Sell price. */
-uint8_t GBASlot::SpaceshipPrice() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x102); };
-void GBASlot::SpaceshipPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x102, V); };
+uint8_t GBASlot::SpaceshipPrice() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xFC, 0x102, 0x108)); };
+void GBASlot::SpaceshipPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xFC, 0x102, 0x108), V); };
 
 /* Get and Set Nuclear Fuelrods Amount. */
-uint8_t GBASlot::Fuelrods() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0xFF); };
-void GBASlot::Fuelrods(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0xFF, std::min<uint8_t>(250, V)); };
+uint8_t GBASlot::Fuelrods() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xF9, 0xFF, 0x105)); };
+void GBASlot::Fuelrods(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xF9, 0xFF, 0x105), std::min<uint8_t>(250, V)); };
 /* Get and Set Nuclear Fuelrods Sell price. */
-uint8_t GBASlot::FuelrodsPrice() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x103); };
-void GBASlot::FuelrodsPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x103, V); };
+uint8_t GBASlot::FuelrodsPrice() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xFD, 0x103, 0x109)); };
+void GBASlot::FuelrodsPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xFD, 0x103, 0x109), V); };
+
+/* Get the Current Episode you are in. */
+uint8_t GBASlot::CurrentEpisode() const {
+	for (uint8_t Idx = 0; Idx < 12; Idx++) {
+		if (GBASAVUtils::Read<uint8_t>(this->Offset(0x1A4, 0x1A9, 0x1AE)) == this->EPVals[Idx]) return Idx;
+	}
+
+	return 12; // 12 -> "Unofficial Episode". ;P
+};
+
+/*
+	Set the Current Episode.
+
+	const uint8_t V: The Episode.
+	const bool ValidCheck: If checking for official Episodes (valid) or not. It is recommended to have this to TRUE.
+*/
+void GBASlot::CurrentEpisode(const uint8_t V, const bool ValidCheck) {
+	if (!ValidCheck) { // In case we're not checking for validateness, Set it without checks.
+		GBASAVUtils::Write<uint8_t>(this->Offset(0x1A4, 0x1A9, 0x1AE), V);
+		GBASAVUtils::Write<uint8_t>(this->Offs + 0x9, V); // It's better to set that to 0x9 as well for display.
+		return;
+	}
+
+	for (uint8_t Idx = 0; Idx < 12; Idx++) {
+		if (V == this->EPVals[Idx]) {
+			GBASAVUtils::Write<uint8_t>(this->Offset(0x1A4, 0x1A9, 0x1AE), V);
+			GBASAVUtils::Write<uint8_t>(this->Offs + 0x9, V); // It's better to set that to 0x9 as well for display.
+			break;
+		}
+	}
+};
 
 /* Get an Episode class. */
-std::unique_ptr<GBAEpisode> GBASlot::Episode(const uint8_t EP) const { return std::make_unique<GBAEpisode>(this->Slot, EP); };
+std::unique_ptr<GBAEpisode> GBASlot::Episode(const uint8_t EP) const { return std::make_unique<GBAEpisode>(this->Slot, EP, this->Move); };
 
 /* Get a Cast class. */
-std::unique_ptr<GBACast> GBASlot::Cast(const uint8_t CST) const { return std::make_unique<GBACast>(this->Slot, CST); };
+std::unique_ptr<GBACast> GBASlot::Cast(const uint8_t CST) const {
+	return std::make_unique<GBACast>(this->Offset(0x466, 0x46C, 0x472) + (std::min<uint8_t>(25, CST)) * 0xA, CST);
+};
 
 /* Get a Social Move class. */
-std::unique_ptr<GBASocialMove> GBASlot::SocialMove(const uint8_t Move) const { return std::make_unique<GBASocialMove>(this->Slot, Move); };
+std::unique_ptr<GBASocialMove> GBASlot::SocialMove(const uint8_t Move) const {
+	return std::make_unique<GBASocialMove>(this->Offset(0x0, 0x3F0, 0x3F6) + (std::min<uint8_t>(14, Move)) * 0x8, Move);
+};
 
 /*
 	Fix the Checksum of the current Slot, if invalid.
