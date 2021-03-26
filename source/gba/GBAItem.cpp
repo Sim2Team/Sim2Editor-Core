@@ -24,31 +24,23 @@
 *         reasonable ways as different from the original version.
 */
 
-#ifndef _SIM2EDITOR_CPP_CORE_GBA_EPISODE_HPP
-#define _SIM2EDITOR_CPP_CORE_GBA_EPISODE_HPP
+#include "GBAItem.hpp"
+#include "../shared/SAVUtils.hpp"
 
-#include "../shared/CoreCommon.hpp"
+/* Get and Set the Item Count. */
+uint8_t GBAItem::Count() const { return GBASAVUtils::Read<uint8_t>(this->Offs); };
+void GBAItem::Count(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs, V); };
 
-class GBAEpisode {
-public:
-	GBAEpisode(const uint8_t Slot, const uint8_t Episode, const uint8_t Move = 0x0)
-		: Episode(Episode), Offs((Slot * 0x1000) + this->SetOffset(std::min<uint8_t>(Move, 10))) { };
+/* Get and Set the Item's ID. */
+uint8_t GBAItem::ID(const uint8_t Index) const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x1 + (std::min<uint8_t>(5, Index) * 0x3)); };
+void GBAItem::ID(const uint8_t Index, const uint8_t V) {
+	GBASAVUtils::Write<uint8_t>(this->Offs + 0x1 + (std::min<uint8_t>(5, Index) * 0x3), V);
 
-	uint8_t Index() const { return this->Episode; };
+	/* Update Item Count. */
+	uint8_t Amount = 0;
+	for (uint8_t Idx = 0; Idx < 6; Idx++) {
+		if (this->ID(Idx) != 0xE6) Amount++; // If not 0xE6 (Empty Item), increase count.
+	}
 
-	uint8_t Rating(const uint8_t Category) const;
-	void Rating(const uint8_t Category, const uint8_t V);
-
-	bool State() const;
-	void State(const bool V);
-private:
-	uint8_t Episode = 0;
-	uint32_t Offs = 0;
-
-	static constexpr uint32_t EPOffs[11] = { 0x104, 0x10E, 0x122, 0x11D, 0x131, 0x127, 0x14A, 0x140, 0x118, 0x16D, 0x168 }; // 11 Episodes.
-
-	/* Sets the base offset for the Episodes. */
-	uint32_t SetOffset(const uint8_t Move) const { return this->EPOffs[this->Episode] + (Move * 0x6); };
+	if (this->Count() != Amount) this->Count(Amount);
 };
-
-#endif

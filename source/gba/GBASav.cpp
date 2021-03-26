@@ -75,6 +75,11 @@ bool GBASAV::SlotExist(const uint8_t Slot) {
 std::unique_ptr<GBASlot> GBASAV::Slot(const uint8_t Slot) {
 	if (!this->SlotExist(Slot)) return nullptr;
 
+	/*
+		The second parameter are the Item count inside the House.
+		This seems to affect things after the House Items to move for 0x6 per House Item.
+		Max Count seems to be 0xC, sooo.. `DefaultOffs + (0xC * 0x6)` which is 0x48 / 72.
+	*/
 	return std::make_unique<GBASlot>(Slot, this->SAVData.get()[(Slot * 0x1000) + 0xD6]);
 };
 

@@ -24,31 +24,49 @@
 *         reasonable ways as different from the original version.
 */
 
-#ifndef _SIM2EDITOR_CPP_CORE_GBA_EPISODE_HPP
-#define _SIM2EDITOR_CPP_CORE_GBA_EPISODE_HPP
+#ifndef _SIM2EDITOR_CPP_CORE_GBA_HOUSE_ITEM_HPP
+#define _SIM2EDITOR_CPP_CORE_GBA_HOUSE_ITEM_HPP
 
-#include "../shared/CoreCommon.hpp"
+#include "CoreCommon.hpp"
 
-class GBAEpisode {
+enum class GBAHouseItemDirection : uint8_t {
+	Right = 0x1,
+	Down = 0x3,
+	Left = 0x5,
+	Up = 0x7,
+	Invalid = 0xFF
+};
+
+class GBAHouseItem {
 public:
-	GBAEpisode(const uint8_t Slot, const uint8_t Episode, const uint8_t Move = 0x0)
-		: Episode(Episode), Offs((Slot * 0x1000) + this->SetOffset(std::min<uint8_t>(Move, 10))) { };
+	GBAHouseItem(const uint32_t Offset) : Offs(Offset) { };
 
-	uint8_t Index() const { return this->Episode; };
+	uint8_t Count() const;
+	void Count(const uint8_t V);
 
-	uint8_t Rating(const uint8_t Category) const;
-	void Rating(const uint8_t Category, const uint8_t V);
+	uint8_t ID(const uint8_t Index) const;
+	void ID(const uint8_t Index, const uint8_t V);
 
-	bool State() const;
-	void State(const bool V);
+	uint8_t Flag(const uint8_t Index) const;
+	void Flag(const uint8_t Index, const uint8_t V);
+
+	uint8_t UseCount(const uint8_t Index) const;
+	void UseCount(const uint8_t Index, const uint8_t V);
+
+	uint8_t XPos(const uint8_t Index) const;
+	void XPos(const uint8_t Index, const uint8_t V);
+
+	uint8_t YPos(const uint8_t Index) const;
+	void YPos(const uint8_t Index, const uint8_t V);
+
+	GBAHouseItemDirection Direction(const uint8_t Index) const;
+	void Direction(const uint8_t Index, const GBAHouseItemDirection V);
+
+	/* Add and Removes. */
+	void AddItem(const uint8_t ID, const uint8_t Flag, const uint8_t UseCount, const uint8_t XPos, const uint8_t YPos, const GBAHouseItemDirection Direction);
+	void RemoveItem(const uint8_t Index);
 private:
-	uint8_t Episode = 0;
 	uint32_t Offs = 0;
-
-	static constexpr uint32_t EPOffs[11] = { 0x104, 0x10E, 0x122, 0x11D, 0x131, 0x127, 0x14A, 0x140, 0x118, 0x16D, 0x168 }; // 11 Episodes.
-
-	/* Sets the base offset for the Episodes. */
-	uint32_t SetOffset(const uint8_t Move) const { return this->EPOffs[this->Episode] + (Move * 0x6); };
 };
 
 #endif

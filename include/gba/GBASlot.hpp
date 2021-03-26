@@ -30,6 +30,8 @@
 #include "CoreCommon.hpp"
 #include "GBACast.hpp"
 #include "GBAEpisode.hpp"
+#include "GBAHouseItem.hpp"
+#include "GBAItem.hpp"
 #include "GBASocialMove.hpp"
 
 class GBASlot {
@@ -66,6 +68,17 @@ public:
 	uint8_t Intellect() const;
 	void Intellect(const uint8_t V);
 
+	uint8_t Sanity() const;
+	void Sanity(const uint8_t V);
+
+	/* Items. */
+	std::unique_ptr<GBAItem> PawnShop() const;
+	std::unique_ptr<GBAItem> Saloon() const;
+	std::unique_ptr<GBAItem> Skills() const;
+	std::unique_ptr<GBAItem> Mailbox() const;
+	std::unique_ptr<GBAItem> Inventory() const;
+	std::unique_ptr<GBAHouseItem> House() const;
+
 	uint8_t Cans() const;
 	void Cans(const uint8_t V);
 	uint8_t CansPrice() const;
@@ -99,18 +112,8 @@ private:
 	uint8_t Slot = 0;
 	uint32_t Offs = 0;
 
-	/* The Sims 2 GBA is annoying and their movement crap, so this is necessary. */
-	uint32_t Offset(const uint32_t DefaultOffs = 0x0, const uint32_t MoveOffs1 = 0x0, const uint32_t MoveOffs2 = 0x0) const {
-		switch(this->Move) {
-			case 1:
-				return this->Offs + MoveOffs1;
-
-			case 2:
-				return this->Offs + MoveOffs2;
-		}
-
-		return this->Offs + DefaultOffs;
-	};
+	/* The House Item Amount seems to affect some stuff and move things around for 0x6 per Item. */
+	uint32_t Offset(const uint32_t DefaultOffs = 0x0) const { return this->Offs + DefaultOffs + (this->Move * 0x6); };
 
 	/* This contains all official Episode Values found at offset (Slot * 0x1000) + 0x1A9. */
 	static constexpr uint8_t EPVals[12] = {
