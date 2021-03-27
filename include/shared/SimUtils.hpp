@@ -33,6 +33,7 @@ namespace SimUtils {
 	const std::string TimeString(const uint16_t Time, const bool AMPM = false);
 	const std::string SimoleonsString(const uint32_t Simoleons);
 	const std::string RatingString(const uint16_t Ratings);
+	const std::string GBAItemName(const uint8_t ID = 0xE6);
 };
 
 #endif

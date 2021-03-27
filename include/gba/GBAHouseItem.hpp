@@ -63,8 +63,8 @@ public:
 	void Direction(const uint8_t Index, const GBAHouseItemDirection V);
 
 	/* Add and Removes. */
-	void AddItem(const uint8_t ID, const uint8_t Flag, const uint8_t UseCount, const uint8_t XPos, const uint8_t YPos, const GBAHouseItemDirection Direction);
-	void RemoveItem(const uint8_t Index);
+	bool AddItem(const uint8_t ID, const uint8_t Flag, const uint8_t UseCount, const uint8_t XPos, const uint8_t YPos, const GBAHouseItemDirection Direction);
+	bool RemoveItem(const uint8_t Index);
 private:
 	uint32_t Offs = 0;
 };

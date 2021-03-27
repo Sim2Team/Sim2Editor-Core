@@ -25,6 +25,7 @@
 */
 
 #include "SimUtils.hpp"
+#include "../Strings.hpp"
 
 /*
 	Returns the current time as a 24 Hr or 12 Hr string.
@@ -95,3 +96,10 @@ const std::string SimUtils::RatingString(const uint16_t Ratings) {
 	if (RString.size() > 3) RString.insert(RString.end() - 3, '.');
 	return RString;
 };
+
+/*
+	Return the Name from an GBA Item.
+
+	const uint8_t ID: The Item's ID.
+*/
+const std::string SimUtils::GBAItemName(const uint8_t ID) { return Strings::GBAItemNames_EN[ID]; };
