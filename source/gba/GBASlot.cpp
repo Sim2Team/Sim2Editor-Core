@@ -28,6 +28,15 @@
 #include "../shared/Checksum.hpp"
 #include "../shared/SAVUtils.hpp"
 
+/*
+	The House Item Amount seems to affect some stuff and move things around for 0x6 per Item.
+	So, we get the Item Count of the House from the 0xD6'th Byte from the GBASlot.
+
+	const uint32_t DefaultOffs: The Default Offset, for things without an Item in your house.
+*/
+uint32_t GBASlot::Offset(const uint32_t DefaultOffs) const { return this->Offs + DefaultOffs + (GBASAVUtils::Read<uint8_t>(this->Offs + 0xD6) * 0x6); };
+
+
 /* Get and Set Time. */
 uint16_t GBASlot::Time() const { return GBASAVUtils::Read<uint16_t>(this->Offs + 0x2); };
 void GBASlot::Time(const uint16_t V) { GBASAVUtils::Write<uint16_t>(this->Offs + 0x2, V); };
@@ -142,7 +151,7 @@ void GBASlot::CurrentEpisode(const uint8_t V, const bool ValidCheck) {
 };
 
 /* Get an Episode class. */
-std::unique_ptr<GBAEpisode> GBASlot::Episode(const uint8_t EP) const { return std::make_unique<GBAEpisode>(this->Slot, EP, this->Move); };
+std::unique_ptr<GBAEpisode> GBASlot::Episode(const uint8_t EP) const { return std::make_unique<GBAEpisode>(this->Slot, EP, GBASAVUtils::Read<uint8_t>(this->Offs + 0xD6)); };
 
 /* Get a Cast class. */
 std::unique_ptr<GBACast> GBASlot::Cast(const uint8_t CST) const {

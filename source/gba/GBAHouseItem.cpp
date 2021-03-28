@@ -142,6 +142,8 @@ void GBAHouseItem::Direction(const uint8_t Index, const GBAHouseItemDirection V)
 /*
 	Add an Item to the House.
 	This needs to be handled like this, because things move 0x6 bytes up when an Item is being added.
+
+	NOTE: The game seems to handle it the other way than this, by doing an insert or something at the 0xD7'th byte, but this way works too.
 */
 bool GBAHouseItem::AddItem(const uint8_t ID, const uint8_t Flag, const uint8_t UseCount, const uint8_t XPos, const uint8_t YPos, const GBAHouseItemDirection Direction) {
 	if (this->Count() == 0xC) return false; // Not allowed to add more than 0xC / 12 Items.

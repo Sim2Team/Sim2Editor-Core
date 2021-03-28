@@ -36,7 +36,7 @@
 
 class GBASlot {
 public:
-	GBASlot(const uint8_t Slot, const uint8_t AddOffs = 0) : Move(AddOffs), Slot(Slot), Offs(Slot * 0x1000) { };
+	GBASlot(const uint8_t Slot) : Slot(Slot), Offs(Slot * 0x1000) { };
 
 	uint16_t Time() const;
 	void Time(const uint16_t V);
@@ -108,12 +108,10 @@ public:
 
 	bool FixChecksum();
 private:
-	uint8_t Move = 0;
 	uint8_t Slot = 0;
 	uint32_t Offs = 0;
 
-	/* The House Item Amount seems to affect some stuff and move things around for 0x6 per Item. */
-	uint32_t Offset(const uint32_t DefaultOffs = 0x0) const { return this->Offs + DefaultOffs + (this->Move * 0x6); };
+	uint32_t Offset(const uint32_t DefaultOffs = 0x0) const;
 
 	/* This contains all official Episode Values found at offset (Slot * 0x1000) + 0x1A9. */
 	static constexpr uint8_t EPVals[12] = {
