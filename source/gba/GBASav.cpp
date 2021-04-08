@@ -90,11 +90,7 @@ void GBASAV::Finish() {
 	if (!this->GetValid()) return;
 
 	for (uint8_t Slot = 1; Slot < 5; Slot++) {
-		if (this->SlotExist(Slot)) {
-			if (!Checksum::GBASlotChecksumValid(this->SAVData.get(), Slot, *reinterpret_cast<uint16_t *>(this->SAVData.get() + (Slot * 0x1000) + 0xFFE))) {
-				*reinterpret_cast<uint16_t *>(this->SAVData.get() + (Slot * 0x1000) + 0xFFE) = Checksum::CalcGBASlot(this->SAVData.get(), Slot);
-			}
-		}
+		if (this->SlotExist(Slot)) this->Slot(Slot)->FixChecksum();
 	}
 
 	/* Do the same with the Settings. */

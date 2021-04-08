@@ -24,40 +24,6 @@
 *         reasonable ways as different from the original version.
 */
 
-#include "Checksum.hpp"
+#include "Strings.hpp"
 
-/*
-	I rewrote the Checksum calculation function, to WORK with both, GBA and NDS versions.
-
-	const uint8_t *Buffer: The SAVBuffer.
-	const uint16_t StartOffs: The Start offset. (NOTE: You'll have to do '/ 2', because it's 2 byte based).
-	const uint16_t EndOffs: The End offset. Same NOTE as above applies here as well.
-	const std::vector<int> &Skipoffs: The Offsets which to skip (Only needed on the NDS version, also same NOTE as above applies as well).
-*/
-uint16_t Checksum::Calc(const uint8_t *Buffer, const uint16_t StartOffs, const uint16_t EndOffs, const std::vector<int> &SkipOffs) {
-	uint8_t Byte1 = 0, Byte2 = 0;
-	bool Skip = false;
-
-	for (uint16_t Idx = StartOffs; Idx < EndOffs; Idx++) {
-		if (!SkipOffs.empty()) { // Only do this, if it isn't empty.
-			for (uint8_t I = 0; I < SkipOffs.size(); I++) {
-				if (Idx == SkipOffs[I]) {
-					Skip = true; // We'll skip those bytes here.
-					break;
-				}
-			}
-		}
-
-		if (Skip) {
-			Skip = false;
-			continue;
-		}
-
-		if (Buffer[(Idx * 2)] + Byte1 > 255) Byte2++;
-		Byte1 += Buffer[(Idx * 2)];
-		Byte2 += Buffer[(Idx * 2) + 1];
-	}
-
-	Byte2++;
-	return (256 * (uint8_t)-Byte2) + (uint8_t)-Byte1;
-};
+const std::vector<std::string> Strings::NDSSkillPointNames_EN = { "Creativity", "Business", "Body", "Charisma", "Mechanical" };

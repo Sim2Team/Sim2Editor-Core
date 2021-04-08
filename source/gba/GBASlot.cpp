@@ -53,6 +53,74 @@ void GBASlot::Ratings(const uint16_t V) { GBASAVUtils::Write<uint16_t>(this->Off
 std::string GBASlot::Name() const { return SAVUtils::ReadString(GBASAVUtils::SAV->GetData(), this->Offs + 0xD, 0x8); };
 void GBASlot::Name(const std::string &V) { SAVUtils::WriteString(GBASAVUtils::SAV->GetData(), this->Offs + 0xD, 0x8, V); };
 
+/* Get and Set Hairstyle. */
+uint8_t GBASlot::Hairstyle() const { return GBASAVUtils::ReadBits(this->Offs + 0x1D, false) / 2; };
+void GBASlot::Hairstyle(const uint8_t V) {
+	if (V > 7) return;
+
+	GBASAVUtils::WriteBits(this->Offs + 0x1D, false, (V * 2) + (this->Shirtcolor3() > 15 ? 0x1 : 0x0));
+};
+
+/* Get and Set third Shirtcolor (Long Sleeves). */
+uint8_t GBASlot::Shirtcolor3() const { return ((GBASAVUtils::ReadBits(this->Offs + 0x1D, false) % 2 == 1) ? 16 : 0) + GBASAVUtils::ReadBits(this->Offs + 0x1D, true); };
+void GBASlot::Shirtcolor3(const uint8_t V) {
+	GBASAVUtils::WriteBits(this->Offs + 0x1D, true, ((V > 15) ? V - 16 : V));
+	GBASAVUtils::WriteBits(this->Offs + 0x1D, false, (this->Hairstyle() * 2) + (V > 15 ? 0x1 : 0x0)); // Refresh Hairstyle as well.
+};
+
+/* Get and Set Tan / Skin color. */
+uint8_t GBASlot::Tan() const { return GBASAVUtils::ReadBits(this->Offs + 0x1E, false) / 2; };
+void GBASlot::Tan(const uint8_t V) {
+	if (V > 5) return;
+
+	GBASAVUtils::WriteBits(this->Offs + 0x1E, false, (V * 2) + (this->Shirtcolor2() > 15 ? 0x1 : 0x0));
+};
+
+/* Get and Set second Shirtcolor (Short Sleeves). */
+uint8_t GBASlot::Shirtcolor2() const { return ((GBASAVUtils::ReadBits(this->Offs + 0x1E, false) % 2 == 1) ? 16 : 0) + GBASAVUtils::ReadBits(this->Offs + 0x1E, true); };
+void GBASlot::Shirtcolor2(const uint8_t V) {
+	GBASAVUtils::WriteBits(this->Offs + 0x1E, true, ((V > 15) ? V - 16 : V));
+	GBASAVUtils::WriteBits(this->Offs + 0x1E, false, (GBASAVUtils::ReadBits(this->Offs + 0x1E, false) * 2) + (V > 15 ? 0x1 : 0x0)); // Refresh Tan as well.
+};
+
+/* Get and Set Haircolor. */
+uint8_t GBASlot::Haircolor() const { return GBASAVUtils::ReadBits(this->Offs + 0x1F, false); };
+void GBASlot::Haircolor(const uint8_t V) { GBASAVUtils::WriteBits(this->Offs + 0x1F, false, V); };
+
+/* Get the Hatcolor. NOTE: Is also shoe color. */
+uint8_t GBASlot::Hatcolor() const { return GBASAVUtils::ReadBits(this->Offs + 0x1F, true); };
+void GBASlot::Hatcolor(const uint8_t V) { GBASAVUtils::WriteBits(this->Offs + 0x1F, true, V); };
+
+/* Get and Set Shirt Type. */
+uint8_t GBASlot::Shirt() const { return GBASAVUtils::ReadBits(this->Offs + 0x20, false) / 2; };
+void GBASlot::Shirt(const uint8_t V) {
+	if (V > 5) return;
+
+	GBASAVUtils::WriteBits(this->Offs + 0x20, false, (V * 2) + (this->Shirtcolor1() > 15 ? 0x1 : 0x0));
+};
+
+/* Get and Set first Shirtcolor (Body). */
+uint8_t GBASlot::Shirtcolor1() const { return ((GBASAVUtils::ReadBits(this->Offs + 0x20, false) % 2 == 1) ? 16 : 0) + GBASAVUtils::ReadBits(this->Offs + 0x20, true); };
+void GBASlot::Shirtcolor1(const uint8_t V) {
+	GBASAVUtils::WriteBits(this->Offs + 0x20, true, ((V > 15) ? V - 16 : V));
+	GBASAVUtils::WriteBits(this->Offs + 0x20, false, (GBASAVUtils::ReadBits(this->Offs + 0x20, false) * 2) + (V > 15 ? 0x1 : 0x0)); // Refresh Shirt as well.
+};
+
+/* Get and Set Pants. */
+uint8_t GBASlot::Pants() const { return GBASAVUtils::ReadBits(this->Offs + 0x21, false) / 2; };
+void GBASlot::Pants(const uint8_t V) {
+	if (V > 1) return;
+
+	GBASAVUtils::WriteBits(this->Offs + 0x21, false, (V * 2) + (this->Pantscolor() > 15 ? 0x1 : 0x0));
+};
+
+/* Get and Set Pantscolor. */
+uint8_t GBASlot::Pantscolor() const { return ((GBASAVUtils::ReadBits(this->Offs + 0x21, false) % 2 == 1) ? 16 : 0) + GBASAVUtils::ReadBits(this->Offs + 0x21, true); };
+void GBASlot::Pantscolor(const uint8_t V) {
+	GBASAVUtils::WriteBits(this->Offs + 0x21, true, ((V > 15) ? V - 16 : V));
+	GBASAVUtils::WriteBits(this->Offs + 0x21, false, (this->Pants() * 2) + (V > 15 ? 0x1 : 0x0)); // Refresh Pants as well.
+};
+
 /* Get and Set the Confidence Skill Points. */
 uint8_t GBASlot::Confidence() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x22); };
 void GBASlot::Confidence(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x22, std::min<uint8_t>(5, V)); };
@@ -80,6 +148,10 @@ void GBASlot::Intellect(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Off
 /* Get and Set the Sanity. */
 uint8_t GBASlot::Sanity() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x32); };
 void GBASlot::Sanity(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x32, std::min<uint8_t>(100, V)); };
+
+/* Get and Set the Aspiration. */
+uint8_t GBASlot::Aspiration() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x4B); };
+void GBASlot::Aspiration(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x4B, std::min<uint8_t>(2, V)); };
 
 /* Return some Item Groups of 6 Items each group. */
 std::unique_ptr<GBAItem> GBASlot::PawnShop() const { return std::make_unique<GBAItem>(this->Offs + 0x4C); };
@@ -171,8 +243,12 @@ std::unique_ptr<GBASocialMove> GBASlot::SocialMove(const uint8_t Move) const {
 bool GBASlot::FixChecksum() {
 	if (this->Slot < 1 || this->Slot > 4) return false;
 
-	if (!Checksum::GBASlotChecksumValid(GBASAVUtils::SAV->GetData(), this->Slot, GBASAVUtils::Read<uint16_t>((this->Slot * 0x1000) + 0xFFE))) {
-		GBASAVUtils::Write<uint16_t>((this->Slot * 0x1000) + 0xFFE, Checksum::CalcGBASlot(GBASAVUtils::SAV->GetData(), this->Slot));
+	const uint16_t CurCHKS = GBASAVUtils::Read<uint16_t>(this->Offs + 0xFFE);
+	const uint16_t Calced = Checksum::Calc(GBASAVUtils::SAV->GetData(), (this->Offs / 2), ((this->Offs + 0xFFE) / 2));
+
+
+	if (Calced != CurCHKS) { // If the calced result is NOT the current checksum.
+		GBASAVUtils::Write<uint16_t>(this->Offs + 0xFFE, Calced);
 		return true;
 	}
 

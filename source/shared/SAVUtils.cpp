@@ -254,3 +254,87 @@ void SAVUtils::WriteString(uint8_t *Buffer, const uint32_t Offset, const uint32_
 		else Buffer[Offset + Idx] = 0; // Index outside the string length.. so write 0.
 	}
 };
+
+/*
+	Read Lower / Upper Bits.
+
+	const uint8_t *Buffer: The Buffer.
+	const uint32_t Offs: The offset where to read from.
+	const bool First: If Reading from the first four bits, or second.
+*/
+uint8_t SAVUtils::ReadBits(const uint8_t *Buffer, const uint32_t Offs, const bool First) {
+	if (!Buffer) return 0x0;
+
+	if (First) return (Buffer[Offs] & 0xF); // Bit 0 - 3.
+	else return (Buffer[Offs] >> 4); // Bit 4 - 7.
+};
+
+/*
+	Write Lower / Upper Bits.
+
+	uint8_t *Buffer: The Buffer.
+	const uint32_t Offs: The offset where to write to.
+	const bool First: If Writing on the first four bits, or second.
+	const uint8_t Data: The Data to write.
+*/
+void SAVUtils::WriteBits(uint8_t *Buffer, const uint32_t Offs, const bool First, const uint8_t Data) {
+	if (Data > 0xF || !Buffer) return;
+
+	if (First) Buffer[Offs] = (Buffer[Offs] & 0xF0) | (Data & 0xF); // Bit 0 - 3.
+	else Buffer[Offs] = (Buffer[Offs] & 0x0F) | (Data << 4);// Bit 4 - 7.
+};
+
+
+/* GBA and NDS Stuff here. */
+
+/*
+	Read Lower / Upperbits from the SAVBuffer.
+
+	const uint32_t Offs: The Offset where to read from.
+	const bool First: If reading from the first 4 bits, or the last 4.
+*/
+uint8_t GBASAVUtils::ReadBits(const uint32_t Offs, const bool First) {
+	if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid()) return 0;
+
+	return SAVUtils::ReadBits(GBASAVUtils::SAV->GetData(), Offs, First);
+};
+
+/*
+	Write Lower / Upperbits to the SAVBuffer.
+
+	const uint32_t Offs: The Offset where to write to.
+	const bool First: If writing on the first 4 bits, or the last 4.
+	const uint8_t Data: The Data to write.
+*/
+void GBASAVUtils::WriteBits(const uint32_t Offs, const bool First, const uint8_t Data) {
+	if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid() || Data > 0xF) return;
+
+	SAVUtils::WriteBits(GBASAVUtils::SAV->GetData(), Offs, First, Data);
+	if (!GBASAVUtils::SAV->GetChangesMade()) GBASAVUtils::SAV->SetChangesMade(true);
+};
+
+/*
+	Read Lower / Upperbits from the SAVBuffer.
+
+	const uint32_t Offs: The Offset where to read from.
+	const bool First: If reading from the first 4 bits, or the last 4.
+*/
+uint8_t NDSSAVUtils::ReadBits(const uint32_t Offs, const bool First) {
+	if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid()) return 0;
+
+	return SAVUtils::ReadBits(NDSSAVUtils::SAV->GetData(), Offs, First);
+};
+
+/*
+	Write Lower / Upperbits to the SAVBuffer.
+
+	const uint32_t Offs: The Offset where to write to.
+	const bool First: If writing on the first 4 bits, or the last 4.
+	const uint8_t Data: The Data to write.
+*/
+void NDSSAVUtils::WriteBits(const uint32_t Offs, const bool First, const uint8_t Data) {
+	if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid() || Data > 0xF) return;
+
+	SAVUtils::WriteBits(NDSSAVUtils::SAV->GetData(), Offs, First, Data);
+	if (!NDSSAVUtils::SAV->GetChangesMade()) NDSSAVUtils::SAV->SetChangesMade(true);
+};

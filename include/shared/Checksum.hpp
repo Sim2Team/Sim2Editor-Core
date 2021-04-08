@@ -28,25 +28,10 @@
 #define _SIM2EDITOR_CPP_CORE_CHECKSUM_HPP
 
 #include "CoreCommon.hpp"
+#include <vector>
 
 namespace Checksum {
-	/* GBA Main Slot Checksum. */
-	uint16_t CalcGBASlot(const uint8_t *Buffer, const uint8_t Slot);
-	bool GBASlotChecksumValid(const uint8_t *Buffer, const uint8_t Slot, const uint16_t CHKS);
-
-	/* GBA Settings Checksum Calculation. */
-	uint16_t CalcGBASettings(const uint8_t *Buffer);
-	bool GBASettingsValid(const uint8_t *Buffer, const uint16_t CHKS);
-
-	/* NDS Checksum. The NDS version has multiple ones though. */
-	uint16_t CalcNDSSlot(const uint8_t *Buffer, const uint8_t Slot);
-	bool NDSSlotChecksumValid(const uint8_t *Buffer, const uint8_t Slot, const uint16_t CHKS);
-
-	uint16_t CalcNDSSlotHeader(const uint8_t *Buffer, const uint8_t Slot);
-	bool NDSSlotChecksumHeaderValid(const uint8_t *Buffer, const uint8_t Slot, const uint16_t CHKS);
-
-	uint16_t CalcNDSSlotShared(const uint8_t *Buffer, const uint8_t Slot);
-	bool NDSSlotChecksumSharedValid(const uint8_t *Buffer, const uint8_t Slot, const uint16_t CHKS);
+	uint16_t Calc(const uint8_t *Buffer, const uint16_t StartIndex, const uint16_t EndIndex, const std::vector<int> &SkipOffs = { });
 };
 
 #endif

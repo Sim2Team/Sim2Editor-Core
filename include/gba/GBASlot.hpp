@@ -50,6 +50,36 @@ public:
 	std::string Name() const;
 	void Name(const std::string &V);
 
+	uint8_t Hairstyle() const;
+	void Hairstyle(const uint8_t V);
+
+	uint8_t Shirtcolor3() const;
+	void Shirtcolor3(const uint8_t V);
+
+	uint8_t Tan() const;
+	void Tan(const uint8_t V);
+
+	uint8_t Shirtcolor2() const;
+	void Shirtcolor2(const uint8_t V);
+
+	uint8_t Haircolor() const;
+	void Haircolor(const uint8_t V);
+
+	uint8_t Hatcolor() const;
+	void Hatcolor(const uint8_t V);
+
+	uint8_t Shirt() const;
+	void Shirt(const uint8_t V);
+
+	uint8_t Shirtcolor1() const;
+	void Shirtcolor1(const uint8_t V);
+
+	uint8_t Pants() const;
+	void Pants(const uint8_t V);
+
+	uint8_t Pantscolor() const;
+	void Pantscolor(const uint8_t V);
+
 	uint8_t Confidence() const;
 	void Confidence(const uint8_t V);
 
@@ -70,6 +100,9 @@ public:
 
 	uint8_t Sanity() const;
 	void Sanity(const uint8_t V);
+
+	uint8_t Aspiration() const;
+	void Aspiration(const uint8_t V);
 
 	/* Items. */
 	std::unique_ptr<GBAItem> PawnShop() const;

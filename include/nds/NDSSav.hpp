@@ -32,9 +32,10 @@
 class NDSSAV {
 public:
 	NDSSAV(const std::string &SAVFile);
+	int8_t FetchSlot(const uint8_t SAVSlot);
 
 	/* Core Returns and Actions. */
-	std::unique_ptr<NDSSlot> GetSlot(const uint8_t Slot);
+	std::unique_ptr<NDSSlot> Slot(const uint8_t Slot);
 	void Finish();
 	bool SlotExist(const uint8_t Slot);
 
@@ -50,6 +51,7 @@ private:
 	bool SAVValid = false, SAVChangesMade = false;
 
 	static constexpr uint8_t SlotIdent[8] = { 0x64, 0x61, 0x74, 0x0, 0x20, 0x0, 0x0, 0x0 };
+	int8_t Slots[3] = { -1, -1, -1 };
 };
 
 #endif

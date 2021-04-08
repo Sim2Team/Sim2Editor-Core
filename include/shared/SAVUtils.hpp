@@ -47,6 +47,8 @@ namespace SAVUtils {
 
 	const std::string ReadString(const uint8_t *Buffer, const uint32_t Offset, const uint32_t Length);
 	void WriteString(uint8_t *Buffer, const uint32_t Offset, const uint32_t Length, const std::string &Str);
+	uint8_t ReadBits(const uint8_t *Buffer, const uint32_t Offs, const bool First);
+	void WriteBits(uint8_t *Buffer, const uint32_t Offs, const bool First, const uint8_t Data);
 };
 
 
@@ -60,7 +62,7 @@ namespace GBASAVUtils {
 		const uint32_t Offs: The Offset from where to read.
 	*/
 	template <typename T>
-	T Read(const uint32_t Offs) {
+	const T Read(const uint32_t Offs) {
 		if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid()) return 0; // Return 0, if nullptr OR invalid.
 
 		return *reinterpret_cast<T *>(GBASAVUtils::SAV->GetData() + Offs);
@@ -79,6 +81,9 @@ namespace GBASAVUtils {
 		*reinterpret_cast<T *>(GBASAVUtils::SAV->GetData() + Offs) = Data;
 		if (!GBASAVUtils::SAV->GetChangesMade()) GBASAVUtils::SAV->SetChangesMade(true);
 	};
+
+	uint8_t ReadBits(const uint32_t Offs, const bool First = true);
+	void WriteBits(const uint32_t Offs, const bool First = true, const uint8_t Data = 0x0);
 };
 
 /* SAVUtils for NDS. */
@@ -91,7 +96,7 @@ namespace NDSSAVUtils {
 		const uint32_t Offs: The Offset from where to read.
 	*/
 	template <typename T>
-	T Read(const uint32_t Offs) {
+	const T Read(const uint32_t Offs) {
 		if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid()) return 0; // Return 0, if nullptr OR invalid.
 
 		return *reinterpret_cast<T *>(NDSSAVUtils::SAV->GetData() + Offs);
@@ -110,6 +115,10 @@ namespace NDSSAVUtils {
 		*reinterpret_cast<T *>(NDSSAVUtils::SAV->GetData() + Offs) = Data;
 		if (!NDSSAVUtils::SAV->GetChangesMade()) NDSSAVUtils::SAV->SetChangesMade(true);
 	};
+
+
+	uint8_t ReadBits(const uint32_t Offs, const bool First = true);
+	void WriteBits(const uint32_t Offs, const bool First = true, const uint8_t Data = 0x0);
 };
 
 #endif

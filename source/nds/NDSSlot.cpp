@@ -28,6 +28,50 @@
 #include "../shared/Checksum.hpp"
 #include "../shared/SAVUtils.hpp"
 
+/* Get and Set Simoleons. */
+uint32_t NDSSlot::Simoleons() const { return NDSSAVUtils::Read<uint32_t>(this->Offs + 0x2C); };
+void NDSSlot::Simoleons(uint32_t V) { NDSSAVUtils::Write<uint32_t>(this->Offs + 0x2C, (std::min<uint32_t>(999999, V))); };
+
+/* Get and Set Name. */
+std::string NDSSlot::Name() const { return SAVUtils::ReadString(NDSSAVUtils::SAV->GetData(), this->Offs + 0x30, 0x7); };
+void NDSSlot::Name(const std::string &V) { SAVUtils::WriteString(NDSSAVUtils::SAV->GetData(), this->Offs + 0x30, 0x7, V); };
+
+/* Get and Set Nuclear Fuelrods. */
+uint8_t NDSSlot::Fuelrods() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0xBC); };
+void NDSSlot::Fuelrods(const uint8_t V) { NDSSAVUtils::Write<uint8_t>(this->Offs + 0xBC, (std::min<uint8_t>(250, V))); };
+
+/* Get and Set License Plates. */
+uint8_t NDSSlot::Plates() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0xBD); };
+void NDSSlot::Plates(const uint8_t V) { NDSSAVUtils::Write<uint8_t>(this->Offs + 0xBD, (std::min<uint8_t>(250, V))); };
+
+/* Get and Set Strange Gourds. */
+uint8_t NDSSlot::Gourds() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0xBE); };
+void NDSSlot::Gourds(const uint8_t V) { NDSSAVUtils::Write<uint8_t>(this->Offs + 0xBE, (std::min<uint8_t>(250, V))); };
+
+/* Get and Set Alien Spaceship Parts. */
+uint8_t NDSSlot::Spaceship() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0xBF); };
+void NDSSlot::Spaceship(const uint8_t V) { NDSSAVUtils::Write<uint8_t>(this->Offs + 0xBF, (std::min<uint8_t>(250, V))); };
+
+/* Get and Set Creativity Skill Points. */
+uint8_t NDSSlot::Creativity() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0xDF); };
+void NDSSlot::Creativity(const uint8_t V) { NDSSAVUtils::Write<uint8_t>(this->Offs + 0xDF, (std::min<uint8_t>(10, V))); };
+
+/* Get and Set Business Skill Points. */
+uint8_t NDSSlot::Business() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0xE0); };
+void NDSSlot::Business(const uint8_t V) { NDSSAVUtils::Write<uint8_t>(this->Offs + 0xE0, (std::min<uint8_t>(10, V))); };
+
+/* Get and Set Body Skill Points. */
+uint8_t NDSSlot::Body() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0xE1); };
+void NDSSlot::Body(const uint8_t V) { NDSSAVUtils::Write<uint8_t>(this->Offs + 0xE1, (std::min<uint8_t>(10, V))); };
+
+/* Get and Set Charisma Skill Points. */
+uint8_t NDSSlot::Charisma() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0xE2); };
+void NDSSlot::Charisma(const uint8_t V) { NDSSAVUtils::Write<uint8_t>(this->Offs + 0xE2, (std::min<uint8_t>(10, V))); };
+
+/* Get and Set Mechanical Skill Points. */
+uint8_t NDSSlot::Mechanical() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0xE3); };
+void NDSSlot::Mechanical(const uint8_t V) { NDSSAVUtils::Write<uint8_t>(this->Offs + 0xE3, (std::min<uint8_t>(10, V))); };
+
 /*
 	Fix the Checksum of the current Slot, if invalid.
 
@@ -36,8 +80,12 @@
 bool NDSSlot::FixChecksum() {
 	if (this->Slot > 4) return false;
 
-	if (!Checksum::NDSSlotChecksumValid(NDSSAVUtils::SAV->GetData(), this->Slot, NDSSAVUtils::Read<uint16_t>((this->Slot * 0x1000) + 0x28))) {
-		NDSSAVUtils::Write<uint16_t>((this->Slot * 0x1000) + 0x28, Checksum::CalcNDSSlot(NDSSAVUtils::SAV->GetData(), this->Slot));
+	const uint16_t CurCHKS = NDSSAVUtils::Read<uint16_t>(this->Offs + 0x28);
+	const std::vector<int> Offs = { ((int)this->Offs + 0x12) / 2, ((int)this->Offs + 0x28) / 2 };
+	const uint16_t Calced = Checksum::Calc(NDSSAVUtils::SAV->GetData(), ((this->Offs + 0x10) / 2), ((this->Offs + 0x1000) / 2), Offs);
+
+	if (Calced != CurCHKS) { // If the calced result is NOT the current checksum.
+		NDSSAVUtils::Write<uint16_t>(this->Offs + 0x28, Calced);
 		return true;
 	}
 

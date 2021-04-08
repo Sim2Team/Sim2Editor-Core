@@ -53,7 +53,10 @@ void GBASettings::Language(const GBALanguage V) {
 
 /* Update the Checksum of the GBA Settings. */
 void GBASettings::UpdateChecksum() {
-	if (!Checksum::GBASettingsValid(GBASAVUtils::SAV->GetData(), GBASAVUtils::Read<uint16_t>(0xE))) { // Update if not valid.
-		GBASAVUtils::Write<uint16_t>(0xE, Checksum::CalcGBASettings(GBASAVUtils::SAV->GetData()));
+	const uint16_t CurCHKS = GBASAVUtils::Read<uint16_t>(0xE);
+	const uint16_t Calced = Checksum::Calc(GBASAVUtils::SAV->GetData(), 0x0, (0x18 / 2), { (0xE / 2) });
+
+	if (Calced != CurCHKS) { // If the calced result is NOT the current checksum.
+		GBASAVUtils::Write<uint16_t>(0xE, Calced);
 	}
 };
