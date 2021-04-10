@@ -1,5 +1,5 @@
-# Sim2Editor-CPPCore
-Sim2Editor's C++ Core as it's own Repository.
+# Sim2Editor-Core
+Sim2Editor's C++ Core written by SuperSaiyajinStackZ.
 
 This Core is being used for [Sim2Editor](https://github.com/Universal-Team/Sim2Editor)'s 3DS and NDS version. I decided to do the Core External, so other apps can make use of this as well, if needed for whatever reason.
 
