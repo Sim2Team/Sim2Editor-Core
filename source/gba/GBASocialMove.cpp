@@ -27,10 +27,12 @@
 #include "GBASocialMove.hpp"
 #include "../shared/SAVUtils.hpp"
 
-/* Get and Set the Social Move Flag. */
-SocialMoveFlag GBASocialMove::Flag() const { return (SocialMoveFlag)GBASAVUtils::Read<uint8_t>(this->Offs + 0x4); };
-void GBASocialMove::Flag(const SocialMoveFlag V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x4, (uint8_t)V); };
+namespace S2Editor {
+	/* Get and Set the Social Move Flag. */
+	SocialMoveFlag GBASocialMove::Flag() const { return (SocialMoveFlag)GBASAVUtils::Read<uint8_t>(this->Offs + 0x4); };
+	void GBASocialMove::Flag(const SocialMoveFlag V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x4, (uint8_t)V); };
 
-/* Get and Set the Social Move Level. */
-uint8_t GBASocialMove::Level() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x8); };
-void GBASocialMove::Level(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x8, std::min<uint8_t>(3, V)); };
+	/* Get and Set the Social Move Level. */
+	uint8_t GBASocialMove::Level() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x8); };
+	void GBASocialMove::Level(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x8, std::min<uint8_t>(3, V)); };
+};

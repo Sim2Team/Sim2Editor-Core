@@ -31,10 +31,12 @@
 #include <memory>
 #include <string>
 
-enum class SAVType {
-	GBA,
-	_NDS, // _NDS, because it seems like somethin' like SAVType::NDS exist on libnds as well or so?
-	NONE
+namespace S2Editor {
+	enum class SAVType {
+		_GBA,
+		_NDS,
+		_NONE
+	};
 };
 
 #endif

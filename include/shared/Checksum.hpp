@@ -30,8 +30,10 @@
 #include "CoreCommon.hpp"
 #include <vector>
 
-namespace Checksum {
-	uint16_t Calc(const uint8_t *Buffer, const uint16_t StartIndex, const uint16_t EndIndex, const std::vector<int> &SkipOffs = { });
+namespace S2Editor {
+	namespace Checksum {
+		uint16_t Calc(const uint8_t *Buffer, const uint16_t StartIndex, const uint16_t EndIndex, const std::vector<int> &SkipOffs = { });
+	};
 };
 
 #endif

@@ -30,95 +30,97 @@
 #include "../gba/GBASav.hpp"
 #include "../nds/NDSSav.hpp"
 
-/*
-	SAVUtils for common things.
-
-	Used for SAVType Detection and various other common things.
-*/
-namespace SAVUtils {
-	extern SAVType SAV; // Active SAVType.
-	extern std::string SAVName;
-
-	SAVType DetectType(const std::string &File);
-	bool LoadSAV(const std::string &File, const std::string &BasePath = "", const bool DoBackup = false);
-	bool CreateBackup(const std::string &BasePath);
-	void Finish();
-	bool ChangesMade();
-
-	const std::string ReadString(const uint8_t *Buffer, const uint32_t Offset, const uint32_t Length);
-	void WriteString(uint8_t *Buffer, const uint32_t Offset, const uint32_t Length, const std::string &Str);
-	uint8_t ReadBits(const uint8_t *Buffer, const uint32_t Offs, const bool First);
-	void WriteBits(uint8_t *Buffer, const uint32_t Offs, const bool First, const uint8_t Data);
-};
-
-
-/* SAVUtils for GBA. */
-namespace GBASAVUtils {
-	extern std::unique_ptr<GBASAV> SAV;
-
+namespace S2Editor {
 	/*
-		Read from the SAVBuffer.
+		SAVUtils for common things.
 
-		const uint32_t Offs: The Offset from where to read.
+		Used for SAVType Detection and various other common things.
 	*/
-	template <typename T>
-	const T Read(const uint32_t Offs) {
-		if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid()) return 0; // Return 0, if nullptr OR invalid.
+	namespace SAVUtils {
+		extern SAVType SAV; // Active SAVType.
+		extern std::string SAVName;
 
-		return *reinterpret_cast<T *>(GBASAVUtils::SAV->GetData() + Offs);
-	};
+		SAVType DetectType(const std::string &File);
+		bool LoadSAV(const std::string &File, const std::string &BasePath = "", const bool DoBackup = false);
+		bool CreateBackup(const std::string &BasePath);
+		void Finish();
+		bool ChangesMade();
 
-	/*
-		Write to the SAVBuffer.
-
-		const uint32_t Offs: The Offset where to write to.
-		const T Data: The data which to write.
-	*/
-	template <typename T>
-	void Write(const uint32_t Offs, const T Data) {
-		if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid()) return;
-
-		*reinterpret_cast<T *>(GBASAVUtils::SAV->GetData() + Offs) = Data;
-		if (!GBASAVUtils::SAV->GetChangesMade()) GBASAVUtils::SAV->SetChangesMade(true);
-	};
-
-	uint8_t ReadBits(const uint32_t Offs, const bool First = true);
-	void WriteBits(const uint32_t Offs, const bool First = true, const uint8_t Data = 0x0);
-};
-
-/* SAVUtils for NDS. */
-namespace NDSSAVUtils {
-	extern std::unique_ptr<NDSSAV> SAV;
-
-	/*
-		Read from the SAVBuffer.
-
-		const uint32_t Offs: The Offset from where to read.
-	*/
-	template <typename T>
-	const T Read(const uint32_t Offs) {
-		if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid()) return 0; // Return 0, if nullptr OR invalid.
-
-		return *reinterpret_cast<T *>(NDSSAVUtils::SAV->GetData() + Offs);
-	};
-
-	/*
-		Write to the SAVBuffer.
-
-		const uint32_t Offs: The Offset where to write to.
-		const T Data: The data which to write.
-	*/
-	template <typename T>
-	void Write(const uint32_t Offs, const T Data) {
-		if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid()) return;
-
-		*reinterpret_cast<T *>(NDSSAVUtils::SAV->GetData() + Offs) = Data;
-		if (!NDSSAVUtils::SAV->GetChangesMade()) NDSSAVUtils::SAV->SetChangesMade(true);
+		const std::string ReadString(const uint8_t *Buffer, const uint32_t Offset, const uint32_t Length);
+		void WriteString(uint8_t *Buffer, const uint32_t Offset, const uint32_t Length, const std::string &Str);
+		uint8_t ReadBits(const uint8_t *Buffer, const uint32_t Offs, const bool First);
+		void WriteBits(uint8_t *Buffer, const uint32_t Offs, const bool First, const uint8_t Data);
 	};
 
 
-	uint8_t ReadBits(const uint32_t Offs, const bool First = true);
-	void WriteBits(const uint32_t Offs, const bool First = true, const uint8_t Data = 0x0);
+	/* SAVUtils for GBA. */
+	namespace GBASAVUtils {
+		extern std::unique_ptr<GBASAV> SAV;
+
+		/*
+			Read from the SAVBuffer.
+
+			const uint32_t Offs: The Offset from where to read.
+		*/
+		template <typename T>
+		const T Read(const uint32_t Offs) {
+			if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid()) return 0; // Return 0, if nullptr OR invalid.
+
+			return *reinterpret_cast<T *>(GBASAVUtils::SAV->GetData() + Offs);
+		};
+
+		/*
+			Write to the SAVBuffer.
+
+			const uint32_t Offs: The Offset where to write to.
+			const T Data: The data which to write.
+		*/
+		template <typename T>
+		void Write(const uint32_t Offs, const T Data) {
+			if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid()) return;
+
+			*reinterpret_cast<T *>(GBASAVUtils::SAV->GetData() + Offs) = Data;
+			if (!GBASAVUtils::SAV->GetChangesMade()) GBASAVUtils::SAV->SetChangesMade(true);
+		};
+
+		uint8_t ReadBits(const uint32_t Offs, const bool First = true);
+		void WriteBits(const uint32_t Offs, const bool First = true, const uint8_t Data = 0x0);
+	};
+
+	/* SAVUtils for NDS. */
+	namespace NDSSAVUtils {
+		extern std::unique_ptr<NDSSAV> SAV;
+
+		/*
+			Read from the SAVBuffer.
+
+			const uint32_t Offs: The Offset from where to read.
+		*/
+		template <typename T>
+		const T Read(const uint32_t Offs) {
+			if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid()) return 0; // Return 0, if nullptr OR invalid.
+
+			return *reinterpret_cast<T *>(NDSSAVUtils::SAV->GetData() + Offs);
+		};
+
+		/*
+			Write to the SAVBuffer.
+
+			const uint32_t Offs: The Offset where to write to.
+			const T Data: The data which to write.
+		*/
+		template <typename T>
+		void Write(const uint32_t Offs, const T Data) {
+			if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid()) return;
+
+			*reinterpret_cast<T *>(NDSSAVUtils::SAV->GetData() + Offs) = Data;
+			if (!NDSSAVUtils::SAV->GetChangesMade()) NDSSAVUtils::SAV->SetChangesMade(true);
+		};
+
+
+		uint8_t ReadBits(const uint32_t Offs, const bool First = true);
+		void WriteBits(const uint32_t Offs, const bool First = true, const uint8_t Data = 0x0);
+	};
 };
 
 #endif

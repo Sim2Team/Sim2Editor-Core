@@ -27,22 +27,24 @@
 #include "GBACast.hpp"
 #include "../shared/SAVUtils.hpp"
 
-/* Get and Set Friendly Conversation level. */
-uint8_t GBACast::Friendly() const { return GBASAVUtils::Read<uint8_t>(this->Offs); };
-void GBACast::Friendly(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs, std::min<uint8_t>(3, V)); };
+namespace S2Editor {
+	/* Get and Set Friendly Conversation level. */
+	uint8_t GBACast::Friendly() const { return GBASAVUtils::Read<uint8_t>(this->Offs); };
+	void GBACast::Friendly(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs, std::min<uint8_t>(3, V)); };
 
-/* Get and Set Romance Conversation level. */
-uint8_t GBACast::Romance() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x1); };
-void GBACast::Romance(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x1, std::min<uint8_t>(3, V)); };
+	/* Get and Set Romance Conversation level. */
+	uint8_t GBACast::Romance() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x1); };
+	void GBACast::Romance(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x1, std::min<uint8_t>(3, V)); };
 
-/* Get and Set Intimidate Conversation level. */
-uint8_t GBACast::Intimidate() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x2); };
-void GBACast::Intimidate(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x2, std::min<uint8_t>(3, V)); };
+	/* Get and Set Intimidate Conversation level. */
+	uint8_t GBACast::Intimidate() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x2); };
+	void GBACast::Intimidate(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x2, std::min<uint8_t>(3, V)); };
 
-/* Get and Set Alternative Picture Unlock state. */
-bool GBACast::Alternativepic() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x3); };
-void GBACast::Alternativepic(const bool V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x3, V); };
+	/* Get and Set Alternative Picture Unlock state. */
+	bool GBACast::Alternativepic() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x3); };
+	void GBACast::Alternativepic(const bool V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x3, V); };
 
-/* Get and Set Mystery Unlock state. */
-bool GBACast::Mystery() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x8); };
-void GBACast::Mystery(const bool V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x8, V); };
+	/* Get and Set Mystery Unlock state. */
+	bool GBACast::Mystery() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x8); };
+	void GBACast::Mystery(const bool V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x8, V); };
+};

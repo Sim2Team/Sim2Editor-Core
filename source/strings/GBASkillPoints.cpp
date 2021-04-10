@@ -26,12 +26,14 @@
 
 #include "Strings.hpp"
 
-const std::vector<std::string> Strings::GBASkillPointNames_DE = {
-	"Vertrauen", "Mechanik", "Stärke", "Persönlichkeit",
-	"Attraktivität", "Intellekt"
-};
+namespace S2Editor {
+	const std::vector<std::string> Strings::GBASkillPointNames_DE = {
+		"Vertrauen", "Mechanik", "Stärke", "Persönlichkeit",
+		"Attraktivität", "Intellekt"
+	};
 
-const std::vector<std::string> Strings::GBASkillPointNames_EN = {
-	"Confidence", "Mechanical", "Strength", "Personality",
-	"Hotness", "Intellect"
+	const std::vector<std::string> Strings::GBASkillPointNames_EN = {
+		"Confidence", "Mechanical", "Strength", "Personality",
+		"Hotness", "Intellect"
+	};
 };

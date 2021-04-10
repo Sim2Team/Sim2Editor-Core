@@ -29,33 +29,35 @@
 
 #include "../shared/CoreCommon.hpp"
 
-/* GBA Languages. */
-enum class GBALanguage : uint8_t {
-	EN, // English
-	NL, // Nederlands
-	FR, // Français
-	DE, // Deutsch
-	IT, // Italiano
-	ES  // Español
-};
+namespace S2Editor {
+	/* GBA Languages. */
+	enum class GBALanguage : uint8_t {
+		EN, // English
+		NL, // Nederlands
+		FR, // Français
+		DE, // Deutsch
+		IT, // Italiano
+		ES  // Español
+	};
 
-class GBASettings {
-public:
-	GBASettings() { };
+	class GBASettings {
+	public:
+		GBASettings() { };
 
-	uint8_t SFX() const;
-	void SFX(const uint8_t V);
+		uint8_t SFX() const;
+		void SFX(const uint8_t V);
 
-	uint8_t Music() const;
-	void Music(const uint8_t V);
+		uint8_t Music() const;
+		void Music(const uint8_t V);
 
-	GBALanguage Language() const;
-	void Language(const GBALanguage V);
+		GBALanguage Language() const;
+		void Language(const GBALanguage V);
 
-	void UpdateChecksum();
-private:
-	static constexpr uint8_t MusicLevels[11] = { 0x0, 0x19, 0x32, 0x4B, 0x64, 0x7D, 0x96, 0xAF, 0xC8, 0xE1, 0xFF };
-	static constexpr uint8_t SFXLevels[11]   = { 0x0, 0x0C, 0x18, 0x24, 0x30, 0x3C, 0x48, 0x54, 0x60, 0x6C, 0x80 };
+		void UpdateChecksum();
+	private:
+		static constexpr uint8_t MusicLevels[11] = { 0x0, 0x19, 0x32, 0x4B, 0x64, 0x7D, 0x96, 0xAF, 0xC8, 0xE1, 0xFF };
+		static constexpr uint8_t SFXLevels[11]   = { 0x0, 0x0C, 0x18, 0x24, 0x30, 0x3C, 0x48, 0x54, 0x60, 0x6C, 0x80 };
+	};
 };
 
 #endif

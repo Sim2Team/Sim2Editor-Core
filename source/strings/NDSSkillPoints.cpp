@@ -26,4 +26,12 @@
 
 #include "Strings.hpp"
 
-const std::vector<std::string> Strings::NDSSkillPointNames_EN = { "Creativity", "Business", "Body", "Charisma", "Mechanical" };
+namespace S2Editor {
+	const std::vector<std::string> Strings::NDSSkillPointNames_EN = {
+		"Creativity", "Business", "Body", "Charisma", "Mechanical"
+	};
+
+	const std::vector<std::string> Strings::NDSSkillPointNames_DE = {
+		"Kreativität", "Geschäftssinn", "Körper", "Charisma", "Mechanik"
+	};
+};

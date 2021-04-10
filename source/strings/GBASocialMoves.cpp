@@ -26,16 +26,18 @@
 
 #include "Strings.hpp"
 
-const std::vector<std::string> Strings::GBASocialMoveNames_DE = {
-	"Plaudern", "Unterhalten", "Umarmen", "Prahlen",
-	"Entschuldigen", "Schmeicheln", "Flirten", "Kuss zuwerfen",
-	"Küssen", "Körper Präsentieren", "Ärgern", "Beleidigen",
-	"Bedrohen", "Unfeine Geste", "Karatebewegungen"
-};
+namespace S2Editor {
+	const std::vector<std::string> Strings::GBASocialMoveNames_DE = {
+		"Plaudern", "Unterhalten", "Umarmen", "Prahlen",
+		"Entschuldigen", "Schmeicheln", "Flirten", "Kuss zuwerfen",
+		"Küssen", "Körper Präsentieren", "Ärgern", "Beleidigen",
+		"Bedrohen", "Unfeine Geste", "Karatebewegungen"
+	};
 
-const std::vector<std::string> Strings::GBASocialMoveNames_EN = {
-	"Chit-Chat", "Entertain", "Hug", "Brag",
-	"Apologize", "Sweet Talk", "Flirt", "Blow Kiss",
-	"Kiss", "Show Off Body", "Annoy", "Insult",
-	"Threaten", "Rude Gesture", "Karate Moves"
+	const std::vector<std::string> Strings::GBASocialMoveNames_EN = {
+		"Chit-Chat", "Entertain", "Hug", "Brag",
+		"Apologize", "Sweet Talk", "Flirt", "Blow Kiss",
+		"Kiss", "Show Off Body", "Annoy", "Insult",
+		"Threaten", "Rude Gesture", "Karate Moves"
+	};
 };

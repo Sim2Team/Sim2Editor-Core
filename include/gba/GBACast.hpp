@@ -29,30 +29,32 @@
 
 #include "../shared/CoreCommon.hpp"
 
-class GBACast {
-public:
-	GBACast(const uint32_t Offs, const uint8_t Cast)
-		: Cast(Cast), Offs(Offs) { };
+namespace S2Editor {
+	class GBACast {
+	public:
+		GBACast(const uint32_t Offs, const uint8_t Cast)
+			: Cast(Cast), Offs(Offs) { };
 
-	uint8_t Index() const { return this->Cast; };
+		uint8_t Index() const { return this->Cast; };
 
-	uint8_t Friendly() const;
-	void Friendly(const uint8_t V);
+		uint8_t Friendly() const;
+		void Friendly(const uint8_t V);
 
-	uint8_t Romance() const;
-	void Romance(const uint8_t V);
+		uint8_t Romance() const;
+		void Romance(const uint8_t V);
 
-	uint8_t Intimidate() const;
-	void Intimidate(const uint8_t V);
+		uint8_t Intimidate() const;
+		void Intimidate(const uint8_t V);
 
-	bool Alternativepic() const;
-	void Alternativepic(const bool V);
+		bool Alternativepic() const;
+		void Alternativepic(const bool V);
 
-	bool Mystery() const;
-	void Mystery(const bool V);
-private:
-	uint8_t Cast = 0;
-	uint32_t Offs = 0;
+		bool Mystery() const;
+		void Mystery(const bool V);
+	private:
+		uint8_t Cast = 0;
+		uint32_t Offs = 0;
+	};
 };
 
 #endif

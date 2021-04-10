@@ -27,72 +27,74 @@
 #include "GBASav.hpp"
 #include "../shared/Checksum.hpp"
 
-/*
-	Initialize the GBA SAV.
+namespace S2Editor {
+	/*
+		Initialize the GBA SAV.
 
-	const std::string &SAVFile: The SAVFile path.
-*/
-GBASAV::GBASAV(const std::string &SAVFile) {
-	FILE *SAV = fopen(SAVFile.c_str(), "r");
+		const std::string &SAVFile: The SAVFile path.
+	*/
+	GBASAV::GBASAV(const std::string &SAVFile) {
+		FILE *SAV = fopen(SAVFile.c_str(), "r");
 
-	if (SAV) {
-		fseek(SAV, 0, SEEK_END);
-		this->SAVSize = ftell(SAV); // Get the SAVSize.
-		fseek(SAV, 0, SEEK_SET);
+		if (SAV) {
+			fseek(SAV, 0, SEEK_END);
+			this->SAVSize = ftell(SAV); // Get the SAVSize.
+			fseek(SAV, 0, SEEK_SET);
 
-		this->SAVData = std::make_unique<uint8_t[]>(this->SAVSize);
-		fread(this->SAVData.get(), 1, this->SAVSize, SAV);
-		fclose(SAV);
+			this->SAVData = std::make_unique<uint8_t[]>(this->SAVSize);
+			fread(this->SAVData.get(), 1, this->SAVSize, SAV);
+			fclose(SAV);
 
-		this->SAVValid = true;
-		if (this->SAVData.get()[0xA] > 5) { // Language Index is 6 or larger, which is "blank" and can break the game.
-			this->SAVData.get()[0xA] = 0; // English.
-			this->SetChangesMade(true);
+			this->SAVValid = true;
+			if (this->SAVData.get()[0xA] > 5) { // Language Index is 6 or larger, which is "blank" and can break the game.
+				this->SAVData.get()[0xA] = 0; // English.
+				this->SetChangesMade(true);
+			}
 		}
-	}
-};
+	};
 
-/*
-	Return, wheter a Slot is valid / exist.
+	/*
+		Return, wheter a Slot is valid / exist.
 
-	const uint8_t Slot: The Slot to check.
-*/
-bool GBASAV::SlotExist(const uint8_t Slot) {
-	if (Slot < 1 || Slot > 4 || !this->GetValid()) return false;
+		const uint8_t Slot: The Slot to check.
+	*/
+	bool GBASAV::SlotExist(const uint8_t Slot) {
+		if (Slot < 1 || Slot > 4 || !this->GetValid()) return false;
 
-	for (uint8_t Idx = 0; Idx < 10; Idx++) {
-		if (this->SAVData.get()[(Slot * 0x1000) + Idx] != 0) return true;
-	}
+		for (uint8_t Idx = 0; Idx < 10; Idx++) {
+			if (this->SAVData.get()[(Slot * 0x1000) + Idx] != 0) return true;
+		}
 
-	return false;
-};
+		return false;
+	};
 
-/*
-	Return a GBASlot class.
+	/*
+		Return a GBASlot class.
 
-	const uint8_t Slot: The GBASAV Slot ( 1 - 4 ).
-*/
-std::unique_ptr<GBASlot> GBASAV::Slot(const uint8_t Slot) {
-	if (!this->SlotExist(Slot)) return nullptr;
+		const uint8_t Slot: The GBASAV Slot ( 1 - 4 ).
+	*/
+	std::unique_ptr<GBASlot> GBASAV::Slot(const uint8_t Slot) {
+		if (!this->SlotExist(Slot)) return nullptr;
 
-	return std::make_unique<GBASlot>(Slot);
-};
+		return std::make_unique<GBASlot>(Slot);
+	};
 
-/* Get a Settings class. */
-std::unique_ptr<GBASettings> GBASAV::Settings() const { return std::make_unique<GBASettings>(); };
+	/* Get a Settings class. */
+	std::unique_ptr<GBASettings> GBASAV::Settings() const { return std::make_unique<GBASettings>(); };
 
-/*
-	Finish call before writting to file.
+	/*
+		Finish call before writting to file.
 
-	Fix the Checksum of all existing Slots and the Settings, if invalid.
-*/
-void GBASAV::Finish() {
-	if (!this->GetValid()) return;
+		Fix the Checksum of all existing Slots and the Settings, if invalid.
+	*/
+	void GBASAV::Finish() {
+		if (!this->GetValid()) return;
 
-	for (uint8_t Slot = 1; Slot < 5; Slot++) {
-		if (this->SlotExist(Slot)) this->Slot(Slot)->FixChecksum();
-	}
+		for (uint8_t Slot = 1; Slot < 5; Slot++) {
+			if (this->SlotExist(Slot)) this->Slot(Slot)->FixChecksum();
+		}
 
-	/* Do the same with the Settings. */
-	this->Settings()->UpdateChecksum();
+		/* Do the same with the Settings. */
+		this->Settings()->UpdateChecksum();
+	};
 };

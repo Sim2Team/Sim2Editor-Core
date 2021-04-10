@@ -27,79 +27,81 @@
 #include "SimUtils.hpp"
 #include "../Strings.hpp"
 
-/*
-	Returns the current time as a 24 Hr or 12 Hr string.
+namespace S2Editor {
+	/*
+		Returns the current time as a 24 Hr or 12 Hr string.
 
-	const uint16_t Time: The current time as an uint16_t.
-	const bool AMPM: If using AM / PM or 24 Hours.
+		const uint16_t Time: The current time as an uint16_t.
+		const bool AMPM: If using AM / PM or 24 Hours.
 
-	This Results in: '13:44' or '01:44 PM'.
-*/
-const std::string SimUtils::TimeString(const uint16_t Time, const bool AMPM) {
-	char TimeBuffer[(AMPM ? 11 : 8)];
-	const uint8_t Minute = (uint8_t)(Time >> 8), Hour = (uint8_t)Time;
+		This Results in: '13:44' or '01:44 PM'.
+	*/
+	const std::string SimUtils::TimeString(const uint16_t Time, const bool AMPM) {
+		char TimeBuffer[(AMPM ? 11 : 8)];
+		const uint8_t Minute = (uint8_t)(Time >> 8), Hour = (uint8_t)Time;
 
-	if (AMPM) {
-		snprintf(TimeBuffer, sizeof(TimeBuffer), "%02d:%02d %s", (Hour > 11 ? Hour - 12 : Hour), Minute, (Hour > 11 ? "PM" : "AM"));
+		if (AMPM) {
+			snprintf(TimeBuffer, sizeof(TimeBuffer), "%02d:%02d %s", (Hour > 11 ? Hour - 12 : Hour), Minute, (Hour > 11 ? "PM" : "AM"));
 
-	} else {
-		snprintf(TimeBuffer, sizeof(TimeBuffer), "%02d:%02d", Hour, Minute);
-	}
+		} else {
+			snprintf(TimeBuffer, sizeof(TimeBuffer), "%02d:%02d", Hour, Minute);
+		}
 
-	return TimeBuffer;
+		return TimeBuffer;
+	};
+
+	/*
+		Returns the current Simoleon amount as a string.
+
+		const uint32_t Simoleons: The current Simoleons.
+
+		This results in 123.456$.
+	*/
+	const std::string SimUtils::SimoleonsString(const uint32_t Simoleons) {
+		std::string SString = std::to_string(Simoleons);
+
+		/* Here we'll add the periods. */
+		switch(SString.size()) {
+			case 4:
+			case 5:
+			case 6:
+				SString.insert(SString.end() - 3, '.');
+				break;
+
+			case 7: // Technically, 7 Digits are possible too for the SAV, but that should never happen.
+			case 8:
+			case 9:
+				SString.insert(SString.end() - 6, '.');
+				SString.insert(SString.end() - 3, '.');
+				break;
+
+			default:
+				break;
+		}
+
+		SString.push_back('$'); // Simoleons sign.
+		return SString;
+	};
+
+	/*
+		Returns the current Ratings as a string.
+
+		const uint16_t Ratings: The current Ratings.
+
+		This results in 1.345.
+	*/
+	const std::string SimUtils::RatingString(const uint16_t Ratings) {
+		std::string RString = std::to_string(Ratings);
+
+		/* That's how it's handled in The Sims 2 GBA. If there are more THAN 3 digits, a '.' is being added. */
+		if (RString.size() > 3) RString.insert(RString.end() - 3, '.');
+		return RString;
+	};
+
+	/*
+		Return the Name from an GBA Item.
+
+		const uint8_t ID: The Item's ID.
+	*/
+	const std::string SimUtils::GBAItemName(const uint8_t ID) { return Strings::GBAItemNames_EN[ID]; };
 };
-
-/*
-	Returns the current Simoleon amount as a string.
-
-	const uint32_t Simoleons: The current Simoleons.
-
-	This results in 123.456$.
-*/
-const std::string SimUtils::SimoleonsString(const uint32_t Simoleons) {
-	std::string SString = std::to_string(Simoleons);
-
-	/* Here we'll add the periods. */
-	switch(SString.size()) {
-		case 4:
-		case 5:
-		case 6:
-			SString.insert(SString.end() - 3, '.');
-			break;
-
-		case 7: // Technically, 7 Digits are possible too for the SAV, but that should never happen.
-		case 8:
-		case 9:
-			SString.insert(SString.end() - 6, '.');
-			SString.insert(SString.end() - 3, '.');
-			break;
-
-		default:
-			break;
-	}
-
-	SString.push_back('$'); // Simoleons sign.
-	return SString;
-};
-
-/*
-	Returns the current Ratings as a string.
-
-	const uint16_t Ratings: The current Ratings.
-
-	This results in 1.345.
-*/
-const std::string SimUtils::RatingString(const uint16_t Ratings) {
-	std::string RString = std::to_string(Ratings);
-
-	/* That's how it's handled in The Sims 2 GBA. If there are more THAN 3 digits, a '.' is being added. */
-	if (RString.size() > 3) RString.insert(RString.end() - 3, '.');
-	return RString;
-};
-
-/*
-	Return the Name from an GBA Item.
-
-	const uint8_t ID: The Item's ID.
-*/
-const std::string SimUtils::GBAItemName(const uint8_t ID) { return Strings::GBAItemNames_EN[ID]; };

@@ -29,26 +29,28 @@
 
 #include "../shared/CoreCommon.hpp"
 
-class GBAEpisode {
-public:
-	GBAEpisode(const uint8_t Slot, const uint8_t Episode, const uint8_t Move = 0x0)
-		: Episode(Episode), Offs((Slot * 0x1000) + this->SetOffset(std::min<uint8_t>(Move, 10))) { };
+namespace S2Editor {
+	class GBAEpisode {
+	public:
+		GBAEpisode(const uint8_t Slot, const uint8_t Episode, const uint8_t Move = 0x0)
+			: Episode(Episode), Offs((Slot * 0x1000) + this->SetOffset(std::min<uint8_t>(Move, 10))) { };
 
-	uint8_t Index() const { return this->Episode; };
+		uint8_t Index() const { return this->Episode; };
 
-	uint8_t Rating(const uint8_t Category) const;
-	void Rating(const uint8_t Category, const uint8_t V);
+		uint8_t Rating(const uint8_t Category) const;
+		void Rating(const uint8_t Category, const uint8_t V);
 
-	bool State() const;
-	void State(const bool V);
-private:
-	uint8_t Episode = 0;
-	uint32_t Offs = 0;
+		bool State() const;
+		void State(const bool V);
+	private:
+		uint8_t Episode = 0;
+		uint32_t Offs = 0;
 
-	static constexpr uint32_t EPOffs[11] = { 0x104, 0x10E, 0x122, 0x11D, 0x131, 0x127, 0x14A, 0x140, 0x118, 0x16D, 0x168 }; // 11 Episodes.
+		static constexpr uint32_t EPOffs[11] = { 0x104, 0x10E, 0x122, 0x11D, 0x131, 0x127, 0x14A, 0x140, 0x118, 0x16D, 0x168 }; // 11 Episodes.
 
-	/* Sets the base offset for the Episodes. */
-	uint32_t SetOffset(const uint8_t Move) const { return this->EPOffs[this->Episode] + (Move * 0x6); };
+		/* Sets the base offset for the Episodes. */
+		uint32_t SetOffset(const uint8_t Move) const { return this->EPOffs[this->Episode] + (Move * 0x6); };
+	};
 };
 
 #endif

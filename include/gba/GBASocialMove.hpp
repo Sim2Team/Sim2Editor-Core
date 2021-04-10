@@ -29,27 +29,29 @@
 
 #include "../shared/CoreCommon.hpp"
 
-enum class SocialMoveFlag : uint8_t {
-	Locked = 0x0,
-	Unlocked = 0x1,
-	Blocked = 0x2
-};
+namespace S2Editor {
+	enum class SocialMoveFlag : uint8_t {
+		Locked = 0x0,
+		Unlocked = 0x1,
+		Blocked = 0x2
+	};
 
-class GBASocialMove {
-public:
-	GBASocialMove(const uint32_t Offs, const uint8_t Move)
-		: Move(Move), Offs(Offs) { };
+	class GBASocialMove {
+	public:
+		GBASocialMove(const uint32_t Offs, const uint8_t Move)
+			: Move(Move), Offs(Offs) { };
 
-	uint8_t Index() const { return this->Move; };
+		uint8_t Index() const { return this->Move; };
 
-	SocialMoveFlag Flag() const;
-	void Flag(const SocialMoveFlag V);
+		SocialMoveFlag Flag() const;
+		void Flag(const SocialMoveFlag V);
 
-	uint8_t Level() const;
-	void Level(const uint8_t V);
-private:
-	uint8_t Move = 0;
-	uint32_t Offs = 0;
+		uint8_t Level() const;
+		void Level(const uint8_t V);
+	private:
+		uint8_t Move = 0;
+		uint32_t Offs = 0;
+	};
 };
 
 #endif

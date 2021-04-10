@@ -29,44 +29,54 @@
 
 #include "CoreCommon.hpp"
 
-enum class GBAHouseItemDirection : uint8_t {
-	Right = 0x1,
-	Down = 0x3,
-	Left = 0x5,
-	Up = 0x7,
-	Invalid = 0xFF
-};
 
-class GBAHouseItem {
-public:
-	GBAHouseItem(const uint32_t Offset) : Offs(Offset) { };
 
-	uint8_t Count() const;
-	void Count(const uint8_t V);
+/*
+	NOTE:
+		Items from your Inventory and the ones from your House have different structures, hence it's a separate class.
+		Also the House Items are annoying handled as well.
+		Each item of the room changes the offsets to + 0x6 for data after 0xD6 of the SAVSlot.
+*/
+namespace S2Editor {
+	enum class GBAHouseItemDirection : uint8_t {
+		Right = 0x1,
+		Down = 0x3,
+		Left = 0x5,
+		Up = 0x7,
+		Invalid = 0xFF
+	};
 
-	uint8_t ID(const uint8_t Index) const;
-	void ID(const uint8_t Index, const uint8_t V);
+	class GBAHouseItem {
+	public:
+		GBAHouseItem(const uint32_t Offset) : Offs(Offset) { };
 
-	uint8_t Flag(const uint8_t Index) const;
-	void Flag(const uint8_t Index, const uint8_t V);
+		uint8_t Count() const;
+		void Count(const uint8_t V);
 
-	uint8_t UseCount(const uint8_t Index) const;
-	void UseCount(const uint8_t Index, const uint8_t V);
+		uint8_t ID(const uint8_t Index) const;
+		void ID(const uint8_t Index, const uint8_t V);
 
-	uint8_t XPos(const uint8_t Index) const;
-	void XPos(const uint8_t Index, const uint8_t V);
+		uint8_t Flag(const uint8_t Index) const;
+		void Flag(const uint8_t Index, const uint8_t V);
 
-	uint8_t YPos(const uint8_t Index) const;
-	void YPos(const uint8_t Index, const uint8_t V);
+		uint8_t UseCount(const uint8_t Index) const;
+		void UseCount(const uint8_t Index, const uint8_t V);
 
-	GBAHouseItemDirection Direction(const uint8_t Index) const;
-	void Direction(const uint8_t Index, const GBAHouseItemDirection V);
+		uint8_t XPos(const uint8_t Index) const;
+		void XPos(const uint8_t Index, const uint8_t V);
 
-	/* Add and Removes. */
-	bool AddItem(const uint8_t ID, const uint8_t Flag, const uint8_t UseCount, const uint8_t XPos, const uint8_t YPos, const GBAHouseItemDirection Direction);
-	bool RemoveItem(const uint8_t Index);
-private:
-	uint32_t Offs = 0;
+		uint8_t YPos(const uint8_t Index) const;
+		void YPos(const uint8_t Index, const uint8_t V);
+
+		GBAHouseItemDirection Direction(const uint8_t Index) const;
+		void Direction(const uint8_t Index, const GBAHouseItemDirection V);
+
+		/* Add and Removes. */
+		bool AddItem(const uint8_t ID, const uint8_t Flag, const uint8_t UseCount, const uint8_t XPos, const uint8_t YPos, const GBAHouseItemDirection Direction);
+		bool RemoveItem(const uint8_t Index);
+	private:
+		uint32_t Offs = 0;
+	};
 };
 
 #endif

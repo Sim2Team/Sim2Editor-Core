@@ -30,27 +30,29 @@
 #include "GBASettings.hpp"
 #include "GBASlot.hpp"
 
-class GBASAV {
-public:
-	GBASAV(const std::string &SAVFile);
+namespace S2Editor {
+	class GBASAV {
+	public:
+		GBASAV(const std::string &SAVFile);
 
-	bool SlotExist(const uint8_t Slot);
+		bool SlotExist(const uint8_t Slot);
 
-	/* Core Returns and Actions. */
-	std::unique_ptr<GBASlot> Slot(const uint8_t Slot);
-	std::unique_ptr<GBASettings> Settings() const;
-	void Finish();
+		/* Core Returns and Actions. */
+		std::unique_ptr<GBASlot> Slot(const uint8_t Slot);
+		std::unique_ptr<GBASettings> Settings() const;
+		void Finish();
 
-	/* Some Returns. */
-	uint32_t GetSize() const { return this->SAVSize; };
-	uint8_t *GetData() const { return this->SAVData.get(); };
-	bool GetValid() const { return this->SAVValid; };
-	bool GetChangesMade() const { return this->SAVChangesMade; };
-	void SetChangesMade(const bool V) { this->SAVChangesMade = V; };
-private:
-	std::unique_ptr<uint8_t[]> SAVData = nullptr;
-	uint32_t SAVSize = 0;
-	bool SAVValid = false, SAVChangesMade = false;
+		/* Some Returns. */
+		uint32_t GetSize() const { return this->SAVSize; };
+		uint8_t *GetData() const { return this->SAVData.get(); };
+		bool GetValid() const { return this->SAVValid; };
+		bool GetChangesMade() const { return this->SAVChangesMade; };
+		void SetChangesMade(const bool V) { this->SAVChangesMade = V; };
+	private:
+		std::unique_ptr<uint8_t[]> SAVData = nullptr;
+		uint32_t SAVSize = 0;
+		bool SAVValid = false, SAVChangesMade = false;
+	};
 };
 
 #endif

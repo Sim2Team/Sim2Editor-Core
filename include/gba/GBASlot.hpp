@@ -30,127 +30,129 @@
 #include "CoreCommon.hpp"
 #include "GBACast.hpp"
 #include "GBAEpisode.hpp"
-#include "GBAHouseItem.hpp"
+#include "GBAHouse.hpp"
 #include "GBAItem.hpp"
 #include "GBASocialMove.hpp"
 
-class GBASlot {
-public:
-	GBASlot(const uint8_t Slot) : Slot(Slot), Offs(Slot * 0x1000) { };
+namespace S2Editor {
+	class GBASlot {
+	public:
+		GBASlot(const uint8_t Slot) : Slot(Slot), Offs(Slot * 0x1000) { };
 
-	uint16_t Time() const;
-	void Time(const uint16_t V);
+		uint16_t Time() const;
+		void Time(const uint16_t V);
 
-	uint32_t Simoleons() const;
-	void Simoleons(const uint32_t V);
+		uint32_t Simoleons() const;
+		void Simoleons(const uint32_t V);
 
-	uint16_t Ratings() const;
-	void Ratings(const uint16_t V);
+		uint16_t Ratings() const;
+		void Ratings(const uint16_t V);
 
-	std::string Name() const;
-	void Name(const std::string &V);
+		std::string Name() const;
+		void Name(const std::string &V);
 
-	uint8_t Hairstyle() const;
-	void Hairstyle(const uint8_t V);
+		uint8_t Hairstyle() const;
+		void Hairstyle(const uint8_t V);
 
-	uint8_t Shirtcolor3() const;
-	void Shirtcolor3(const uint8_t V);
+		uint8_t Shirtcolor3() const;
+		void Shirtcolor3(const uint8_t V);
 
-	uint8_t Tan() const;
-	void Tan(const uint8_t V);
+		uint8_t Tan() const;
+		void Tan(const uint8_t V);
 
-	uint8_t Shirtcolor2() const;
-	void Shirtcolor2(const uint8_t V);
+		uint8_t Shirtcolor2() const;
+		void Shirtcolor2(const uint8_t V);
 
-	uint8_t Haircolor() const;
-	void Haircolor(const uint8_t V);
+		uint8_t Haircolor() const;
+		void Haircolor(const uint8_t V);
 
-	uint8_t Hatcolor() const;
-	void Hatcolor(const uint8_t V);
+		uint8_t Hatcolor() const;
+		void Hatcolor(const uint8_t V);
 
-	uint8_t Shirt() const;
-	void Shirt(const uint8_t V);
+		uint8_t Shirt() const;
+		void Shirt(const uint8_t V);
 
-	uint8_t Shirtcolor1() const;
-	void Shirtcolor1(const uint8_t V);
+		uint8_t Shirtcolor1() const;
+		void Shirtcolor1(const uint8_t V);
 
-	uint8_t Pants() const;
-	void Pants(const uint8_t V);
+		uint8_t Pants() const;
+		void Pants(const uint8_t V);
 
-	uint8_t Pantscolor() const;
-	void Pantscolor(const uint8_t V);
+		uint8_t Pantscolor() const;
+		void Pantscolor(const uint8_t V);
 
-	uint8_t Confidence() const;
-	void Confidence(const uint8_t V);
+		uint8_t Confidence() const;
+		void Confidence(const uint8_t V);
 
-	uint8_t Mechanical() const;
-	void Mechanical(const uint8_t V);
+		uint8_t Mechanical() const;
+		void Mechanical(const uint8_t V);
 
-	uint8_t Strength() const;
-	void Strength(const uint8_t V);
+		uint8_t Strength() const;
+		void Strength(const uint8_t V);
 
-	uint8_t Personality() const;
-	void Personality(const uint8_t V);
+		uint8_t Personality() const;
+		void Personality(const uint8_t V);
 
-	uint8_t Hotness() const;
-	void Hotness(const uint8_t V);
+		uint8_t Hotness() const;
+		void Hotness(const uint8_t V);
 
-	uint8_t Intellect() const;
-	void Intellect(const uint8_t V);
+		uint8_t Intellect() const;
+		void Intellect(const uint8_t V);
 
-	uint8_t Sanity() const;
-	void Sanity(const uint8_t V);
+		uint8_t Sanity() const;
+		void Sanity(const uint8_t V);
 
-	uint8_t Aspiration() const;
-	void Aspiration(const uint8_t V);
+		uint8_t Aspiration() const;
+		void Aspiration(const uint8_t V);
 
-	/* Items. */
-	std::unique_ptr<GBAItem> PawnShop() const;
-	std::unique_ptr<GBAItem> Saloon() const;
-	std::unique_ptr<GBAItem> Skills() const;
-	std::unique_ptr<GBAItem> Mailbox() const;
-	std::unique_ptr<GBAItem> Inventory() const;
-	std::unique_ptr<GBAHouseItem> House() const;
+		/* Items. */
+		std::unique_ptr<GBAItem> PawnShop() const;
+		std::unique_ptr<GBAItem> Saloon() const;
+		std::unique_ptr<GBAItem> Skills() const;
+		std::unique_ptr<GBAItem> Mailbox() const;
+		std::unique_ptr<GBAItem> Inventory() const;
+		std::unique_ptr<GBAHouse> House() const;
 
-	uint8_t Cans() const;
-	void Cans(const uint8_t V);
-	uint8_t CansPrice() const;
-	void CansPrice(const uint8_t V);
+		uint8_t Cans() const;
+		void Cans(const uint8_t V);
+		uint8_t CansPrice() const;
+		void CansPrice(const uint8_t V);
 
-    uint8_t Cowbells() const;
-    void Cowbells(const uint8_t V);
-    uint8_t CowbellsPrice() const;
-    void CowbellsPrice(const uint8_t v);
+    	uint8_t Cowbells() const;
+    	void Cowbells(const uint8_t V);
+    	uint8_t CowbellsPrice() const;
+    	void CowbellsPrice(const uint8_t v);
 
-    uint8_t Spaceship() const;
-    void Spaceship(const uint8_t V);
-    uint8_t SpaceshipPrice() const;
-    void SpaceshipPrice(const uint8_t V);
+    	uint8_t Spaceship() const;
+    	void Spaceship(const uint8_t V);
+    	uint8_t SpaceshipPrice() const;
+    	void SpaceshipPrice(const uint8_t V);
 
-    uint8_t Fuelrods() const;
-    void Fuelrods(const uint8_t V);
-    uint8_t FuelrodsPrice() const;
-    void FuelrodsPrice(const uint8_t V);
+    	uint8_t Fuelrods() const;
+    	void Fuelrods(const uint8_t V);
+    	uint8_t FuelrodsPrice() const;
+    	void FuelrodsPrice(const uint8_t V);
 
-	uint8_t CurrentEpisode() const;
-	void CurrentEpisode(const uint8_t V, const bool ValidCheck = true);
+		uint8_t CurrentEpisode() const;
+		void CurrentEpisode(const uint8_t V, const bool ValidCheck = true);
 
-	std::unique_ptr<GBAEpisode> Episode(const uint8_t EP) const;
-	std::unique_ptr<GBACast> Cast(const uint8_t CST) const;
-	std::unique_ptr<GBASocialMove> SocialMove(const uint8_t Move) const;
+		std::unique_ptr<GBAEpisode> Episode(const uint8_t EP) const;
+		std::unique_ptr<GBACast> Cast(const uint8_t CST) const;
+		std::unique_ptr<GBASocialMove> SocialMove(const uint8_t Move) const;
 
-	bool FixChecksum();
-private:
-	uint8_t Slot = 0;
-	uint32_t Offs = 0;
+		bool FixChecksum();
+	private:
+		uint8_t Slot = 0;
+		uint32_t Offs = 0;
 
-	uint32_t Offset(const uint32_t DefaultOffs = 0x0) const;
+		uint32_t Offset(const uint32_t DefaultOffs = 0x0) const;
 
-	/* This contains all official Episode Values found at offset (Slot * 0x1000) + 0x1A9. */
-	static constexpr uint8_t EPVals[12] = {
-		0x0, 0x1, 0x3, 0x7, // Tutorial + Season 1.
-		0x6, 0xA, 0x8, 0xF, // Season 2.
-		0xD, 0x5, 0x16, 0x15 // Season 3.
+		/* This contains all official Episode Values found at offset (Slot * 0x1000) + 0x1A9. */
+		static constexpr uint8_t EPVals[12] = {
+			0x0, 0x1, 0x3, 0x7, // Tutorial + Season 1.
+			0x6, 0xA, 0x8, 0xF, // Season 2.
+			0xD, 0x5, 0x16, 0x15 // Season 3.
+		};
 	};
 };
 

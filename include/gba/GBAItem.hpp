@@ -29,17 +29,30 @@
 
 #include "CoreCommon.hpp"
 
-class GBAItem {
-public:
-	GBAItem(const uint32_t Offset) : Offs(Offset) { };
+/*
+	NOTE:
+		Items from your Inventory and the one from your House have different structures, hence it's a separate class.
 
-	uint8_t Count() const;
-	void Count(const uint8_t V);
+		The GBAItem class can be moreso seen as like a package of 6 Items.
+		The Pawnshop, Saloon, Skillbook seller, Mailbox and the Inventory have 6 Item Slots.
+		The first byte contains the Item Count, while the following things contain the item data.
+		It still needs to be a bit more researched though, because there is still 0x3 of 0x4 bytes unresearched of the Item.
 
-	uint8_t ID(const uint8_t Index) const;
-	void ID(const uint8_t Index, const uint8_t V);
-private:
-	uint32_t Offs = 0;
+		0xE6 is known as an Empty Item ID.
+*/
+namespace S2Editor {
+	class GBAItem {
+	public:
+		GBAItem(const uint32_t Offset) : Offs(Offset) { };
+
+		uint8_t Count() const;
+		void Count(const uint8_t V);
+
+		uint8_t ID(const uint8_t Index) const;
+		void ID(const uint8_t Index, const uint8_t V);
+	private:
+		uint32_t Offs = 0;
+	};
 };
 
 #endif
