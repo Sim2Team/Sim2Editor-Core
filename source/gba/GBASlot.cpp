@@ -169,27 +169,31 @@ namespace S2Editor {
 	/* Get and Set Empty Chug-Chug Cola Cans Amount. */
 	uint8_t GBASlot::Cans() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xF6)); };
 	void GBASlot::Cans(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xF6), std::min<uint8_t>(250, V)); };
-	/* Get and Set Empty Chug-Chug Cola Cans Sell price. */
-	uint8_t GBASlot::CansPrice() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xFA)); };
-	void GBASlot::CansPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xFA), V); };
 
 	/* Get and Set Cowbells Amount. */
 	uint8_t GBASlot::Cowbells() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xF7)); };
 	void GBASlot::Cowbells(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xF7), std::min<uint8_t>(250, V)); };
-	/* Get and Set the Cowbells Sell price. */
-	uint8_t GBASlot::CowbellsPrice() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xFB)); };
-	void GBASlot::CowbellsPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xFB), V); };
 
 	/* Get and Set Alien Spaceship Parts Amount. */
 	uint8_t GBASlot::Spaceship() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xF8)); };
 	void GBASlot::Spaceship(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xF8), std::min<uint8_t>(250, V)); };
-	/* Get and Set Alien Spaceship Parts Sell price. */
-	uint8_t GBASlot::SpaceshipPrice() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xFC)); };
-	void GBASlot::SpaceshipPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xFC), V); };
 
 	/* Get and Set Nuclear Fuelrods Amount. */
 	uint8_t GBASlot::Fuelrods() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xF9)); };
 	void GBASlot::Fuelrods(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xF9), std::min<uint8_t>(250, V)); };
+
+	/* Get and Set Empty Chug-Chug Cola Cans Sell price. */
+	uint8_t GBASlot::CansPrice() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xFA)); };
+	void GBASlot::CansPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xFA), V); };
+
+	/* Get and Set the Cowbells Sell price. */
+	uint8_t GBASlot::CowbellsPrice() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xFB)); };
+	void GBASlot::CowbellsPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xFB), V); };
+
+	/* Get and Set Alien Spaceship Parts Sell price. */
+	uint8_t GBASlot::SpaceshipPrice() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xFC)); };
+	void GBASlot::SpaceshipPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xFC), V); };
+
 	/* Get and Set Nuclear Fuelrods Sell price. */
 	uint8_t GBASlot::FuelrodsPrice() const { return GBASAVUtils::Read<uint8_t>(this->Offset(0xFD)); };
 	void GBASlot::FuelrodsPrice(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offset(0xFD), V); };
@@ -225,19 +229,43 @@ namespace S2Editor {
 		}
 	};
 
+	/* Get and Set the Mystery Plot unlock state. */
+	bool GBASlot::MysteryPlot() const { return GBASAVUtils::ReadBit(this->Offset(0x1CF), 0x0); };
+	void GBASlot::MysteryPlot(const bool V) { GBASAVUtils::WriteBit(this->Offset(0x1CF), 0x0, V); };
+
+	/* Get and Set the Friendly Plot unlock state. */
+	bool GBASlot::FriendlyPlot() const { return GBASAVUtils::ReadBit(this->Offset(0x1CF), 0x1); };
+	void GBASlot::FriendlyPlot(const bool V) { GBASAVUtils::WriteBit(this->Offset(0x1CF), 0x1, V); };
+
+	/* Get and Set the Romance Plot unlock state. */
+	bool GBASlot::RomanticPlot() const { return GBASAVUtils::ReadBit(this->Offset(0x1CF), 0x2); };
+	void GBASlot::RomanticPlot(const bool V) { GBASAVUtils::WriteBit(this->Offset(0x1CF), 0x2, V); };
+
+	/* Get and Set the Intimidate Plot unlock state. */
+	bool GBASlot::IntimidatingPlot() const { return GBASAVUtils::ReadBit(this->Offset(0x1CF), 0x3); };
+	void GBASlot::IntimidatingPlot(const bool V) { GBASAVUtils::WriteBit(this->Offset(0x1CF), 0x3, V); };
+
+	/* Get and Set the Motorbike aka "The Chopper" unlock state */
+	bool GBASlot::TheChopperPlot() const { return GBASAVUtils::ReadBit(this->Offset(0x1CF), 0x4); };
+	void GBASlot::TheChopperPlot(const bool V) { GBASAVUtils::WriteBit(this->Offset(0x1CF), 0x4, V); };
+
+	/* Get and Set the Weirdness Plot unlock state. */
+	bool GBASlot::WeirdnessPlot() const { return GBASAVUtils::ReadBit(this->Offset(0x1CF), 0x5); };
+	void GBASlot::WeirdnessPlot(const bool V) { GBASAVUtils::WriteBit(this->Offset(0x1CF), 0x5, V); };
+
 	/* Get an Episode class. */
 	std::unique_ptr<GBAEpisode> GBASlot::Episode(const uint8_t EP) const {
 		return std::make_unique<GBAEpisode>(this->Slot, EP, GBASAVUtils::Read<uint8_t>(this->Offs + 0xD6));
 	};
 
-	/* Get a Cast class. */
-	std::unique_ptr<GBACast> GBASlot::Cast(const uint8_t CST) const {
-		return std::make_unique<GBACast>(this->Offset(0x466) + (std::min<uint8_t>(25, CST)) * 0xA, CST);
-	};
-
 	/* Get a Social Move class. */
 	std::unique_ptr<GBASocialMove> GBASlot::SocialMove(const uint8_t Move) const {
 		return std::make_unique<GBASocialMove>(this->Offset(0x3EA) + (std::min<uint8_t>(14, Move)) * 0x8, Move);
+	};
+
+	/* Get a Cast class. */
+	std::unique_ptr<GBACast> GBASlot::Cast(const uint8_t CST) const {
+		return std::make_unique<GBACast>(this->Offset(0x466) + (std::min<uint8_t>(25, CST)) * 0xA, CST);
 	};
 
 	/*

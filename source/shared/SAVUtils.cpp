@@ -248,8 +248,6 @@ namespace S2Editor {
 
 		return str;
 	};
-
-
 	/*
 		Write a string to a SAVBuffer.
 
@@ -268,19 +266,45 @@ namespace S2Editor {
 	};
 
 	/*
+		Return a bit from the SAVData.
+
+		const uint8_t *Buffer: The Buffer.
+		const uint32_t Offs: The Offset to read from.
+		const uint8_t BitIndex: The Bit index ( 0 - 7 ).
+	*/
+	const bool SAVUtils::ReadBit(const uint8_t *Buffer, const uint32_t Offs, const uint8_t BitIndex) {
+		if (!Buffer || BitIndex > 7) return false;
+
+		return (Buffer[Offs] >> BitIndex & 1) != 0;
+	};
+	/*
+		Set a bit to the SAVData.
+
+		uint8_t *Buffer: The Buffer.
+		const uint32_t Offs: The Offset to write to.
+		const uint8_t BitIndex: The Bit index ( 0 - 7 ).
+		const bool IsSet: If it's set (1) or not (0).
+	*/
+	void SAVUtils::WriteBit(uint8_t *Buffer, const uint32_t Offs, const uint8_t BitIndex, const bool IsSet) {
+		if (!Buffer || BitIndex > 7) return;
+
+		Buffer[Offs] &= ~(1 << BitIndex);
+		Buffer[Offs] |= (IsSet ? 1 : 0) << BitIndex;
+	};
+
+	/*
 		Read Lower / Upper Bits.
 
 		const uint8_t *Buffer: The Buffer.
 		const uint32_t Offs: The offset where to read from.
 		const bool First: If Reading from the first four bits, or second.
 	*/
-	uint8_t SAVUtils::ReadBits(const uint8_t *Buffer, const uint32_t Offs, const bool First) {
+	const uint8_t SAVUtils::ReadBits(const uint8_t *Buffer, const uint32_t Offs, const bool First) {
 		if (!Buffer) return 0x0;
 
 		if (First) return (Buffer[Offs] & 0xF); // Bit 0 - 3.
 		else return (Buffer[Offs] >> 4); // Bit 4 - 7.
 	};
-
 	/*
 		Write Lower / Upper Bits.
 
@@ -297,7 +321,31 @@ namespace S2Editor {
 	};
 
 
-	/* GBA and NDS Stuff here. */
+
+	/*
+		Read a bit from the SAVData.
+
+		const uint32_t Offs: The Offset where to read from.
+		const uint8_t BitIndex: The bit index ( 0 - 7 ).
+	*/
+	const bool GBASAVUtils::ReadBit(const uint32_t Offs, const uint8_t BitIndex) {
+		if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid() || BitIndex > 0x7) return false;
+
+		return SAVUtils::ReadBit(GBASAVUtils::SAV->GetData(), Offs, BitIndex);
+	};
+	/*
+		Write a bit to the SAVData.
+
+		const uint32_t Offs: The Offset where to write to.
+		const uint8_t BitIndex: The bit index ( 0 - 7 ).
+		const bool IsSet: If the bit is set (1) or not (0).
+	*/
+	void GBASAVUtils::WriteBit(const uint32_t Offs, const uint8_t BitIndex, const bool IsSet) {
+		if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid() || BitIndex > 0x7) return;
+
+		SAVUtils::WriteBit(GBASAVUtils::SAV->GetData(), Offs, BitIndex, IsSet);
+		if (!GBASAVUtils::SAV->GetChangesMade()) GBASAVUtils::SAV->SetChangesMade(true);
+	};
 
 	/*
 		Read Lower / Upperbits from the SAVBuffer.
@@ -305,12 +353,11 @@ namespace S2Editor {
 		const uint32_t Offs: The Offset where to read from.
 		const bool First: If reading from the first 4 bits, or the last 4.
 	*/
-	uint8_t GBASAVUtils::ReadBits(const uint32_t Offs, const bool First) {
+	const uint8_t GBASAVUtils::ReadBits(const uint32_t Offs, const bool First) {
 		if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid()) return 0;
 
 		return SAVUtils::ReadBits(GBASAVUtils::SAV->GetData(), Offs, First);
 	};
-
 	/*
 		Write Lower / Upperbits to the SAVBuffer.
 
@@ -325,18 +372,44 @@ namespace S2Editor {
 		if (!GBASAVUtils::SAV->GetChangesMade()) GBASAVUtils::SAV->SetChangesMade(true);
 	};
 
+
+
+	/*
+		Read a bit from the SAVData.
+
+		const uint32_t Offs: The Offset where to read from.
+		const uint8_t BitIndex: The bit index ( 0 - 7 ).
+	*/
+	const bool NDSSAVUtils::ReadBit(const uint32_t Offs, const uint8_t BitIndex) {
+		if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid() || BitIndex > 0x7) return false;
+
+		return SAVUtils::ReadBit(NDSSAVUtils::SAV->GetData(), Offs, BitIndex);
+	};
+	/*
+		Write a bit to the SAVData.
+
+		const uint32_t Offs: The Offset where to write to.
+		const uint8_t BitIndex: The bit index ( 0 - 7 ).
+		const bool IsSet: If the bit is set (1) or not (0).
+	*/
+	void NDSSAVUtils::WriteBit(const uint32_t Offs, const uint8_t BitIndex, const bool IsSet) {
+		if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid() || BitIndex > 0x7) return;
+
+		SAVUtils::WriteBit(NDSSAVUtils::SAV->GetData(), Offs, BitIndex, IsSet);
+		if (!NDSSAVUtils::SAV->GetChangesMade()) NDSSAVUtils::SAV->SetChangesMade(true);
+	};
+
 	/*
 		Read Lower / Upperbits from the SAVBuffer.
 
 		const uint32_t Offs: The Offset where to read from.
 		const bool First: If reading from the first 4 bits, or the last 4.
 	*/
-	uint8_t NDSSAVUtils::ReadBits(const uint32_t Offs, const bool First) {
+	const uint8_t NDSSAVUtils::ReadBits(const uint32_t Offs, const bool First) {
 		if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid()) return 0;
 
 		return SAVUtils::ReadBits(NDSSAVUtils::SAV->GetData(), Offs, First);
 	};
-
 	/*
 		Write Lower / Upperbits to the SAVBuffer.
 

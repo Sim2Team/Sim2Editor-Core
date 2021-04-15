@@ -34,36 +34,31 @@ namespace S2Editor {
 	public:
 		NDSSlot(const uint8_t Slot) : Slot(Slot), Offs(Slot * 0x1000) { };
 
+		/* Main things. */
 		uint32_t Simoleons() const;
 		void Simoleons(const uint32_t V);
-
 		std::string Name() const;
 		void Name(const std::string &V);
 
+		/* Collectables. */
 		uint8_t Fuelrods() const;
 		void Fuelrods(const uint8_t V);
-
 		uint8_t Plates() const;
 		void Plates(const uint8_t V);
-
 		uint8_t Gourds() const;
 		void Gourds(const uint8_t V);
-
 		uint8_t Spaceship() const;
 		void Spaceship(const uint8_t V);
 
+		/* Skill Points. */
 		uint8_t Creativity() const;
 		void Creativity(const uint8_t V);
-
 		uint8_t Business() const;
 		void Business(const uint8_t V);
-
 		uint8_t Body() const;
 		void Body(const uint8_t V);
-
 		uint8_t Charisma() const;
 		void Charisma(const uint8_t V);
-
 		uint8_t Mechanical() const;
 		void Mechanical(const uint8_t V);
 

@@ -56,22 +56,22 @@ namespace S2Editor {
 		uint8_t ID(const uint8_t Index) const;
 		void ID(const uint8_t Index, const uint8_t V);
 
+		/* Flag and Use count. */
 		uint8_t Flag(const uint8_t Index) const;
 		void Flag(const uint8_t Index, const uint8_t V);
-
 		uint8_t UseCount(const uint8_t Index) const;
 		void UseCount(const uint8_t Index, const uint8_t V);
 
+		/* Positions. */
 		uint8_t XPos(const uint8_t Index) const;
 		void XPos(const uint8_t Index, const uint8_t V);
-
 		uint8_t YPos(const uint8_t Index) const;
 		void YPos(const uint8_t Index, const uint8_t V);
 
 		GBAHouseItemDirection Direction(const uint8_t Index) const;
 		void Direction(const uint8_t Index, const GBAHouseItemDirection V);
 
-		/* Add and Removes. */
+		/* Add and Remove. */
 		bool AddItem(const uint8_t ID, const uint8_t Flag, const uint8_t UseCount, const uint8_t XPos, const uint8_t YPos, const GBAHouseItemDirection Direction);
 		bool RemoveItem(const uint8_t Index);
 	private:

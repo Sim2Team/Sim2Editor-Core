@@ -29,6 +29,7 @@
 
 #include "../gba/GBASav.hpp"
 #include "../nds/NDSSav.hpp"
+#include <cstring>
 
 namespace S2Editor {
 	/*
@@ -48,7 +49,11 @@ namespace S2Editor {
 
 		const std::string ReadString(const uint8_t *Buffer, const uint32_t Offset, const uint32_t Length);
 		void WriteString(uint8_t *Buffer, const uint32_t Offset, const uint32_t Length, const std::string &Str);
-		uint8_t ReadBits(const uint8_t *Buffer, const uint32_t Offs, const bool First);
+
+		/* BIT stuff. */
+		const bool ReadBit(const uint8_t *Buffer, const uint32_t Offs, const uint8_t BitIndex);
+		void WriteBit(uint8_t *Buffer, const uint32_t Offs, const uint8_t BitIndex, const bool IsSet);
+		const uint8_t ReadBits(const uint8_t *Buffer, const uint32_t Offs, const bool First);
 		void WriteBits(uint8_t *Buffer, const uint32_t Offs, const bool First, const uint8_t Data);
 	};
 
@@ -63,27 +68,36 @@ namespace S2Editor {
 			const uint32_t Offs: The Offset from where to read.
 		*/
 		template <typename T>
-		const T Read(const uint32_t Offs) {
+		T Read(const uint32_t Offs) {
 			if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid()) return 0; // Return 0, if nullptr OR invalid.
 
-			return *reinterpret_cast<T *>(GBASAVUtils::SAV->GetData() + Offs);
+			T Res = 0;
+			memcpy(&Res, GBASAVUtils::SAV->GetData() + Offs, sizeof(T));
+			return Res;
 		};
 
 		/*
 			Write to the SAVBuffer.
 
 			const uint32_t Offs: The Offset where to write to.
-			const T Data: The data which to write.
+			T Data: The data which to write.
 		*/
 		template <typename T>
-		void Write(const uint32_t Offs, const T Data) {
+		void Write(const uint32_t Offs, T Data) {
 			if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid()) return;
 
-			*reinterpret_cast<T *>(GBASAVUtils::SAV->GetData() + Offs) = Data;
+			for (size_t Idx = 0; Idx < sizeof(T); Idx++) {
+				GBASAVUtils::SAV->GetData()[Offs + Idx] = (uint8_t)Data;
+				Data >>= 8; // Go to next byte.
+			}
+
 			if (!GBASAVUtils::SAV->GetChangesMade()) GBASAVUtils::SAV->SetChangesMade(true);
 		};
 
-		uint8_t ReadBits(const uint32_t Offs, const bool First = true);
+		/* BIT stuff. */
+		const bool ReadBit(const uint32_t Offs, const uint8_t BitIndex);
+		void WriteBit(const uint32_t Offs, const uint8_t BitIndex, const bool IsSet);
+		const uint8_t ReadBits(const uint32_t Offs, const bool First = true);
 		void WriteBits(const uint32_t Offs, const bool First = true, const uint8_t Data = 0x0);
 	};
 
@@ -97,28 +111,36 @@ namespace S2Editor {
 			const uint32_t Offs: The Offset from where to read.
 		*/
 		template <typename T>
-		const T Read(const uint32_t Offs) {
+		T Read(const uint32_t Offs) {
 			if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid()) return 0; // Return 0, if nullptr OR invalid.
 
-			return *reinterpret_cast<T *>(NDSSAVUtils::SAV->GetData() + Offs);
+			T Res = 0;
+			memcpy(&Res, NDSSAVUtils::SAV->GetData() + Offs, sizeof(T));
+			return Res;
 		};
 
 		/*
 			Write to the SAVBuffer.
 
 			const uint32_t Offs: The Offset where to write to.
-			const T Data: The data which to write.
+			T Data: The data which to write.
 		*/
 		template <typename T>
-		void Write(const uint32_t Offs, const T Data) {
+		void Write(const uint32_t Offs, T Data) {
 			if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid()) return;
 
-			*reinterpret_cast<T *>(NDSSAVUtils::SAV->GetData() + Offs) = Data;
+			for (size_t Idx = 0; Idx < sizeof(T); Idx++) {
+				NDSSAVUtils::SAV->GetData()[Offs + Idx] = (uint8_t)Data;
+				Data >>= 8; // Go to next byte.
+			}
+
 			if (!NDSSAVUtils::SAV->GetChangesMade()) NDSSAVUtils::SAV->SetChangesMade(true);
 		};
 
-
-		uint8_t ReadBits(const uint32_t Offs, const bool First = true);
+		/* BIT stuff. */
+		const bool ReadBit(const uint32_t Offs, const uint8_t BitIndex);
+		void WriteBit(const uint32_t Offs, const uint8_t BitIndex, const bool IsSet);
+		const uint8_t ReadBits(const uint32_t Offs, const bool First = true);
 		void WriteBits(const uint32_t Offs, const bool First = true, const uint8_t Data = 0x0);
 	};
 };

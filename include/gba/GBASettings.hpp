@@ -44,9 +44,9 @@ namespace S2Editor {
 	public:
 		GBASettings() { };
 
+		/* Volume Levels. */
 		uint8_t SFX() const;
 		void SFX(const uint8_t V);
-
 		uint8_t Music() const;
 		void Music(const uint8_t V);
 

@@ -32,11 +32,7 @@
 #include <string>
 
 namespace S2Editor {
-	enum class SAVType {
-		_GBA,
-		_NDS,
-		_NONE
-	};
+	enum class SAVType { _GBA, _NDS, _NONE };
 };
 
 #endif
