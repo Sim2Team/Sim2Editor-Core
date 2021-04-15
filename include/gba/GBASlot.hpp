@@ -102,22 +102,22 @@ namespace S2Editor {
 		/* Collectables Amount. */
 		uint8_t Cans() const;
 		void Cans(const uint8_t V);
-    	uint8_t Cowbells() const;
-    	void Cowbells(const uint8_t V);
-    	uint8_t Spaceship() const;
-    	void Spaceship(const uint8_t V);
-    	uint8_t Fuelrods() const;
-    	void Fuelrods(const uint8_t V);
+		uint8_t Cowbells() const;
+		void Cowbells(const uint8_t V);
+		uint8_t Spaceship() const;
+		void Spaceship(const uint8_t V);
+		uint8_t Fuelrods() const;
+		void Fuelrods(const uint8_t V);
 
 		/* Collectables Price. */
 		uint8_t CansPrice() const;
 		void CansPrice(const uint8_t V);
-    	uint8_t CowbellsPrice() const;
-    	void CowbellsPrice(const uint8_t v);
-    	uint8_t SpaceshipPrice() const;
-    	void SpaceshipPrice(const uint8_t V);
-    	uint8_t FuelrodsPrice() const;
-    	void FuelrodsPrice(const uint8_t V);
+		uint8_t CowbellsPrice() const;
+		void CowbellsPrice(const uint8_t v);
+		uint8_t SpaceshipPrice() const;
+		void SpaceshipPrice(const uint8_t V);
+		uint8_t FuelrodsPrice() const;
+		void FuelrodsPrice(const uint8_t V);
 
 		/* Episode stuff. */
 		uint8_t CurrentEpisode() const;
