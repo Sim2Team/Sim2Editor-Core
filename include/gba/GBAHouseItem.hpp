@@ -29,8 +29,6 @@
 
 #include "CoreCommon.hpp"
 
-
-
 /*
 	NOTE:
 		Items from your Inventory and the ones from your House have different structures, hence it's a separate class.

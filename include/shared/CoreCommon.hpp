@@ -27,6 +27,7 @@
 #ifndef _SIM2EDITOR_CPP_CORE_COMMON_HPP
 #define _SIM2EDITOR_CPP_CORE_COMMON_HPP
 
+#include <cstring>
 #include <math.h>
 #include <memory>
 #include <string>

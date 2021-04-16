@@ -34,8 +34,8 @@ namespace S2Editor {
 	void NDSSlot::Simoleons(uint32_t V) { NDSSAVUtils::Write<uint32_t>(this->Offs + 0x2C, (std::min<uint32_t>(999999, V))); };
 
 	/* Get and Set Name. */
-	std::string NDSSlot::Name() const { return SAVUtils::ReadString(NDSSAVUtils::SAV->GetData(), this->Offs + 0x30, 0x7); };
-	void NDSSlot::Name(const std::string &V) { SAVUtils::WriteString(NDSSAVUtils::SAV->GetData(), this->Offs + 0x30, 0x7, V); };
+	std::string NDSSlot::Name() const { return NDSSAVUtils::ReadString(this->Offs + 0x30, 0x7); };
+	void NDSSlot::Name(const std::string &V) { NDSSAVUtils::WriteString(this->Offs + 0x30, 0x7, V); };
 
 	/* Get and Set Nuclear Fuelrods. */
 	uint8_t NDSSlot::Fuelrods() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0xBC); };

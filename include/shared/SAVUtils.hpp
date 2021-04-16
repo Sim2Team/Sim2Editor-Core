@@ -27,9 +27,9 @@
 #ifndef _SIM2EDITOR_CPP_CORE_SAV_UTILS_HPP
 #define _SIM2EDITOR_CPP_CORE_SAV_UTILS_HPP
 
+#include "DataHelper.hpp"
 #include "../gba/GBASav.hpp"
 #include "../nds/NDSSav.hpp"
-#include <cstring>
 
 namespace S2Editor {
 	/*
@@ -46,15 +46,6 @@ namespace S2Editor {
 		bool CreateBackup(const std::string &BasePath);
 		void Finish();
 		bool ChangesMade();
-
-		const std::string ReadString(const uint8_t *Buffer, const uint32_t Offset, const uint32_t Length);
-		void WriteString(uint8_t *Buffer, const uint32_t Offset, const uint32_t Length, const std::string &Str);
-
-		/* BIT stuff. */
-		const bool ReadBit(const uint8_t *Buffer, const uint32_t Offs, const uint8_t BitIndex);
-		void WriteBit(uint8_t *Buffer, const uint32_t Offs, const uint8_t BitIndex, const bool IsSet);
-		const uint8_t ReadBits(const uint8_t *Buffer, const uint32_t Offs, const bool First);
-		void WriteBits(uint8_t *Buffer, const uint32_t Offs, const bool First, const uint8_t Data);
 	};
 
 
@@ -69,11 +60,8 @@ namespace S2Editor {
 		*/
 		template <typename T>
 		T Read(const uint32_t Offs) {
-			if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid()) return 0; // Return 0, if nullptr OR invalid.
-
-			T Res = 0;
-			memcpy(&Res, GBASAVUtils::SAV->GetData() + Offs, sizeof(T));
-			return Res;
+			if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetData()) return 0;
+			return DataHelper::Read<T>(GBASAVUtils::SAV->GetData(), Offs);
 		};
 
 		/*
@@ -86,12 +74,9 @@ namespace S2Editor {
 		void Write(const uint32_t Offs, T Data) {
 			if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid()) return;
 
-			for (size_t Idx = 0; Idx < sizeof(T); Idx++) {
-				GBASAVUtils::SAV->GetData()[Offs + Idx] = (uint8_t)Data;
-				Data >>= 8; // Go to next byte.
+			if (DataHelper::Write<T>(GBASAVUtils::SAV->GetData(), Offs, Data)) {
+				if (!GBASAVUtils::SAV->GetChangesMade()) GBASAVUtils::SAV->SetChangesMade(true);
 			}
-
-			if (!GBASAVUtils::SAV->GetChangesMade()) GBASAVUtils::SAV->SetChangesMade(true);
 		};
 
 		/* BIT stuff. */
@@ -99,6 +84,9 @@ namespace S2Editor {
 		void WriteBit(const uint32_t Offs, const uint8_t BitIndex, const bool IsSet);
 		const uint8_t ReadBits(const uint32_t Offs, const bool First = true);
 		void WriteBits(const uint32_t Offs, const bool First = true, const uint8_t Data = 0x0);
+
+		const std::string ReadString(const uint32_t Offs, const uint32_t Length);
+		void WriteString(const uint32_t Offs, const uint32_t Length, const std::string &Str);
 	};
 
 	/* SAVUtils for NDS. */
@@ -112,11 +100,8 @@ namespace S2Editor {
 		*/
 		template <typename T>
 		T Read(const uint32_t Offs) {
-			if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid()) return 0; // Return 0, if nullptr OR invalid.
-
-			T Res = 0;
-			memcpy(&Res, NDSSAVUtils::SAV->GetData() + Offs, sizeof(T));
-			return Res;
+			if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetData()) return 0;
+			return DataHelper::Read<T>(NDSSAVUtils::SAV->GetData(), Offs);
 		};
 
 		/*
@@ -129,12 +114,9 @@ namespace S2Editor {
 		void Write(const uint32_t Offs, T Data) {
 			if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid()) return;
 
-			for (size_t Idx = 0; Idx < sizeof(T); Idx++) {
-				NDSSAVUtils::SAV->GetData()[Offs + Idx] = (uint8_t)Data;
-				Data >>= 8; // Go to next byte.
+			if (DataHelper::Write<T>(NDSSAVUtils::SAV->GetData(), Offs, Data)) {
+				if (!NDSSAVUtils::SAV->GetChangesMade()) NDSSAVUtils::SAV->SetChangesMade(true);
 			}
-
-			if (!NDSSAVUtils::SAV->GetChangesMade()) NDSSAVUtils::SAV->SetChangesMade(true);
 		};
 
 		/* BIT stuff. */
@@ -142,6 +124,9 @@ namespace S2Editor {
 		void WriteBit(const uint32_t Offs, const uint8_t BitIndex, const bool IsSet);
 		const uint8_t ReadBits(const uint32_t Offs, const bool First = true);
 		void WriteBits(const uint32_t Offs, const bool First = true, const uint8_t Data = 0x0);
+
+		const std::string ReadString(const uint32_t Offs, const uint32_t Length);
+		void WriteString(const uint32_t Offs, const uint32_t Length, const std::string &Str);
 	};
 };
 

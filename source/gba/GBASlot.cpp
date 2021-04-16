@@ -36,7 +36,7 @@ namespace S2Editor {
 		const uint32_t DefaultOffs: The Default Offset, for things without an Item in your house.
 	*/
 	uint32_t GBASlot::Offset(const uint32_t DefaultOffs) const {
-		return this->Offs + DefaultOffs + (GBASAVUtils::Read<uint8_t>(this->Offs + 0xD6) * 0x6);
+		return (this->Offs + DefaultOffs) + (GBASAVUtils::Read<uint8_t>(this->Offs + 0xD6) * 0x6);
 	};
 
 
@@ -53,8 +53,8 @@ namespace S2Editor {
 	void GBASlot::Ratings(const uint16_t V) { GBASAVUtils::Write<uint16_t>(this->Offs + 0xA, std::min<uint16_t>(9999, V)); };
 
 	/* Get and Set Name. */
-	std::string GBASlot::Name() const { return SAVUtils::ReadString(GBASAVUtils::SAV->GetData(), this->Offs + 0xD, 0x8); };
-	void GBASlot::Name(const std::string &V) { SAVUtils::WriteString(GBASAVUtils::SAV->GetData(), this->Offs + 0xD, 0x8, V); };
+	std::string GBASlot::Name() const { return GBASAVUtils::ReadString(this->Offs + 0xD, 0x8); };
+	void GBASlot::Name(const std::string &V) { GBASAVUtils::WriteString(this->Offs + 0xD, 0x8, V); };
 
 	/* Get and Set Hairstyle. */
 	uint8_t GBASlot::Hairstyle() const { return GBASAVUtils::ReadBits(this->Offs + 0x1D, false) / 2; };

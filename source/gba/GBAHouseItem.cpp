@@ -26,7 +26,6 @@
 
 #include "GBAHouseItem.hpp"
 #include "../shared/SAVUtils.hpp"
-#include <cstring>
 
 namespace S2Editor {
 	/* Get and Set the Item Count. */
