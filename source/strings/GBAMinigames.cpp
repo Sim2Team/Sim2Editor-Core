@@ -24,23 +24,16 @@
 *         reasonable ways as different from the original version.
 */
 
-#ifndef _SIM2EDITOR_CPP_CORE_STRINGS_HPP
-#define _SIM2EDITOR_CPP_CORE_STRINGS_HPP
-
-#include <string>
-#include <vector>
+#include "Strings.hpp"
 
 namespace S2Editor {
-	namespace Strings {
-		extern const std::vector<std::string> GBACastNames_DE, GBACastNames_EN; // GBA Casts.
-		extern const std::vector<std::string> GBASocialMoveNames_DE, GBASocialMoveNames_EN; // GBA Social Moves.
-		extern const std::vector<std::string> GBAEpisodeNames_DE, GBAEpisodeNames_EN; // GBA Episodes.
-		extern const std::vector<std::string> GBASkillPointNames_DE, GBASkillPointNames_EN; // GBA Skill Points.
-		extern const std::vector<std::string> GBAItemNames_EN; // GBA Item Names.
-		extern const std::vector<std::string> GBAMinigameNames_DE, GBAMinigameNames_EN; // GBA Minigames.
+	const std::vector<std::string> Strings::GBAMinigameNames_DE = {
+		"Bigfoot liebt Hühnchen", "Autowerbung", "Piraten-Kartenspiel",
+		"Frühjahrsputz", "Cola-Werbung", "Felsenspringer", "Klopp-Shop"
+	};
 
-		extern const std::vector<std::string> NDSSkillPointNames_DE, NDSSkillPointNames_EN;
+	const std::vector<std::string> Strings::GBAMinigameNames_EN = {
+		"Bigfoot Love Chickens", "Car Commercial", "Keelhaulin' Cards",
+		"Cattle Cleanup", "King Chug Chug", "Canyon Jumping", "Chop Shop"
 	};
 };
-
-#endif

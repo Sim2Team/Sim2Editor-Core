@@ -24,23 +24,20 @@
 *         reasonable ways as different from the original version.
 */
 
-#ifndef _SIM2EDITOR_CPP_CORE_STRINGS_HPP
-#define _SIM2EDITOR_CPP_CORE_STRINGS_HPP
-
-#include <string>
-#include <vector>
+#include "GBAMinigame.hpp"
+#include "../shared/SAVUtils.hpp"
 
 namespace S2Editor {
-	namespace Strings {
-		extern const std::vector<std::string> GBACastNames_DE, GBACastNames_EN; // GBA Casts.
-		extern const std::vector<std::string> GBASocialMoveNames_DE, GBASocialMoveNames_EN; // GBA Social Moves.
-		extern const std::vector<std::string> GBAEpisodeNames_DE, GBAEpisodeNames_EN; // GBA Episodes.
-		extern const std::vector<std::string> GBASkillPointNames_DE, GBASkillPointNames_EN; // GBA Skill Points.
-		extern const std::vector<std::string> GBAItemNames_EN; // GBA Item Names.
-		extern const std::vector<std::string> GBAMinigameNames_DE, GBAMinigameNames_EN; // GBA Minigames.
+	/* Get and Set if you played that game already today. */
+	bool GBAMinigame::Played() const { return GBASAVUtils::ReadBit(this->Offs, this->Game); };
+	void GBAMinigame::Played(const bool V) { GBASAVUtils::WriteBit(this->Offs, this->Game, V); };
 
-		extern const std::vector<std::string> NDSSkillPointNames_DE, NDSSkillPointNames_EN;
+	/* Get and Set the Minigame Level. */
+	uint8_t GBAMinigame::Level() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x24 + this->Game); };
+	void GBAMinigame::Level(const uint8_t V, const bool MetaData) {
+		GBASAVUtils::Write<uint8_t>(this->Offs + 0x24 + this->Game, std::min<uint8_t>(5, V));
+
+		/* Optionally: Set to Metadata / Settings as well. */
+		if (MetaData) GBASAVUtils::WriteBits(0x10 + (this->Game / 2), ((this->Game % 2) == 0), std::min<uint8_t>(5, V));
 	};
 };
-
-#endif

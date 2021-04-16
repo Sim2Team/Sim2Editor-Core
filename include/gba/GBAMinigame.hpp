@@ -24,22 +24,26 @@
 *         reasonable ways as different from the original version.
 */
 
-#ifndef _SIM2EDITOR_CPP_CORE_STRINGS_HPP
-#define _SIM2EDITOR_CPP_CORE_STRINGS_HPP
+#ifndef _SIM2EDITOR_CPP_CORE_GBA_MINIGAMES_HPP
+#define _SIM2EDITOR_CPP_CORE_GBA_MINIGAMES_HPP
 
-#include <string>
-#include <vector>
+#include "../shared/CoreCommon.hpp"
 
 namespace S2Editor {
-	namespace Strings {
-		extern const std::vector<std::string> GBACastNames_DE, GBACastNames_EN; // GBA Casts.
-		extern const std::vector<std::string> GBASocialMoveNames_DE, GBASocialMoveNames_EN; // GBA Social Moves.
-		extern const std::vector<std::string> GBAEpisodeNames_DE, GBAEpisodeNames_EN; // GBA Episodes.
-		extern const std::vector<std::string> GBASkillPointNames_DE, GBASkillPointNames_EN; // GBA Skill Points.
-		extern const std::vector<std::string> GBAItemNames_EN; // GBA Item Names.
-		extern const std::vector<std::string> GBAMinigameNames_DE, GBAMinigameNames_EN; // GBA Minigames.
+	class GBAMinigame {
+	public:
+		GBAMinigame(const uint32_t Offs, const uint8_t Game) : Game(std::min<uint8_t>(6, Game)), Offs(Offs) { };
 
-		extern const std::vector<std::string> NDSSkillPointNames_DE, NDSSkillPointNames_EN;
+		uint8_t Index() const { return this->Game; };
+
+		bool Played() const;
+		void Played(const bool V);
+
+		uint8_t Level() const;
+		void Level(const uint8_t V, const bool MetaData = false);
+	private:
+		uint8_t Game = 0;
+		uint32_t Offs = 0;
 	};
 };
 

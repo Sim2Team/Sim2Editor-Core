@@ -32,6 +32,7 @@
 #include "GBAEpisode.hpp"
 #include "GBAHouse.hpp"
 #include "GBAItem.hpp"
+#include "GBAMinigame.hpp"
 #include "GBASocialMove.hpp"
 
 namespace S2Editor {
@@ -122,6 +123,9 @@ namespace S2Editor {
 		/* Episode stuff. */
 		uint8_t CurrentEpisode() const;
 		void CurrentEpisode(const uint8_t V, const bool ValidCheck = true);
+
+		/* Minigames. */
+		std::unique_ptr<GBAMinigame> Minigame(const uint8_t Game);
 
 		/* Plot Points stuff. */
 		bool MysteryPlot() const;

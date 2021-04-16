@@ -229,6 +229,11 @@ namespace S2Editor {
 		}
 	};
 
+	/* Get a Minigame class. */
+	std::unique_ptr<GBAMinigame> GBASlot::Minigame(const uint8_t Game) {
+		return std::make_unique<GBAMinigame>(this->Offset(0x1AD), Game);
+	};
+
 	/* Get and Set the Mystery Plot unlock state. */
 	bool GBASlot::MysteryPlot() const { return GBASAVUtils::ReadBit(this->Offset(0x1CF), 0x0); };
 	void GBASlot::MysteryPlot(const bool V) { GBASAVUtils::WriteBit(this->Offset(0x1CF), 0x0, V); };
