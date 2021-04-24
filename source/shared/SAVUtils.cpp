@@ -52,21 +52,21 @@ namespace S2Editor {
 		SAVType ST = SAVType::_NONE;
 
 		if (access(File.c_str(), F_OK) != 0) return ST;
-		FILE *in = fopen(File.c_str(), "r");
+		FILE *In = fopen(File.c_str(), "r");
 
-		if (in) {
-			fseek(in, 0, SEEK_END);
-			const uint32_t SIZE = ftell(in);
-			fseek(in, 0, SEEK_SET);
+		if (In) {
+			fseek(In, 0, SEEK_END);
+			const uint32_t Size = ftell(In);
+			fseek(In, 0, SEEK_SET);
 
 			std::unique_ptr<uint8_t[]> Data = nullptr;
 			uint8_t Count = 0;
 
-			switch(SIZE) {
+			switch(Size) {
 				case 0x10000:
 				case 0x20000: // 64, 128 KB is a GBA Size.
 					Data = std::make_unique<uint8_t[]>(0x7);
-					fread(Data.get(), 1, 0x7, in); // Read the first 0x7 byte (Header).
+					fread(Data.get(), 1, 0x7, In); // Read the first 0x7 byte (Header).
 
 					for (uint8_t ID = 0; ID < 7; ID++) { if (Data.get()[ID] == GBAIdent[ID]) Count++; }; // Identifier Check.
 
@@ -75,8 +75,8 @@ namespace S2Editor {
 
 				case 0x40000:
 				case 0x80000: // 256, 512 KB is a NDS Size.
-					Data = std::make_unique<uint8_t[]>(SIZE);
-					fread(Data.get(), 1, SIZE, in);
+					Data = std::make_unique<uint8_t[]>(Size);
+					fread(Data.get(), 1, Size, In);
 
 					for (uint8_t Slot = 0; Slot < 5; Slot++) { // Check for all 5 possible Slots.
 						Count = 0; // Reset Count here.
@@ -92,7 +92,7 @@ namespace S2Editor {
 					break;
 			}
 
-			fclose(in);
+			fclose(In);
 		}
 
 		return ST;
@@ -110,6 +110,7 @@ namespace S2Editor {
 	*/
 	bool SAVUtils::LoadSAV(const std::string &File, const std::string &BasePath, const bool DoBackup) {
 		const SAVType ST = SAVUtils::DetectType(File);
+		bool Good = false;
 
 		if (ST != SAVType::_NONE) {
 			SAVUtils::SAV = ST; // Set SAVType.
@@ -119,18 +120,21 @@ namespace S2Editor {
 			switch(SAVUtils::SAV) {
 				case SAVType::_GBA:
 					GBASAVUtils::SAV = std::make_unique<GBASAV>(SAVUtils::SAVName);
+					Good = GBASAVUtils::SAV->GetValid();
 					break;
 
 				case SAVType::_NDS:
 					NDSSAVUtils::SAV = std::make_unique<NDSSAV>(SAVUtils::SAVName);
+					Good = NDSSAVUtils::SAV->GetValid();
 					break;
 
 				case SAVType::_NONE:
 					return false;
 			}
 
-			if (DoBackup) SAVUtils::CreateBackup(BasePath); // Create Backup, if true.
-			return true;
+
+			if (DoBackup && Good) SAVUtils::CreateBackup(BasePath); // Create Backup, if true.
+			return Good;
 		}
 
 		return false;
@@ -176,9 +180,9 @@ namespace S2Editor {
 		}
 
 		if (CreateIt) {
-			FILE *out = fopen(BackupPath.c_str(), "w");
-			fwrite((SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetData() : NDSSAVUtils::SAV->GetData()), 1, (SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetSize() : NDSSAVUtils::SAV->GetSize()), out);
-			fclose(out);
+			FILE *Out = fopen(BackupPath.c_str(), "w");
+			fwrite((SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetData() : NDSSAVUtils::SAV->GetData()), 1, (SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetSize() : NDSSAVUtils::SAV->GetSize()), Out);
+			fclose(Out);
 		}
 
 		return CreateIt;
@@ -192,13 +196,16 @@ namespace S2Editor {
 		const bool SAVLoaded = (SAVUtils::SAV != SAVType::_NONE); // Ensure it's not NONE.
 
 		if (SAVLoaded) {
-			/* Ensure first, that we made changes, otherwise writing is useless. */
-			if ((SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetChangesMade() : NDSSAVUtils::SAV->GetChangesMade())) {
-				(SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->Finish() : NDSSAVUtils::SAV->Finish()); // The Finish action.
+			/* Ensure for validateness. */
+			if ((SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetValid() : NDSSAVUtils::SAV->GetValid())) {
+				/* Ensure that we made changes, otherwise writing is useless. */
+				if ((SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetChangesMade() : NDSSAVUtils::SAV->GetChangesMade())) {
+					(SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->Finish() : NDSSAVUtils::SAV->Finish()); // The Finish action.
 
-				FILE *out = fopen(SAVUtils::SAVName.c_str(), "rb+");
-				fwrite((SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetData() : NDSSAVUtils::SAV->GetData()), 1, (SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetSize() : NDSSAVUtils::SAV->GetSize()), out);
-				fclose(out);
+					FILE *Out = fopen(SAVUtils::SAVName.c_str(), "rb+");
+					fwrite((SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetData() : NDSSAVUtils::SAV->GetData()), 1, (SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetSize() : NDSSAVUtils::SAV->GetSize()), Out);
+					fclose(Out);
+				}
 			}
 		}
 

@@ -73,6 +73,23 @@ namespace S2Editor {
 	uint8_t NDSSlot::Mechanical() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0xE3); };
 	void NDSSlot::Mechanical(const uint8_t V) { NDSSAVUtils::Write<uint8_t>(this->Offs + 0xE3, (std::min<uint8_t>(10, V))); };
 
+	/* Get and Set the Pocket Item Count. */
+	uint8_t NDSSlot::PocketCount() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0xCF); };
+	void NDSSlot::PocketCount(const uint8_t V) { NDSSAVUtils::Write<uint8_t>(this->Offs + 0xCF, std::min<uint8_t>(6, V)); };
+
+	/* Get and Set the Pocket Item IDs. */
+	uint16_t NDSSlot::PocketID(const uint8_t Index) const { return NDSSAVUtils::Read<uint16_t>(this->Offs + 0xC3 + (std::min<uint8_t>(6, Index) * 2)); };
+	void NDSSlot::PocketID(const uint8_t Index, const uint16_t V) {
+		NDSSAVUtils::Write<uint8_t>(this->Offs + 0xC3 + (std::min<uint8_t>(6, Index) * 2), V);
+
+		uint8_t Count = 0;
+		for (uint8_t Idx = 0; Idx < 6; Idx++) {
+			if (this->PocketID(Idx) != 0x0) Count++; // Is that the proper way? TODO: More research for actual empty IDs.
+		}
+
+		this->PocketCount(Count);
+	};
+
 	/*
 		Fix the Checksum of the current Slot, if invalid.
 

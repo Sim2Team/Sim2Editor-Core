@@ -26,6 +26,7 @@
 
 #include "NDSSav.hpp"
 #include "../shared/Checksum.hpp"
+#include "../shared/DataHelper.hpp"
 
 namespace S2Editor {
 	/*
@@ -38,15 +39,40 @@ namespace S2Editor {
 
 		if (SAV) {
 			fseek(SAV, 0, SEEK_END);
-			this->SAVSize = ftell(SAV); // Get the SAVSize.
+			this->SavSize = ftell(SAV); // Get the SAVSize.
 			fseek(SAV, 0, SEEK_SET);
 
-			this->SAVData = std::make_unique<uint8_t[]>(this->SAVSize);
-			fread(this->SAVData.get(), 1, this->SAVSize, SAV);
+			this->SavData = std::make_unique<uint8_t[]>(this->GetSize());
+			fread(this->SavData.get(), 1, this->GetSize(), SAV);
 			fclose(SAV);
 
-			this->SAVValid = true;
-			for (uint8_t Idx = 0; Idx < 3; Idx++) this->Slots[Idx] = this->FetchSlot(Idx);
+			this->ValidationCheck();
+		}
+	};
+
+	/*
+		Some Save Validation checks.
+	*/
+	void NDSSAV::ValidationCheck() {
+		if (!this->GetData()) return;
+
+		uint8_t Count = 0;
+
+		for (uint8_t Slot = 0; Slot < 5; Slot++) { // Check for all 5 possible Slots.
+			Count = 0; // Reset Count here.
+
+			for (uint8_t ID = 0; ID < 8; ID++) {
+				if (this->GetData()[(Slot * 0x1000) + ID] == this->SlotIdent[ID]) Count++;
+			}
+
+			if (Count == 8) {
+				this->SavValid = true;
+				break;
+			}
+		}
+
+		if (this->GetValid()) {
+			for (uint8_t Idx = 0; Idx < 3; Idx++) this->Slots[Idx] = this->FetchSlot(Idx); // Fetch Slot Locations.
 		}
 	};
 
@@ -55,12 +81,12 @@ namespace S2Editor {
 
 		This function has been ported of the LSSD Tool, SuperSaiyajinStackZ created.
 	*/
-	int8_t NDSSAV::FetchSlot(const uint8_t SAVSlot) {
-		if (!this->SAVValid || !this->SAVData) return -1;
+	int8_t NDSSAV::FetchSlot(const uint8_t SavSlot) {
+		if (!this->GetData()) return -1;
 
 		int8_t LastSavedSlot = -1, IDCount = 0;
-		uint32_t SAVCount[5] = { 0x0 };
-		bool SAVSlotExist[5] = { false };
+		uint32_t SavCount[5] = { 0x0 };
+		bool SavSlotExist[5] = { false };
 
 		/* Looping through all possible Locations. */
 		for (uint8_t Slot = 0; Slot < 5; Slot++) {
@@ -68,16 +94,16 @@ namespace S2Editor {
 
 			/* Check for Identifier. */
 			for (uint8_t ID = 0; ID < 8; ID++) {
-				if (this->SAVData.get()[(Slot * 0x1000) + ID] == this->SlotIdent[ID]) IDCount++;
+				if (this->GetData()[(Slot * 0x1000) + ID] == this->SlotIdent[ID]) IDCount++;
 			}
 
 			/* If 8, then it properly passed the slot existence check. */
 			if (IDCount == 8) {
 				/* Check, if current slot is also the actual SAVSlot. It seems 0xC and 0xD added is the Slot, however 0xD seems never be touched from the game and hence like all the time 0x0? */
-				if ((this->SAVData.get()[(Slot * 0x1000) + 0xC] + this->SAVData.get()[(Slot * 0x1000) + 0xD]) == SAVSlot) {
+				if ((this->GetData()[(Slot * 0x1000) + 0xC] + this->GetData()[(Slot * 0x1000) + 0xD]) == SavSlot) {
 					/* Now get the SAVCount. */
-					SAVCount[Slot] = *reinterpret_cast<uint32_t *>(this->SAVData.get() + (Slot * 0x1000) + 0x8);
-					SAVSlotExist[Slot] = true;
+					SavCount[Slot] = DataHelper::Read<uint32_t>(this->GetData(), (Slot * 0x1000) + 0x8);
+					SavSlotExist[Slot] = true;
 				}
 			}
 		}
@@ -86,9 +112,9 @@ namespace S2Editor {
 		uint32_t HighestCount = 0;
 
 		for (uint8_t Slot = 0; Slot < 5; Slot++) {
-			if (SAVSlotExist[Slot]) { // Ensure the Slot existed before.
-				if (SAVCount[Slot] > HighestCount) { // Ensure count is higher.
-					HighestCount = SAVCount[Slot];
+			if (SavSlotExist[Slot]) { // Ensure the Slot existed before.
+				if (SavCount[Slot] > HighestCount) { // Ensure count is higher.
+					HighestCount = SavCount[Slot];
 					LastSavedSlot = Slot;
 				}
 			}

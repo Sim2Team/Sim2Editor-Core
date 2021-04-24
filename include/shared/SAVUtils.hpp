@@ -60,7 +60,7 @@ namespace S2Editor {
 		*/
 		template <typename T>
 		T Read(const uint32_t Offs) {
-			if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetData()) return 0;
+			if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid() || !GBASAVUtils::SAV->GetData()) return 0;
 			return DataHelper::Read<T>(GBASAVUtils::SAV->GetData(), Offs);
 		};
 
@@ -100,7 +100,7 @@ namespace S2Editor {
 		*/
 		template <typename T>
 		T Read(const uint32_t Offs) {
-			if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetData()) return 0;
+			if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid() || !NDSSAVUtils::SAV->GetData()) return 0;
 			return DataHelper::Read<T>(NDSSAVUtils::SAV->GetData(), Offs);
 		};
 

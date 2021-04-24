@@ -62,6 +62,12 @@ namespace S2Editor {
 		uint8_t Mechanical() const;
 		void Mechanical(const uint8_t V);
 
+		/* Pocket Items + Count. */
+		uint8_t PocketCount() const;
+		void PocketCount(const uint8_t V);
+		uint16_t PocketID(const uint8_t Index) const;
+		void PocketID(const uint8_t Index, const uint16_t V);
+
 		bool FixChecksum();
 	private:
 		uint8_t Slot = 0;

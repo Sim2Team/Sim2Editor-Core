@@ -33,7 +33,8 @@ namespace S2Editor {
 	class NDSSAV {
 	public:
 		NDSSAV(const std::string &SAVFile);
-		int8_t FetchSlot(const uint8_t SAVSlot);
+		void ValidationCheck();
+		int8_t FetchSlot(const uint8_t SavSlot);
 
 		/* Core Returns and Actions. */
 		std::unique_ptr<NDSSlot> Slot(const uint8_t Slot);
@@ -41,15 +42,15 @@ namespace S2Editor {
 		bool SlotExist(const uint8_t Slot);
 
 		/* Some Returns. */
-		uint32_t GetSize() const { return this->SAVSize; };
-		uint8_t *GetData() const { return this->SAVData.get(); };
-		bool GetValid() const { return this->SAVValid; };
-		bool GetChangesMade() const { return this->SAVChangesMade; };
-		void SetChangesMade(const bool V) { this->SAVChangesMade = V; };
+		uint32_t GetSize() const { return this->SavSize; };
+		uint8_t *GetData() const { return this->SavData.get(); };
+		bool GetValid() const { return this->SavValid; };
+		bool GetChangesMade() const { return this->ChangesMade; };
+		void SetChangesMade(const bool V) { this->ChangesMade = V; };
 	private:
-		std::unique_ptr<uint8_t[]> SAVData = nullptr;
-		uint32_t SAVSize = 0;
-		bool SAVValid = false, SAVChangesMade = false;
+		std::unique_ptr<uint8_t[]> SavData = nullptr;
+		uint32_t SavSize = 0;
+		bool SavValid = false, ChangesMade = false;
 
 		static constexpr uint8_t SlotIdent[8] = { 0x64, 0x61, 0x74, 0x0, 0x20, 0x0, 0x0, 0x0 };
 		int8_t Slots[3] = { -1, -1, -1 };

@@ -38,19 +38,39 @@ namespace S2Editor {
 
 		if (SAV) {
 			fseek(SAV, 0, SEEK_END);
-			this->SAVSize = ftell(SAV); // Get the SAVSize.
+			this->SavSize = ftell(SAV); // Get the SAVSize.
 			fseek(SAV, 0, SEEK_SET);
 
-			this->SAVData = std::make_unique<uint8_t[]>(this->SAVSize);
-			fread(this->SAVData.get(), 1, this->SAVSize, SAV);
+			this->SavData = std::make_unique<uint8_t[]>(this->GetSize());
+			fread(this->SavData.get(), 1, this->GetSize(), SAV);
 			fclose(SAV);
 
-			this->SAVValid = true;
-			if (this->SAVData.get()[0xA] > 5) { // Language Index is 6 or larger, which is "blank" and can break the game.
-				this->SAVData.get()[0xA] = 0; // English.
-				this->SetChangesMade(true);
+			this->ValidationCheck();
+		}
+	};
+
+	/*
+		Some Save Validation checks.
+	*/
+	void GBASAV::ValidationCheck() {
+		if (!this->GetData()) return;
+
+		/* Now do the Validation check through the Save Header with the GBAIdents. */
+		bool Res = true;
+		for (uint8_t Idx = 0; Idx < 7; Idx++) {
+			if (this->GetData()[Idx] != this->GBAIdent[Idx]) {
+				Res = false;
+				break;
 			}
 		}
+
+		/* Language Checks as well, because why not. */
+		if (this->GetData()[0xA] > 5) { // Language Index is 6 or larger, which is "blank" and can break the game.
+			this->GetData()[0xA] = 0; // English.
+			this->ChangesMade = true;
+		}
+
+		this->SavValid = Res;
 	};
 
 	/*
@@ -62,7 +82,7 @@ namespace S2Editor {
 		if (Slot < 1 || Slot > 4 || !this->GetValid()) return false;
 
 		for (uint8_t Idx = 0; Idx < 10; Idx++) {
-			if (this->SAVData.get()[(Slot * 0x1000) + Idx] != 0) return true;
+			if (this->GetData()[(Slot * 0x1000) + Idx] != 0) return true;
 		}
 
 		return false;
