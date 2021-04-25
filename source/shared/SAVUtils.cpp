@@ -98,6 +98,40 @@ namespace S2Editor {
 		return ST;
 	};
 
+	/*
+		Detect the SAVType of a SAVFile from rawdata.
+
+		const std::unique_ptr<uint8_t[]> &Data: The raw save data to check.
+		const uint32_t Size: The Size of the raw buffer.
+	*/
+	SAVType SAVUtils::DetectType(const std::unique_ptr<uint8_t[]> &Data, const uint32_t Size) {
+		if (!Data) return SAVType::_NONE;
+		uint8_t Count = 0;
+
+		switch(Size) {
+			case 0x10000:
+			case 0x20000: // 64, 128 KB is a GBA Size.
+				for (uint8_t ID = 0; ID < 7; ID++) { if (Data.get()[ID] == GBAIdent[ID]) Count++; }; // Identifier Check.
+
+				if (Count == 7) return SAVType::_GBA; // If Count matches 7, we're good.
+				break;
+
+			case 0x40000:
+			case 0x80000: // 256, 512 KB is a NDS Size.
+				for (uint8_t Slot = 0; Slot < 5; Slot++) { // Check for all 5 possible Slots.
+					Count = 0; // Reset Count here.
+
+					for (uint8_t ID = 0; ID < 8; ID++) { if (Data.get()[(Slot * 0x1000) + ID] == NDSIdent[ID]) Count++; };
+
+					if (Count == 8) return SAVType::_NDS; // It's a NDS SAV.
+				}
+
+				break;
+		}
+
+		return SAVType::_NONE;
+	};
+
 
 	/*
 		Load a SAVFile.
@@ -106,7 +140,7 @@ namespace S2Editor {
 		const std::string &BasePath: The base path where to create the Backups (Optional).
 		const bool DoBackup: If creating a backup or not after loading the SAVFile (Optional).
 
-		Returns True if SAV Valid and False if Invalid.
+		Returns True if the Save is Valid and False if Invalid.
 	*/
 	bool SAVUtils::LoadSAV(const std::string &File, const std::string &BasePath, const bool DoBackup) {
 		const SAVType ST = SAVUtils::DetectType(File);
@@ -140,6 +174,46 @@ namespace S2Editor {
 		return false;
 	};
 
+	/*
+		Load a SAV from a raw buffer.
+
+		std::unique_ptr<uint8_t[]> &Data: The Raw Save Buffer.
+		const uint32_t Size: The Save Buffer Size.
+		const std::string &BasePath: The base path where to create the Backups (Optional).
+		const bool DoBackup: If creating a backup or not after loading the SAVFile (Optional).
+
+		Returns True if the Save is Valid and False if Invalid.
+	*/
+	bool SAVUtils::LoadSAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size, const std::string &BasePath, const bool DoBackup) {
+		const SAVType ST = SAVUtils::DetectType(Data, Size);
+		bool Good = false;
+
+		if (ST != SAVType::_NONE) {
+			SAVUtils::SAV = ST; // Set SAVType.
+
+			/* Load Proper SAV. */
+			switch(SAVUtils::SAV) {
+				case SAVType::_GBA:
+					GBASAVUtils::SAV = std::make_unique<GBASAV>(Data, Size);
+					Good = GBASAVUtils::SAV->GetValid();
+					break;
+
+				case SAVType::_NDS:
+					NDSSAVUtils::SAV = std::make_unique<NDSSAV>(Data, Size);
+					Good = NDSSAVUtils::SAV->GetValid();
+					break;
+
+				case SAVType::_NONE:
+					return false;
+			}
+
+
+			if (DoBackup && Good) SAVUtils::CreateBackup(BasePath); // Create Backup, if true.
+			return Good;
+		}
+
+		return false;
+	};
 
 	/*
 		Create a Backup of the current loaded SAV.
@@ -193,6 +267,7 @@ namespace S2Editor {
 		Finish SAV Editing and unload everything.
 	*/
 	void SAVUtils::Finish() {
+		if (SAVUtils::SAVName == "") return;
 		const bool SAVLoaded = (SAVUtils::SAV != SAVType::_NONE); // Ensure it's not NONE.
 
 		if (SAVLoaded) {

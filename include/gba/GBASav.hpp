@@ -34,6 +34,8 @@ namespace S2Editor {
 	class GBASAV {
 	public:
 		GBASAV(const std::string &SAVFile);
+		GBASAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size);
+
 		void ValidationCheck();
 
 		bool SlotExist(const uint8_t Slot);

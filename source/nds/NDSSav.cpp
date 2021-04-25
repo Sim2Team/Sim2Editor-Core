@@ -39,25 +39,40 @@ namespace S2Editor {
 
 		if (SAV) {
 			fseek(SAV, 0, SEEK_END);
-			this->SavSize = ftell(SAV); // Get the SAVSize.
+			this->SavSize = ftell(SAV);
 			fseek(SAV, 0, SEEK_SET);
 
-			this->SavData = std::make_unique<uint8_t[]>(this->GetSize());
-			fread(this->SavData.get(), 1, this->GetSize(), SAV);
+			if (this->SavSize == 0x40000 || this->SavSize == 0x80000) {
+				this->SavData = std::make_unique<uint8_t[]>(this->GetSize());
+				fread(this->SavData.get(), 1, this->GetSize(), SAV);
+
+				this->ValidationCheck();
+			}
+
 			fclose(SAV);
+		}
+	};
+
+	/*
+		A second way for the Initializer.
+
+		std::unique_ptr<uint8_t[]> &Data: The raw Save Buffer.
+		const uint32_t Size: The size of the Save Buffer.
+	*/
+	NDSSAV::NDSSAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size) {
+		if (Size == 0x40000 || Size == 0x80000) {
+			this->SavData = std::move(Data);
+			this->SavSize = Size;
 
 			this->ValidationCheck();
 		}
 	};
 
-	/*
-		Some Save Validation checks.
-	*/
+	/* Some Save Validation checks. */
 	void NDSSAV::ValidationCheck() {
 		if (!this->GetData()) return;
 
 		uint8_t Count = 0;
-
 		for (uint8_t Slot = 0; Slot < 5; Slot++) { // Check for all 5 possible Slots.
 			Count = 0; // Reset Count here.
 

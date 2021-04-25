@@ -33,6 +33,8 @@ namespace S2Editor {
 	class NDSSAV {
 	public:
 		NDSSAV(const std::string &SAVFile);
+		NDSSAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size);
+
 		void ValidationCheck();
 		int8_t FetchSlot(const uint8_t SavSlot);
 

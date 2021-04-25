@@ -42,7 +42,9 @@ namespace S2Editor {
 		extern std::string SAVName;
 
 		SAVType DetectType(const std::string &File);
+		SAVType DetectType(const std::unique_ptr<uint8_t[]> &Data, const uint32_t Size);
 		bool LoadSAV(const std::string &File, const std::string &BasePath = "", const bool DoBackup = false);
+		bool LoadSAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size, const std::string &BasePath = "", const bool DoBackup = false);
 		bool CreateBackup(const std::string &BasePath);
 		void Finish();
 		bool ChangesMade();
