@@ -30,6 +30,8 @@
 #include "../shared/CoreCommon.hpp"
 
 namespace S2Editor {
+	enum class GBACastPicture : uint8_t { Neutral, Friendly, Angry };
+
 	class GBACast {
 	public:
 		GBACast(const uint32_t Offs, const uint8_t Cast)
@@ -45,9 +47,10 @@ namespace S2Editor {
 		uint8_t Intimidate() const;
 		void Intimidate(const uint8_t V);
 
+		GBACastPicture Picture() const;
+		void Picture(const GBACastPicture V);
+
 		/* Unlockables. */
-		bool Alternativepic() const;
-		void Alternativepic(const bool V);
 		bool Mystery() const;
 		void Mystery(const bool V);
 	private:

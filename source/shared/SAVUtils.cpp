@@ -68,7 +68,9 @@ namespace S2Editor {
 					Data = std::make_unique<uint8_t[]>(0x7);
 					fread(Data.get(), 1, 0x7, In); // Read the first 0x7 byte (Header).
 
-					for (uint8_t ID = 0; ID < 7; ID++) { if (Data.get()[ID] == GBAIdent[ID]) Count++; }; // Identifier Check.
+					for (uint8_t ID = 0; ID < 7; ID++) {
+						if (Data.get()[ID] == GBAIdent[ID]) Count++;
+					}; // Identifier Check.
 
 					if (Count == 7) ST = SAVType::_GBA; // If Count matches 7, we're good.
 					break;
@@ -81,7 +83,9 @@ namespace S2Editor {
 					for (uint8_t Slot = 0; Slot < 5; Slot++) { // Check for all 5 possible Slots.
 						Count = 0; // Reset Count here.
 
-						for (uint8_t ID = 0; ID < 8; ID++) { if (Data.get()[(Slot * 0x1000) + ID] == NDSIdent[ID]) Count++; };
+						for (uint8_t ID = 0; ID < 8; ID++) {
+							if (Data.get()[(Slot * 0x1000) + ID] == NDSIdent[ID]) Count++;
+						}; // Identifier Check.
 
 						if (Count == 8) {
 							ST = SAVType::_NDS; // It's a NDS SAV.
@@ -111,7 +115,9 @@ namespace S2Editor {
 		switch(Size) {
 			case 0x10000:
 			case 0x20000: // 64, 128 KB is a GBA Size.
-				for (uint8_t ID = 0; ID < 7; ID++) { if (Data.get()[ID] == GBAIdent[ID]) Count++; }; // Identifier Check.
+				for (uint8_t ID = 0; ID < 7; ID++) {
+					if (Data.get()[ID] == GBAIdent[ID]) Count++;
+				}; // Identifier Check.
 
 				if (Count == 7) return SAVType::_GBA; // If Count matches 7, we're good.
 				break;
@@ -121,7 +127,9 @@ namespace S2Editor {
 				for (uint8_t Slot = 0; Slot < 5; Slot++) { // Check for all 5 possible Slots.
 					Count = 0; // Reset Count here.
 
-					for (uint8_t ID = 0; ID < 8; ID++) { if (Data.get()[(Slot * 0x1000) + ID] == NDSIdent[ID]) Count++; };
+					for (uint8_t ID = 0; ID < 8; ID++) {
+						if (Data.get()[(Slot * 0x1000) + ID] == NDSIdent[ID]) Count++;
+					}; // Identifier Check.
 
 					if (Count == 8) return SAVType::_NDS; // It's a NDS SAV.
 				}
@@ -267,20 +275,17 @@ namespace S2Editor {
 		Finish SAV Editing and unload everything.
 	*/
 	void SAVUtils::Finish() {
-		if (SAVUtils::SAVName == "") return;
-		const bool SAVLoaded = (SAVUtils::SAV != SAVType::_NONE); // Ensure it's not NONE.
+		if (SAVUtils::SAVName == "" || SAVUtils::SAV == SAVType::_NONE) return;
 
-		if (SAVLoaded) {
-			/* Ensure for validateness. */
-			if ((SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetValid() : NDSSAVUtils::SAV->GetValid())) {
-				/* Ensure that we made changes, otherwise writing is useless. */
-				if ((SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetChangesMade() : NDSSAVUtils::SAV->GetChangesMade())) {
-					(SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->Finish() : NDSSAVUtils::SAV->Finish()); // The Finish action.
+		/* Ensure for validateness. */
+		if ((SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetValid() : NDSSAVUtils::SAV->GetValid())) {
+			/* Ensure that we made changes, otherwise writing is useless. */
+			if ((SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetChangesMade() : NDSSAVUtils::SAV->GetChangesMade())) {
+				(SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->Finish() : NDSSAVUtils::SAV->Finish()); // The Finish action.
 
-					FILE *Out = fopen(SAVUtils::SAVName.c_str(), "rb+");
-					fwrite((SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetData() : NDSSAVUtils::SAV->GetData()), 1, (SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetSize() : NDSSAVUtils::SAV->GetSize()), Out);
-					fclose(Out);
-				}
+				FILE *Out = fopen(SAVUtils::SAVName.c_str(), "rb+");
+				fwrite((SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetData() : NDSSAVUtils::SAV->GetData()), 1, (SAVUtils::SAV == SAVType::_GBA ? GBASAVUtils::SAV->GetSize() : NDSSAVUtils::SAV->GetSize()), Out);
+				fclose(Out);
 			}
 		}
 
@@ -371,6 +376,7 @@ namespace S2Editor {
 	*/
 	const std::string GBASAVUtils::ReadString(const uint32_t Offs, const uint32_t Length) {
 		if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid()) return "";
+
 		return DataHelper::ReadString(GBASAVUtils::SAV->GetData(), Offs, Length);
 	}
 	/*
@@ -449,6 +455,7 @@ namespace S2Editor {
 	*/
 	const std::string NDSSAVUtils::ReadString(const uint32_t Offs, const uint32_t Length) {
 		if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid()) return "";
+
 		return DataHelper::ReadString(NDSSAVUtils::SAV->GetData(), Offs, Length);
 	}
 	/*

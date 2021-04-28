@@ -40,9 +40,9 @@ namespace S2Editor {
 	uint8_t GBACast::Intimidate() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x2); };
 	void GBACast::Intimidate(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x2, std::min<uint8_t>(3, V)); };
 
-	/* Get and Set Alternative Picture Unlock state. */
-	bool GBACast::Alternativepic() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x3); };
-	void GBACast::Alternativepic(const bool V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x3, V); };
+	/* Get and Set Cast Picture. */
+	GBACastPicture GBACast::Picture() const { return (GBACastPicture)GBASAVUtils::Read<uint8_t>(this->Offs + 0x3); };
+	void GBACast::Picture(const GBACastPicture V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x3, (uint8_t)V); };
 
 	/* Get and Set Mystery Unlock state. */
 	bool GBACast::Mystery() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x8); };

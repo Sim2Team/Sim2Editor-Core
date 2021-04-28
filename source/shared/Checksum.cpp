@@ -55,8 +55,8 @@ namespace S2Editor {
 				continue;
 			}
 
-			if (Buffer[(Idx * 2)] + Byte1 > 255) Byte2++;
-			Byte1 += Buffer[(Idx * 2)];
+			if (Buffer[Idx * 2] + Byte1 > 255) Byte2++;
+			Byte1 += Buffer[Idx * 2];
 			Byte2 += Buffer[(Idx * 2) + 1];
 		}
 

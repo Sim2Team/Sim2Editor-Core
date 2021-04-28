@@ -282,10 +282,10 @@ namespace S2Editor {
 		if (this->Slot < 1 || this->Slot > 4) return false;
 
 		const uint16_t CurCHKS = GBASAVUtils::Read<uint16_t>(this->Offs + 0xFFE);
-		const uint16_t Calced = Checksum::Calc(GBASAVUtils::SAV->GetData(), (this->Offs / 2), ((this->Offs + 0xFFE) / 2));
+		const uint16_t Calced = Checksum::Calc(GBASAVUtils::SAV->GetData(), this->Offs / 2, (this->Offs + 0xFFE) / 2);
 
-
-		if (Calced != CurCHKS) { // If the calced result is NOT the current checksum.
+		/* If the calced result is NOT the current checksum. */
+		if (Calced != CurCHKS) {
 			GBASAVUtils::Write<uint16_t>(this->Offs + 0xFFE, Calced);
 			return true;
 		}

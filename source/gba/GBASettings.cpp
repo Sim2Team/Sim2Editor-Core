@@ -48,17 +48,14 @@ namespace S2Editor {
 		if (GBASAVUtils::Read<uint8_t>(0xA) > 5) return GBALanguage::EN; // Technically, that would be a "blank" Language in game, but ehh that's not good.
 		return (GBALanguage)GBASAVUtils::Read<uint8_t>(0xA);
 	};
-	void GBASettings::Language(const GBALanguage V) {
-		GBASAVUtils::Write<uint8_t>(0xA, (uint8_t)V);
-	};
+	void GBASettings::Language(const GBALanguage V) { GBASAVUtils::Write<uint8_t>(0xA, (uint8_t)V); };
 
 	/* Update the Checksum of the GBA Settings. */
 	void GBASettings::UpdateChecksum() {
 		const uint16_t CurCHKS = GBASAVUtils::Read<uint16_t>(0xE);
-		const uint16_t Calced = Checksum::Calc(GBASAVUtils::SAV->GetData(), 0x0, (0x18 / 2), { (0xE / 2) });
+		const uint16_t Calced = Checksum::Calc(GBASAVUtils::SAV->GetData(), 0x0, 0x18 / 2, { 0xE / 2 });
 
-		if (Calced != CurCHKS) { // If the calced result is NOT the current checksum.
-			GBASAVUtils::Write<uint16_t>(0xE, Calced);
-		}
+		/* If the calced result is NOT the current checksum. */
+		if (Calced != CurCHKS) GBASAVUtils::Write<uint16_t>(0xE, Calced);
 	};
 };

@@ -54,6 +54,7 @@ namespace S2Editor {
 
 		Buffer[Offs] &= ~(1 << BitIndex);
 		Buffer[Offs] |= (IsSet ? 1 : 0) << BitIndex;
+
 		return true;
 	};
 
@@ -84,7 +85,8 @@ namespace S2Editor {
 		if (Data > 0xF || !Buffer) return false;
 
 		if (First) Buffer[Offs] = (Buffer[Offs] & 0xF0) | (Data & 0xF); // Bit 0 - 3.
-		else Buffer[Offs] = (Buffer[Offs] & 0x0F) | (Data << 4);// Bit 4 - 7.
+		else Buffer[Offs] = (Buffer[Offs] & 0x0F) | (Data << 4); // Bit 4 - 7.
+
 		return true;
 	};
 

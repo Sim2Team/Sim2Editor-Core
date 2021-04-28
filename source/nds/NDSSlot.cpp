@@ -100,9 +100,10 @@ namespace S2Editor {
 
 		const uint16_t CurCHKS = NDSSAVUtils::Read<uint16_t>(this->Offs + 0x28);
 		const std::vector<int> Offs = { ((int)this->Offs + 0x12) / 2, ((int)this->Offs + 0x28) / 2 };
-		const uint16_t Calced = Checksum::Calc(NDSSAVUtils::SAV->GetData(), ((this->Offs + 0x10) / 2), ((this->Offs + 0x1000) / 2), Offs);
+		const uint16_t Calced = Checksum::Calc(NDSSAVUtils::SAV->GetData(), (this->Offs + 0x10) / 2, (this->Offs + 0x1000) / 2, Offs);
 
-		if (Calced != CurCHKS) { // If the calced result is NOT the current checksum.
+		/* If the calced result is NOT the current checksum. */
+		if (Calced != CurCHKS) {
 			NDSSAVUtils::Write<uint16_t>(this->Offs + 0x28, Calced);
 			return true;
 		}
