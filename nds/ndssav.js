@@ -24,16 +24,37 @@
 *         reasonable ways as different from the original version.
 */
 
-import { SAVUtils_Read, NDSIdent, SAVUtils_Write } from '../shared/savutils.js';
+import { SAVUtils_Read, NDSIdent, SAVUtils_Write, SAVData } from '../shared/savutils.js';
 import { S2Editor_NDSSlot } from './ndsslot.js';
 
 export class S2Editor_NDSSAV {
 	constructor() {
 		this.ChangesMade = false;
-		this.SAVValid = true; // TODO: Make an use of this.
-
 		this.Slots = new Int8Array(0x3);
-		for (let Idx = 0; Idx < 3; Idx++) this.Slots[Idx] = this.FetchSlot(Idx); // Fetch!
+		this.ValidationCheck();
+	};
+
+	/* Some Save Validation checks. */
+	ValidationCheck() {
+		if (!SAVData) return;
+
+		let Count = 0;
+		for (let Slot = 0; Slot < 5; Slot++) { // Check for all 5 possible Slots.
+			Count = 0; // Reset Count here.
+
+			for (let ID = 0; ID < 8; ID++) {
+				if (SAVUtils_Read("uint8_t", (Slot * 0x1000) + ID) == NDSIdent[ID]) Count++;
+			}
+
+			if (Count == 8) {
+				this.SavValid = true;
+				break;
+			}
+		}
+
+		if (this.SavValid) {
+			for (let Idx = 0; Idx < 3; Idx++) this.Slots[Idx] = this.FetchSlot(Idx); // Fetch Slot Locations.
+		}
 	};
 
 	/*
@@ -42,11 +63,11 @@ export class S2Editor_NDSSAV {
 		This function has been ported of the LSSD Tool, SuperSaiyajinStackZ created.
 	*/
 	FetchSlot(SAVSlot) {
-		if (!this.SAVValid) return -1;
+		if (!this.SavValid) return -1;
 
 		let LastSavedSlot = -1, IDCount = 0;
-		let SAVCount = new Uint32Array(0x5);
-		let SAVSlotExist = new Boolean(0x5);
+		let SavCount = new Uint32Array(0x5);
+		let SavSlotExist = new Boolean(0x5);
 
 		/* Looping through all possible Locations. */
 		for (let Slot = 0; Slot < 5; Slot++) {
@@ -62,8 +83,8 @@ export class S2Editor_NDSSAV {
 				/* Check, if current slot is also the actual SAVSlot. It seems 0xC and 0xD added is the Slot, however 0xD seems never be touched from the game and hence like all the time 0x0? */
 				if ((SAVUtils_Read("uint8_t", (Slot * 0x1000) + 0xC) + SAVUtils_Read("uint8_t", (Slot * 0x1000) + 0xD)) == SAVSlot) {
 					/* Now get the SAVCount. */
-					SAVCount[Slot] = SAVUtils_Read("uint32_t", (Slot * 0x1000) + 0x8);
-					SAVSlotExist[Slot] = true;
+					SavCount[Slot] = SAVUtils_Read("uint32_t", (Slot * 0x1000) + 0x8);
+					SavSlotExist[Slot] = true;
 				}
 			}
 		}
@@ -72,9 +93,9 @@ export class S2Editor_NDSSAV {
 		let HighestCount = 0;
 
 		for (let Slot = 0; Slot < 5; Slot++) {
-			if (SAVSlotExist[Slot]) { // Ensure the Slot existed before.
-				if (SAVCount[Slot] > HighestCount) { // Ensure count is higher.
-					HighestCount = SAVCount[Slot];
+			if (SavSlotExist[Slot]) { // Ensure the Slot existed before.
+				if (SavCount[Slot] > HighestCount) { // Ensure count is higher.
+					HighestCount = SavCount[Slot];
 					LastSavedSlot = Slot;
 				}
 			}
@@ -107,7 +128,7 @@ export class S2Editor_NDSSAV {
 
 
 	/* Return if the SAV is valid. */
-	GetValid() { return this.SAVValid; };
+	GetValid() { return this.SavValid; };
 
 	/* Get and Set if changes made. */
 	GetChangesMade() { return this.ChangesMade; };

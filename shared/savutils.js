@@ -72,7 +72,10 @@ export function SAVUtils_DetectType(Data, Size) {
 	switch(Size) {
 		case 0x10000:
 		case 0x20000: // 64, 128 KB is a GBA Size.
-			for (let ID = 0; ID < 7; ID++) { if (Data.getUint8(ID) == GBAIdent[ID]) Count++; };
+			for (let ID = 0; ID < 7; ID++) {
+				if (Data.getUint8(ID) == GBAIdent[ID]) Count++;
+			}; // Identifier Checks.
+
 			if (Count == 7) return 0;
 			else return -1;
 
@@ -81,7 +84,9 @@ export function SAVUtils_DetectType(Data, Size) {
 			for (let Slot = 0; Slot < 5; Slot++) { // Check for all 5 possible Slots.
 				Count = 0; // Reset Count here.
 
-				for (let ID = 0; ID < 8; ID++) { if (Data.getUint8((Slot * 0x1000) + ID) == NDSIdent[ID]) Count++; };
+				for (let ID = 0; ID < 8; ID++) {
+					if (Data.getUint8((Slot * 0x1000) + ID) == NDSIdent[ID]) Count++;
+				}; // Identifier Checks.
 
 				if (Count == 8) return 1;
 			}
@@ -103,7 +108,7 @@ export function SAVUtils_DetectType(Data, Size) {
 */
 export function SAVUtils_LoadSAV(SAVFile, LoadCallback) {
 	if (!SAVFile) {
-		alert("No SAVFile selected.");
+		alert("No Savefile selected.");
 		return -1;
 	}
 
@@ -132,7 +137,11 @@ export function SAVUtils_LoadSAV(SAVFile, LoadCallback) {
 				break;
 		}
 
-		if (SAV != undefined) LoadCallback();
+		if (SAV != undefined) {
+			if (SAVType == 0 || SAVType == 1) {
+				if (SAV.GetValid()) LoadCallback();
+			}
+		}
 	};
 };
 
@@ -161,7 +170,7 @@ export function SAVUtils_ChangesMade() {
 	I used this style, because it seems similar at some point to the C++ version.
 */
 export function SAVUtils_Read(Type, Offs) {
-	if (SAVType == -1) return 0; // -1 -> Invalid.
+	if (SAVType == -1 || SAVData == undefined) return 0; // -1 -> Invalid.
 
 	switch(Type) {
 		case "uint8_t":
@@ -212,6 +221,34 @@ export function SAVUtils_Write(Type, Offs, Data) {
 			if (!SAV.GetChangesMade()) SAV.SetChangesMade(true);
 			break;
 	}
+};
+
+/*
+	Return a bit from the SAVData.
+
+	Offs: The Offset to read from.
+	BitIndex: The Bit index ( 0 - 7 ).
+*/
+export function SAVUtils_ReadBit(Offs, BitIndex) {
+	if (SAVType == -1 || SAVData == undefined) return; // -1 -> Invalid.
+
+	return (SAVUtils_Read("uint8_t", Offs) >> BitIndex & 1) != 0;
+};
+
+/*
+	Set a bit to the SAVData.
+
+	Offs: The Offset to write to.
+	BitIndex: The Bit index ( 0 - 7 ).
+	IsSet: If it's set (1) or not (0).
+*/
+export function SAVUtils_WriteBit(Offs, BitIndex, IsSet) {
+	if (SAVType == -1 || SAVData == undefined) return; // -1 -> Invalid.
+
+	SAVData[Offs] &= ~(1 << BitIndex);
+	SAVData[Offs] |= (IsSet ? 1 : 0) << BitIndex;
+
+	if (!SAV.GetChangesMade()) SAV.SetChangesMade(true);
 };
 
 /*

@@ -84,8 +84,8 @@ export class S2Editor_GBASettings {
 		const CurCHKS = SAVUtils_Read("uint16_t", 0xE);
 
 		let SkipOffs = new Uint8Array(0x1);
-		SkipOffs[0] = (0xE / 2);
-		const Calced = Checksum_Calc(SAVData, 0x0, (0x18 / 2), SkipOffs);
+		SkipOffs[0] = 0xE / 2;
+		const Calced = Checksum_Calc(SAVData, 0x0, 0x18 / 2, SkipOffs);
 
 		/* If the calced result is NOT the current checksum. */
 		if (Calced != CurCHKS) SAVUtils_Write("uint16_t", 0xE, Calced);

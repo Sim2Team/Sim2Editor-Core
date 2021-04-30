@@ -24,17 +24,36 @@
 *         reasonable ways as different from the original version.
 */
 
-import { SAVUtils_Read, SAVUtils_Write } from '../shared/savutils.js';
+import { GBAIdent, SAVData, SAVUtils_Read, SAVUtils_Write } from '../shared/savutils.js';
 import { S2Editor_GBASlot } from './gbaslot.js';
 import { S2Editor_GBASettings } from './gbasettings.js';
 
 export class S2Editor_GBASAV {
 	constructor() {
 		this.ChangesMade = false;
-		this.SAVValid = true; // TODO: Maybe make a use of this? No idea.
+		this.ValidationCheck();
+	};
 
-		/* Language Index is 6 or larger, which is "blank" and can break the game. */
-		if (SAVUtils_Read("uint8_t", 0xA) > 5) SAVUtils_Write("uint8_t", 0xA, 0); // English.
+	/* Some Save Validation checks. */
+	ValidationCheck() {
+		if (!SAVData) return;
+
+		/* Now do the Validation check through the Save Header with the GBAIdents. */
+		let Res = true;
+		for (let Idx = 0; Idx < 7; Idx++) {
+			if (SAVUtils_Read("uint8_t", Idx) != GBAIdent[Idx]) {
+				Res = false;
+				break;
+			}
+		}
+
+		/* Language Checks as well, because why not. */
+		if (SAVUtils_Read("uint8_t", 0xA) > 5) { // Language Index is 6 or larger, which is "blank" and can break the game.
+			SAVUtils_Write("uint8_t", 0xA, 0); // English.
+			this.ChangesMade = true;
+		}
+
+		this.SavValid = Res;
 	};
 
 	/*
@@ -83,7 +102,7 @@ export class S2Editor_GBASAV {
 	};
 
 	/* Return if the SAV is valid. */
-	GetValid() { return this.SAVValid; };
+	GetValid() { return this.SavValid; };
 
 	/* Get and Set if changes made. */
 	GetChangesMade() { return this.ChangesMade; };

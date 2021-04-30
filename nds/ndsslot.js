@@ -96,6 +96,33 @@ export class S2Editor_NDSSlot {
 		else return SAVUtils_Read("uint8_t", this.Offs + 0xE3);
 	};
 
+	/* Get and Set the Pocket Item Count. */
+	PocketCount(V) {
+		if (V) {
+			SAVUtils_Write("uint8_t", this.Offs + 0xCF, Math.min(6, V));
+
+		} else {
+			return SAVUtils_Read("uint8_t", this.Offs + 0xCF);
+		}
+	};
+
+	PocketID(Index, V) {
+		if (V) {
+			SAVUtils_Write("uint16_t", this.Offs + 0xC3 + (Math.min(6, Index) * 2), V);
+
+			let Count = 0;
+			for (let Idx = 0; Idx < 6; Idx++) {
+				if (this.PocketID(Idx) != 0x0) Count++;
+			}
+
+			this.PocketCount(Count);
+
+		} else {
+			return SAVUtils_Read("uint16_t", this.Offs + 0xC3 + (Math.min(6, Index) * 2));
+		}
+	};
+
+
 	/*
 		Fix the Checksum of the current Slot, if invalid.
 

@@ -24,52 +24,34 @@
 *         reasonable ways as different from the original version.
 */
 
-import { SAVUtils_Read, SAVUtils_Write } from '../shared/savutils.js';
+import { SAVUtils_Read, SAVUtils_ReadBit, SAVUtils_Write, SAVUtils_WriteBit, SAVUtils_WriteBits } from '../shared/savutils.js';
 
-export class S2Editor_GBACast {
-	constructor(Offs, Cast) {
+export class S2Editor_GBAMinigame {
+	constructor(Offs, Game) {
 		this.Offs = Offs;
-		this.Cast = Cast;
+		this.Game = Game;
 	};
 
-	/* Get Cast Index. */
-	Index() { return this.Cast; };
+	/* Get and Set if you played that game already today. */
+	Played(V) {
+		if (V) {
+			SAVUtils_WriteBit(this.Offs, this.Game, V);
 
-	/* Get and Set Friendly Conversation level. */
-	Friendly(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs, Math.min(3, V));
-		else return SAVUtils_Read("uint8_t", this.Offs);
+		} else {
+			return SAVUtils_ReadBit(this.Offs, this.Game);
+		}
 	};
 
-	/* Get and Set Romance Conversation level. */
-	Romance(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs + 0x1, Math.min(3, V));
-		else return SAVUtils_Read("uint8_t", this.Offs + 0x1);
-	};
+	/* Get and Set the Minigame Level. */
+	Level(V, Meta) {
+		if (V) {
+			SAVUtils_Write("uint8_t", this.Offs + 0x24 + this.Game, Math.min(5, V));
 
-	/* Get and Set Intimidate Conversation level. */
-	Intimidate(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs + 0x2, Math.min(3, V));
-		else return SAVUtils_Read("uint8_t", this.Offs + 0x2);
-	};
+			/* Optionally: Set to Metadata / Settings as well. */
+			if (Meta) SAVUtils_WriteBits(0x10 + (this.Game / 2), ((this.Game % 2) == 0), Math.min(5, V));
 
-	/*
-		Get and Set the Picture.
-
-		0:  Neutral.
-		1:  Friendly.
-		2:  Angry.
-		3:  Love.
-		4+: Invalid.
-	*/
-	Picture(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs + 0x3, Math.min(4, V));
-		else return SAVUtils_Read("uint8_t", this.Offs + 0x3);
-	};
-
-	/* Get and Set Mystery Unlock state. */
-	Mystery(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs + 0x8, Math.min(1, V));
-		else return SAVUtils_Read("uint8_t", this.Offs + 0x8);
+		} else {
+			SAVUtils_Read("uint8_t", this.Offs + 0x24 + this.Game);
+		}
 	};
 };

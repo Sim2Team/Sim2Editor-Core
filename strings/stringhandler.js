@@ -28,6 +28,7 @@
 import S2Editor_GBACasts_EN from './en/gba/casts.js';
 import S2Editor_GBAEpisodes_EN from './en/gba/episodes.js';
 import S2Editor_GBAItemList_EN from './en/gba/itemlist.js';
+import S2Editor_GBAMinigames_EN from './en/gba/minigames.js';
 import S2Editor_GBASkillPoints_EN from './en/gba/skillpoints.js';
 import S2Editor_GBASocialMoves_EN from './en/gba/socialmoves.js';
 import S2Editor_NDSSkillPoints_EN from './en/nds/skillpoints.js';
@@ -35,13 +36,14 @@ import S2Editor_NDSSkillPoints_EN from './en/nds/skillpoints.js';
 /* German Strings. */
 import S2Editor_GBACasts_DE from './de/gba/casts.js';
 import S2Editor_GBAEpisodes_DE from './de/gba/episodes.js';
+import S2Editor_GBAMinigames_DE from './de/gba/minigames.js';
 import S2Editor_GBASkillPoints_DE from './de/gba/skillpoints.js';
 import S2Editor_GBASocialMoves_DE from './de/gba/socialmoves.js';
 import S2Editor_NDSSkillPoints_DE from './de/nds/skillpoints.js';
 
 /* Strings which are being initialized and used at the end. */
-export let S2Editor_GBACasts, S2Editor_GBAEpisodes, S2Editor_GBAItemList, S2Editor_GBASkillPoints,
-			S2Editor_GBASocialMoves, S2Editor_NDSSkillPoints;
+export let S2Editor_GBACasts, S2Editor_GBAEpisodes, S2Editor_GBAItemList, S2Editor_GBAMinigames,
+			S2Editor_GBASkillPoints, S2Editor_GBASocialMoves, S2Editor_NDSSkillPoints;
 
 /*
 	Load the Strings for the use with the SAVEditor.
@@ -60,6 +62,7 @@ export function S2Editor_LoadStrings(SAVType, Language) {
 				S2Editor_GBACasts = S2Editor_GBACasts_EN;
 				S2Editor_GBAEpisodes = S2Editor_GBAEpisodes_EN;
 				S2Editor_GBAItemList = S2Editor_GBAItemList_EN;
+				S2Editor_GBAMinigames = S2Editor_GBAMinigames_EN;
 				S2Editor_GBASkillPoints = S2Editor_GBASkillPoints_EN;
 				S2Editor_GBASocialMoves = S2Editor_GBASocialMoves_EN;
 				break;
@@ -68,6 +71,7 @@ export function S2Editor_LoadStrings(SAVType, Language) {
 				S2Editor_GBACasts = S2Editor_GBACasts_DE;
 				S2Editor_GBAEpisodes = S2Editor_GBAEpisodes_DE;
 				S2Editor_GBAItemList = S2Editor_GBAItemList_EN; // Not available in German right now.
+				S2Editor_GBAMinigames = S2Editor_GBAMinigames_DE;
 				S2Editor_GBASkillPoints = S2Editor_GBASkillPoints_DE;
 				S2Editor_GBASocialMoves = S2Editor_GBASocialMoves_DE;
 				break;

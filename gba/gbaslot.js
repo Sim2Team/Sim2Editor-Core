@@ -32,6 +32,7 @@ import { S2Editor_GBACast } from './gbacast.js';
 import { S2Editor_GBAEpisode } from './gbaepisode.js';
 import { S2Editor_GBAHouse } from './gbahouse.js';
 import { S2Editor_GBAItem } from './gbaitem.js';
+import { S2Editor_GBAMinigame } from './gbaminigame.js';
 import { S2Editor_GBASocialMove } from './gbasocialmove.js';
 
 /* Valid Episode Values. */
@@ -318,6 +319,9 @@ export class S2Editor_GBASlot {
 		}
 	};
 
+	/* Get a Minigame class. */
+	Minigame(Game) { return new S2Editor_GBAMinigame(this.Offset(0x1AD), Game); };
+
 	/* Get an Episode class. */
 	Episode(EP) { return new S2Editor_GBAEpisode(this.Slot, EP, SAVUtils_Read("uint8_t", this.Offs + 0xD6)); };
 
@@ -336,7 +340,7 @@ export class S2Editor_GBASlot {
 		if (this.Slot < 1 || this.Slot > 4) return false;
 
 		const CurCHKS = SAVUtils_Read("uint16_t", this.Offs + 0xFFE);
-		const Calced = Checksum_Calc(SAVData, (this.Offs / 2), ((this.Offs + 0xFFE) / 2));
+		const Calced = Checksum_Calc(SAVData, this.Offs / 2, (this.Offs + 0xFFE) / 2);
 
 		/* If the calced result is NOT the current checksum. */
 		if (Calced != CurCHKS) {
