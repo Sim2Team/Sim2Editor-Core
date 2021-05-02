@@ -93,11 +93,9 @@ namespace S2Editor {
 	/*
 		Fix the Checksum of the current Slot, if invalid.
 
-		Returns false if Slot > 4 or already valid, true if got fixed.
+		Returns false if already valid, true if got fixed.
 	*/
 	bool NDSSlot::FixChecksum() {
-		if (this->Slot > 4) return false;
-
 		const uint16_t CurCHKS = NDSSAVUtils::Read<uint16_t>(this->Offs + 0x28);
 		const std::vector<int> Offs = { ((int)this->Offs + 0x12) / 2, ((int)this->Offs + 0x28) / 2 };
 		const uint16_t Calced = Checksum::Calc(NDSSAVUtils::SAV->GetData(), (this->Offs + 0x10) / 2, (this->Offs + 0x1000) / 2, Offs);

@@ -141,6 +141,9 @@ namespace S2Editor {
 		bool WeirdnessPlot() const;
 		void WeirdnessPlot(const bool V);
 
+		uint8_t TheChopperColor() const;
+		void TheChopperColor(const uint8_t V);
+
 		/* Some class pointers. */
 		std::unique_ptr<GBAEpisode> Episode(const uint8_t EP) const;
 		std::unique_ptr<GBASocialMove> SocialMove(const uint8_t Move) const;

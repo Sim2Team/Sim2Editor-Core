@@ -258,6 +258,10 @@ namespace S2Editor {
 	bool GBASlot::WeirdnessPlot() const { return GBASAVUtils::ReadBit(this->Offset(0x1CF), 0x5); };
 	void GBASlot::WeirdnessPlot(const bool V) { GBASAVUtils::WriteBit(this->Offset(0x1CF), 0x5, V); };
 
+	/* Get and Set the Motorbike aka "The Chopper" color. */
+	uint8_t GBASlot::TheChopperColor() const { return GBASAVUtils::ReadBits(this->Offset(0x1F2), true); };
+	void GBASlot::TheChopperColor(const uint8_t V) { GBASAVUtils::WriteBits(this->Offset(0x1F2), true, std::min<uint8_t>(9, V)); };
+
 	/* Get an Episode class. */
 	std::unique_ptr<GBAEpisode> GBASlot::Episode(const uint8_t EP) const {
 		return std::make_unique<GBAEpisode>(this->Slot, EP, GBASAVUtils::Read<uint8_t>(this->Offs + 0xD6));
@@ -276,11 +280,9 @@ namespace S2Editor {
 	/*
 		Fix the Checksum of the current Slot, if invalid.
 
-		Returns false if Slot < 0 or > 4 or already valid, true if got fixed.
+		Returns false if already valid, true if got fixed.
 	*/
 	bool GBASlot::FixChecksum() {
-		if (this->Slot < 1 || this->Slot > 4) return false;
-
 		const uint16_t CurCHKS = GBASAVUtils::Read<uint16_t>(this->Offs + 0xFFE);
 		const uint16_t Calced = Checksum::Calc(GBASAVUtils::SAV->GetData(), this->Offs / 2, (this->Offs + 0xFFE) / 2);
 
