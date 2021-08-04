@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-JSCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 SuperSaiyajinStackZ
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -24,13 +24,21 @@
 *         reasonable ways as different from the original version.
 */
 
-import { SAVUtils_Read, NDSIdent, SAVUtils_Write, SAVData } from '../shared/savutils.js';
+import { SAVUtils_Read, NDSIdent, SAVData } from '../shared/savutils.js';
 import { S2Editor_NDSSlot } from './ndsslot.js';
 
 export class S2Editor_NDSSAV {
-	constructor() {
+	/*
+		Region being passed is:
+		-1: Unknown / Invalid.
+		0: USA International.
+		1: Europe International.
+		2: Japanese.
+	*/
+	constructor(Region) {
 		this.ChangesMade = false;
 		this.Slots = new Int8Array(0x3);
+		this.Region = Region;
 		this.ValidationCheck();
 	};
 
@@ -43,7 +51,7 @@ export class S2Editor_NDSSAV {
 			Count = 0; // Reset Count here.
 
 			for (let ID = 0; ID < 8; ID++) {
-				if (SAVUtils_Read("uint8_t", (Slot * 0x1000) + ID) == NDSIdent[ID]) Count++;
+				if (SAVUtils_Read("uint8_t", (Slot * 0x1000) + ID) == NDSIdent[ID] + (ID == 0x4 ? this.Region : 0x0)) Count++;
 			}
 
 			if (Count == 8) {
@@ -63,7 +71,7 @@ export class S2Editor_NDSSAV {
 		This function has been ported of the LSSD Tool, SuperSaiyajinStackZ created.
 	*/
 	FetchSlot(SAVSlot) {
-		if (!this.SavValid) return -1;
+		if (!this.SavValid || this.Region == -1) return -1;
 
 		let LastSavedSlot = -1, IDCount = 0;
 		let SavCount = new Uint32Array(0x5);
@@ -75,7 +83,7 @@ export class S2Editor_NDSSAV {
 
 			/* Check for Identifier. */
 			for (let ID = 0; ID < 8; ID++) {
-				if (SAVUtils_Read("uint8_t", (Slot * 0x1000) + ID) == NDSIdent[ID]) IDCount++;
+				if (SAVUtils_Read("uint8_t", (Slot * 0x1000) + ID) == NDSIdent[ID] + (ID == 0x4 ? this.Region : 0x0)) IDCount++;
 			}
 
 			/* If 8, then it properly passed the slot existence check. */
@@ -112,7 +120,7 @@ export class S2Editor_NDSSAV {
 	Slot(Slot) {
 		if (!this.SlotExist(Slot)) return undefined;
 
-		return new S2Editor_NDSSlot(this.Slots[Slot]);
+		return new S2Editor_NDSSlot(this.Slots[Slot], this.Region);
 	};
 
 	/*

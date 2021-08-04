@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-JSCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 SuperSaiyajinStackZ
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -28,7 +28,8 @@ import { Checksum_Calc } from '../shared/checksum.js';
 import { SAVUtils_Read, SAVUtils_Write, SAVUtils_WriteString, SAVUtils_ReadString, SAVData } from '../shared/savutils.js';
 
 export class S2Editor_NDSSlot {
-	constructor(Slot) { this.Offs = (Slot * 0x1000); };
+	/* Region is important for later i suppose because of Japanese. */
+	constructor(Slot, Region) { this.Offs = (Slot * 0x1000); this.Region = Region; };
 
 	/* Get and Set Simoleons. */
 	Simoleons(V) {

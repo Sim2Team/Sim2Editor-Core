@@ -8,7 +8,6 @@ For that, look at the coming soon:tm: wiki. It will also contain documentation a
 
 ## Credits
 - [SuperSaiyajinStackZ](https://github.com/SuperSaiyajinStackZ): Main Developer of the Core + Main SAV Researcher.
-- [Universal-Team](https://github.com/Universal-Team): Since i'm part of Universal-Team, also the Credits / Copyright goes to Universal-Team.
 
 
 Licensing:

@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-JSCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 SuperSaiyajinStackZ
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -54,22 +54,30 @@ export class S2Editor_GBACast {
 	};
 
 	/*
-		Get and Set the Picture.
+		Get and Set the Feeling.
 
 		0:  Neutral.
-		1:  Friendly.
+		1:  Happy.
 		2:  Angry.
-		3:  Love.
+		3:  Romantic.
 		4+: Invalid.
 	*/
-	Picture(V) {
+	Feeling(V) {
 		if (V) SAVUtils_Write("uint8_t", this.Offs + 0x3, Math.min(4, V));
 		else return SAVUtils_Read("uint8_t", this.Offs + 0x3);
 	};
 
-	/* Get and Set Mystery Unlock state. */
-	Mystery(V) {
+
+	/* Get and Set the registered on phone state. */
+	RegisteredOnPhone(V) {
+		if (V) SAVUtils_Write("uint8_t", this.Offs + 0x7, Math.min(1, V));
+		else return SAVUtils_Read("uint8_t", this.Offs + 0x7) == 1;
+	};
+
+
+	/* Get and Set Secret Unlock state. */
+	Secret(V) {
 		if (V) SAVUtils_Write("uint8_t", this.Offs + 0x8, Math.min(1, V));
-		else return SAVUtils_Read("uint8_t", this.Offs + 0x8);
+		else return SAVUtils_Read("uint8_t", this.Offs + 0x8) == 1;
 	};
 };

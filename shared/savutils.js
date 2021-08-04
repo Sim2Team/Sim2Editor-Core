@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-JSCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 SuperSaiyajinStackZ
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -25,14 +25,18 @@
 */
 
 export const GBAIdent = [ 0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34 ]; // GBA Header Identifier.
-export const NDSIdent = [ 0x64, 0x61, 0x74, 0x0, 0x20, 0x0, 0x0, 0x0 ]; // NDSSlot Header Identifier.
+export const NDSIdent = [ 0x64, 0x61, 0x74, 0x0, 0x1F, 0x0, 0x0, 0x0 ]; // NDSSlot Header Identifier.
 export let SAV, SAVName, SAVBuffer, SAVData, SAVSize, SAVType; // SAV Variables.
 
 /* Import SAV classes. */
 import { S2Editor_GBASAV } from '../gba/gbasav.js';
 import { S2Editor_NDSSAV } from '../nds/ndssav.js';
 
-/* Character Whitelist. */
+/*
+	Character Whitelist.
+
+	NOTE: The Japanese NDS Version is handled differently, so that's a TODO.
+*/
 const SAVUtils_CharWhiteList = [
 	/* UPPERCASE characters. */
 	'A', 'B', 'C', 'D', 'E', 'F', 'G',
@@ -66,7 +70,7 @@ export function SAVUtils_DetectType(Data, Size) {
 		return -1;
 	}
 
-	let Count = 0;
+	let Count = 0, Reg = 0;
 
 	/* Checking SAVType here. */
 	switch(Size) {
@@ -84,11 +88,21 @@ export function SAVUtils_DetectType(Data, Size) {
 			for (let Slot = 0; Slot < 5; Slot++) { // Check for all 5 possible Slots.
 				Count = 0; // Reset Count here.
 
-				for (let ID = 0; ID < 8; ID++) {
-					if (Data.getUint8((Slot * 0x1000) + ID) == NDSIdent[ID]) Count++;
-				}; // Identifier Checks.
+				for (let ID = 0; ID < 8; ID++) { // Identifier Checks.
+					if (ID == 0x4) { // 0x4 is the region specifier.
+						for (Reg = 0; Reg < 3; Reg++) {
+							if (Data.getUint8((Slot * 0x1000) + ID) == NDSIdent[ID] + Reg) {
+								Count++;
+								break;
+							}
+						}
 
-				if (Count == 8) return 1;
+					} else {
+						if (Data.getUint8((Slot * 0x1000) + ID) == NDSIdent[ID]) Count++;
+					}
+				};
+
+				if (Count == 8) return 1 + Reg;
 			}
 
 			return -1; // There were no 8 Count matches on all 5 Slots, hence invalid.
@@ -128,8 +142,10 @@ export function SAVUtils_LoadSAV(SAVFile, LoadCallback) {
 				SAV = new S2Editor_GBASAV(); // We are using a GBA SAV.
 				break;
 
-			case 1:
-				SAV = new S2Editor_NDSSAV(); // We are using a NDS SAV.
+			case 1: // USA.
+			case 2: // EUR.
+			case 3: // JPN.
+				SAV = new S2Editor_NDSSAV(SAVType - 1); // We are using a NDS SAV.
 				break;
 
 			default:
@@ -138,7 +154,7 @@ export function SAVUtils_LoadSAV(SAVFile, LoadCallback) {
 		}
 
 		if (SAV != undefined) {
-			if (SAVType == 0 || SAVType == 1) {
+			if (SAVType != -1) {
 				if (SAV.GetValid()) LoadCallback();
 			}
 		}
@@ -153,7 +169,9 @@ export function SAVUtils_LoadSAV(SAVFile, LoadCallback) {
 export function SAVUtils_ChangesMade() {
 	switch(SAVType) {
 		case 0: // GBA.
-		case 1: // NDS.
+		case 1: // NDS USA.
+		case 2: // NDS EUR.
+		case 3: // NDS JPN.
 			return SAV.GetChangesMade();
 
 		default: // NONE.
