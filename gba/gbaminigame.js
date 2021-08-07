@@ -34,12 +34,8 @@ export class S2Editor_GBAMinigame {
 
 	/* Get and Set if you played that game already today. */
 	Played(V) {
-		if (V) {
-			SAVUtils_WriteBit(this.Offs, this.Game, V);
-
-		} else {
-			return SAVUtils_ReadBit(this.Offs, this.Game);
-		}
+		if (V != undefined) SAVUtils_WriteBit(this.Offs, this.Game, V);
+		else return SAVUtils_ReadBit(this.Offs, this.Game);
 	};
 
 	/* Get and Set the Minigame Level. */
@@ -51,7 +47,7 @@ export class S2Editor_GBAMinigame {
 			if (Meta) SAVUtils_WriteBits(0x10 + (this.Game / 2), ((this.Game % 2) == 0), Math.min(5, V));
 
 		} else {
-			SAVUtils_Read("uint8_t", this.Offs + 0x24 + this.Game);
+			return SAVUtils_Read("uint8_t", this.Offs + 0x24 + this.Game);
 		}
 	};
 };

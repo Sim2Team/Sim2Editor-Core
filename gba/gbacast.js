@@ -70,14 +70,14 @@ export class S2Editor_GBACast {
 
 	/* Get and Set the registered on phone state. */
 	RegisteredOnPhone(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs + 0x7, Math.min(1, V));
+		if (V != undefined) SAVUtils_Write("uint8_t", this.Offs + 0x7, Math.min(1, V));
 		else return SAVUtils_Read("uint8_t", this.Offs + 0x7) == 1;
 	};
 
 
 	/* Get and Set Secret Unlock state. */
 	Secret(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs + 0x8, Math.min(1, V));
+		if (V != undefined) SAVUtils_Write("uint8_t", this.Offs + 0x8, Math.min(1, V));
 		else return SAVUtils_Read("uint8_t", this.Offs + 0x8) == 1;
 	};
 };

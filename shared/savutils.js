@@ -261,10 +261,10 @@ export function SAVUtils_ReadBit(Offs, BitIndex) {
 	IsSet: If it's set (1) or not (0).
 */
 export function SAVUtils_WriteBit(Offs, BitIndex, IsSet) {
-	if (SAVType == -1 || SAVData == undefined) return; // -1 -> Invalid.
+	if (SAVType == -1 || SAVBuffer == undefined) return; // -1 -> Invalid.
 
-	SAVData[Offs] &= ~(1 << BitIndex);
-	SAVData[Offs] |= (IsSet ? 1 : 0) << BitIndex;
+	SAVBuffer[Offs] &= ~(1 << BitIndex);
+	SAVBuffer[Offs] |= (IsSet ? 1 : 0) << BitIndex;
 
 	if (!SAV.GetChangesMade()) SAV.SetChangesMade(true);
 };

@@ -48,14 +48,12 @@ export function SimUtils_NumberFormat(Value, Nums) {
 	Example output: 23:59 / 11:59 PM.
 */
 export function SimUtils_TimeString(Time, AMPM = false) {
-	const Hour = (Time & 0xFF), Minute = (Time >> 8);
-
 	/* 24 Hour Handle. */
-	if (!AMPM) return SimUtils_NumberFormat(Hour, 2) + ':' + SimUtils_NumberFormat(Minute, 2);
+	if (!AMPM) return SimUtils_NumberFormat(Time[0x0], 2) + ':' + SimUtils_NumberFormat(Time[0x1], 2);
 	else { // 12 Hour handle.
 		const IsPM = (Hour > 11);
 
-		return SimUtils_NumberFormat((IsPM ? Hour - 12 : Hour), 2) + ':' + SimUtils_NumberFormat(Minute, 2) + (IsPM ? " PM" : " AM");
+		return SimUtils_NumberFormat((IsPM ? Time[0x0] - 12 : Time[0x0]), 2) + ':' + SimUtils_NumberFormat(Time[0x1], 2) + (IsPM ? " PM" : " AM");
 	}
 };
 
@@ -67,7 +65,7 @@ export function SimUtils_TimeString(Time, AMPM = false) {
 	Example output: 999.999$.
 */
 export function SimUtils_SimoleonFormat(Simoleons) {
-	const SString = Simoleons.toString() + '$';
+	const SString = Simoleons.toString() + '§';
 
 	/* Here we'll add the periods. */
 	switch(SString.length - 1) {
@@ -98,6 +96,6 @@ export function SimUtils_SimoleonFormat(Simoleons) {
 export function SimUtils_RatingFormat(Ratings) {
 	const SRatings = Ratings.toString();
 
-	if (SRatings.length == 4) return SRatings.substr(0, 1) + '.' + SRatings(1);
+	if (SRatings.length == 4) return SRatings.substr(0, 1) + '.' + SRatings.substr(1);
 	return SRatings;
 };

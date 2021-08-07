@@ -45,7 +45,7 @@ export class S2Editor_GBAEpisode {
 
 	/* Get and Set the Unlocked State. */
 	State(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs + 0x4, Math.min(1, V));
+		if (V != undefined) SAVUtils_Write("uint8_t", this.Offs + 0x4, Math.min(1, V));
 		else return SAVUtils_Read("uint8_t", this.Offs + 0x4);
 	};
 

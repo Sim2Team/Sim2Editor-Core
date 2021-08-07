@@ -60,8 +60,17 @@ export class S2Editor_GBASlot {
 
 	/* Get and Set Time. */
 	Time(V) {
-		if (V) SAVUtils_Write("uint16_t", this.Offs + 0x2, V);
-		else return SAVUtils_Read("uint16_t", this.Offs + 0x2); // Hour + Minute.
+		if (V) {
+			SAVUtils_Write("uint8_t", this.Offs + 0x2, V[0]);
+			SAVUtils_Write("uint8_t", this.Offs + 0x3, V[1]);
+
+		} else {
+			let TM = new Uint8Array(0x2);
+			TM[0x0] = SAVUtils_Read("uint8_t", this.Offs + 0x2);
+			TM[0x1] = SAVUtils_Read("uint8_t", this.Offs + 0x3);
+
+			return TM;
+		}
 	};
 
 	/* Get and Set Simoleons. */
