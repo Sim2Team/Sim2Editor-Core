@@ -24,8 +24,10 @@
 *         reasonable ways as different from the original version.
 */
 
-import { SAVUtils_ReadBits, SAVUtils_WriteBits } from '../shared/savutils.js';
-import { S2Editor_GBAHouseItem } from './gbahouseitem.js';
+
+import { SavUtils_ReadBits, SavUtils_WriteBits } from "../shared/savutils.js";
+import { S2Editor_GBAHouseItem } from "./gbahouseitem.js";
+
 
 export class S2Editor_GBAHouse {
 	constructor(Offs) { this.Offs = Offs; };
@@ -35,8 +37,8 @@ export class S2Editor_GBAHouse {
 		Only 0 - 3 SHOULD be used at all, the others aren't actual room designs and instead may cause issues.
 	*/
 	Roomdesign(V) {
-		if (V) SAVUtils_WriteBits(this.Offs + 0x2E, true, V);
-		else return SAVUtils_ReadBits(this.Offs + 0x2E, true);
+		if (V) SavUtils_WriteBits(this.Offs + 0x2E, true, V);
+		else return SavUtils_ReadBits(this.Offs + 0x2E, true);
 	};
 
 	/* Get the Items of your House / Room. */

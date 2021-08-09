@@ -24,8 +24,9 @@
 *         reasonable ways as different from the original version.
 */
 
-import { Checksum_Calc } from '../shared/checksum.js';
-import { SAVData, SAVUtils_Read, SAVUtils_Write } from '../shared/savutils.js';
+
+import { Checksum_Calc } from "../shared/checksum.js";
+import { SavData, SavUtils_Read, SavUtils_Write } from "../shared/savutils.js";
 
 /*
 	enum class GBALanguage : uint8_t {
@@ -42,6 +43,7 @@ import { SAVData, SAVUtils_Read, SAVUtils_Write } from '../shared/savutils.js';
 const SFXLevels = [ 0x0, 0x0C, 0x18, 0x24, 0x30, 0x3C, 0x48, 0x54, 0x60, 0x6C, 0x80 ];
 const MUSLevels = [ 0x0, 0x19, 0x32, 0x4B, 0x64, 0x7D, 0x96, 0xAF, 0xC8, 0xE1, 0xFF ];
 
+
 export class S2Editor_GBASettings {
 	constructor() { };
 
@@ -49,10 +51,10 @@ export class S2Editor_GBASettings {
 	SFX(V) {
 		if (V) {
 			if (V > 10) return; // 0 - 10 only valid.
-			SAVUtils_Write("uint8_t", 0x8, SFXLevels[V]);
+			SavUtils_Write("uint8_t", 0x8, SFXLevels[V]);
 
 		} else {
-			return SAVUtils_Read("uint8_t", 0x8);
+			return SavUtils_Read("uint8_t", 0x8);
 		}
 	};
 
@@ -60,10 +62,10 @@ export class S2Editor_GBASettings {
 	Music(V) {
 		if (V) {
 			if (V > 10) return; // 0 - 10 only valid.
-			SAVUtils_Write("uint8_t", 0x9, MUSLevels[V]);
+			SavUtils_Write("uint8_t", 0x9, MUSLevels[V]);
 
 		} else {
-			return SAVUtils_Read("uint8_t", 0x9);
+			return SavUtils_Read("uint8_t", 0x9);
 		}
 	};
 
@@ -71,23 +73,23 @@ export class S2Editor_GBASettings {
 	Language(V) {
 		if (V) {
 			if (V > 5) return;
-			SAVUtils_Write("uint8_t", 0xA, V);
+			SavUtils_Write("uint8_t", 0xA, V);
 
 		} else {
-			if (SAVUtils_Read("uint8_t", 0xA) > 5) return 0;
-			return SAVUtils_Read("uint8_t", 0xA);
+			if (SavUtils_Read("uint8_t", 0xA) > 5) return 0;
+			return SavUtils_Read("uint8_t", 0xA);
 		}
 	};
 
 	/* Update the Checksum of the GBA Settings. */
 	UpdateChecksum() {
-		const CurCHKS = SAVUtils_Read("uint16_t", 0xE);
+		const CurCHKS = SavUtils_Read("uint16_t", 0xE);
 
 		let SkipOffs = new Uint8Array(0x1);
 		SkipOffs[0] = 0xE / 2;
-		const Calced = Checksum_Calc(SAVData, 0x0, 0x18 / 2, SkipOffs);
+		const Calced = Checksum_Calc(SavData, 0x0, 0x18 / 2, SkipOffs);
 
 		/* If the calced result is NOT the current checksum. */
-		if (Calced != CurCHKS) SAVUtils_Write("uint16_t", 0xE, Calced);
+		if (Calced != CurCHKS) SavUtils_Write("uint16_t", 0xE, Calced);
 	};
 };

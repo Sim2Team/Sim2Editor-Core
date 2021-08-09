@@ -45,20 +45,21 @@ import S2Editor_NDSSkillPoints_DE from './de/nds/skillpoints.js';
 export let S2Editor_GBACasts, S2Editor_GBAEpisodes, S2Editor_GBAItemList, S2Editor_GBAMinigames,
 			S2Editor_GBASkillPoints, S2Editor_GBASocialMoves, S2Editor_NDSSkillPoints;
 
-/*
-	Load the Strings for the use with the SAVEditor.
 
-	SAVType: The SAVType which strings to load. (0 -> GBA, 1 -> NDS).
+/*
+	Load the Strings for the use with the Save Editor.
+
+	SavType: The SavType which strings to load. (0 -> GBA, 1 -> NDS).
 	Language: The language index to load (It uses the GBASettings Language index right now for both, GBA and NDS).
 
 	After that, use the exported variables listed above this comment.
 */
-export function S2Editor_LoadStrings(SAVType, Language) {
+export function S2Editor_LoadStrings(SavType, Language) {
 	/* 0 --> GBA. */
-	if (SAVType == 0) {
+	if (SavType == 0) {
 		switch(Language) {
-			default: // English.
-			case 0:
+			default:
+			case 0: // English.
 				S2Editor_GBACasts = S2Editor_GBACasts_EN;
 				S2Editor_GBAEpisodes = S2Editor_GBAEpisodes_EN;
 				S2Editor_GBAItemList = S2Editor_GBAItemList_EN;
@@ -78,10 +79,10 @@ export function S2Editor_LoadStrings(SAVType, Language) {
 		}
 
 	/* 1 --> NDS. */
-	} else if (SAVType == 1) {
+	} else if (SavType == 1) {
 		switch(Language) {
-			default: // English.
-			case 0:
+			default:
+			case 0: // English.
 				S2Editor_NDSSkillPoints = S2Editor_NDSSkillPoints_EN;
 				break;
 
@@ -91,6 +92,7 @@ export function S2Editor_LoadStrings(SAVType, Language) {
 		}
 	}
 };
+
 
 /*
 	Return an GBA Item's name.

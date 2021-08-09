@@ -24,7 +24,9 @@
 *         reasonable ways as different from the original version.
 */
 
-import { SAVUtils_Read, SAVUtils_ReadBit, SAVUtils_Write, SAVUtils_WriteBit, SAVUtils_WriteBits } from '../shared/savutils.js';
+
+import { SavUtils_Read, SavUtils_ReadBit, SavUtils_Write, SavUtils_WriteBit, SavUtils_WriteBits } from "../shared/savutils.js";
+
 
 export class S2Editor_GBAMinigame {
 	constructor(Offs, Game) {
@@ -34,20 +36,20 @@ export class S2Editor_GBAMinigame {
 
 	/* Get and Set if you played that game already today. */
 	Played(V) {
-		if (V != undefined) SAVUtils_WriteBit(this.Offs, this.Game, V);
-		else return SAVUtils_ReadBit(this.Offs, this.Game);
+		if (V != undefined) SavUtils_WriteBit(this.Offs, this.Game, V);
+		else return SavUtils_ReadBit(this.Offs, this.Game);
 	};
 
 	/* Get and Set the Minigame Level. */
 	Level(V, Meta) {
 		if (V) {
-			SAVUtils_Write("uint8_t", this.Offs + 0x24 + this.Game, Math.min(5, V));
+			SavUtils_Write("uint8_t", this.Offs + 0x24 + this.Game, Math.min(5, V));
 
 			/* Optionally: Set to Metadata / Settings as well. */
-			if (Meta) SAVUtils_WriteBits(0x10 + (this.Game / 2), ((this.Game % 2) == 0), Math.min(5, V));
+			if (Meta) SavUtils_WriteBits(0x10 + (this.Game / 2), ((this.Game % 2) == 0), Math.min(5, V));
 
 		} else {
-			return SAVUtils_Read("uint8_t", this.Offs + 0x24 + this.Game);
+			return SavUtils_Read("uint8_t", this.Offs + 0x24 + this.Game);
 		}
 	};
 };

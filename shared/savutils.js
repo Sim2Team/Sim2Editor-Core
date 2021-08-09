@@ -24,20 +24,37 @@
 *         reasonable ways as different from the original version.
 */
 
-export const GBAIdent = [ 0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34 ]; // GBA Header Identifier.
-export const NDSIdent = [ 0x64, 0x61, 0x74, 0x0, 0x1F, 0x0, 0x0, 0x0 ]; // NDSSlot Header Identifier.
-export let SAV, SAVName, SAVBuffer, SAVData, SAVSize, SAVType; // SAV Variables.
 
-/* Import SAV classes. */
-import { S2Editor_GBASAV } from '../gba/gbasav.js';
-import { S2Editor_NDSSAV } from '../nds/ndssav.js';
+export const GBAIdent = [ 0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34 ]; // GBA Header Identifier.
+export const NDSIdent = [ 0x64, 0x61, 0x74, 0x0, 0x1F, 0x0, 0x0, 0x0 ]; // NDS Slot Header Identifier.
+
+
+/*
+	Sav: The Sav class of the active save. It can be a GBASav, or NDSSav or undefined.
+	SavName: The name of the Save you loaded.
+	SavBuffer: The main Raw Buffer of the Save you loaded.
+	SavData: The DataView of the SavBuffer, so you can also read them like 'getUint8(...)' etc.
+	SavSize: The size of the Save you loaded.
+	SavType: The SavType of the Save you loaded, see below for types and values.
+
+	-1: Invalid.
+	 0: Game Boy Advance EUR / USA.
+	 1: Nintendo DS USA International.
+	 2: Nintendo DS EUR International.
+	 3: Nintendo DS JPN Japanese.
+*/
+export let Sav, SavName, SavBuffer, SavData, SavSize, SavType; // See above.
+
+/* Import Sav classes. */
+import { S2Editor_GBASav } from "../gba/gbasav.js";
+import { S2Editor_NDSSav } from "../nds/ndssav.js";
 
 /*
 	Character Whitelist.
 
 	NOTE: The Japanese NDS Version is handled differently, so that's a TODO.
 */
-const SAVUtils_CharWhiteList = [
+const SavUtils_CharWhiteList = [
 	/* UPPERCASE characters. */
 	'A', 'B', 'C', 'D', 'E', 'F', 'G',
 	'H', 'I', 'J', 'K', 'L', 'M',
@@ -56,15 +73,16 @@ const SAVUtils_CharWhiteList = [
 	'&', '_', '*', '(', ')'
 ];
 
-/*
-	Detect the SAVType of a SAVFile.
 
-	Data: The DataView of the SAVData.
-	Size: The size of the SAVFile.
+/*
+	Detect the SavType of a SavFile.
+
+	Data: The DataView of the SavData.
+	Size: The size of the SavFile.
 
 	Returns -1 for Invalid, 0 for GBA and 1 for NDS.
 */
-export function SAVUtils_DetectType(Data, Size) {
+export function SavUtils_DetectType(Data, Size) {
 	if (!Data) {
 		console.log("No Data provided.");
 		return -1;
@@ -72,7 +90,7 @@ export function SAVUtils_DetectType(Data, Size) {
 
 	let Count = 0, Reg = 0;
 
-	/* Checking SAVType here. */
+	/* Checking SavType here. */
 	switch(Size) {
 		case 0x10000:
 		case 0x20000: // 64, 128 KB is a GBA Size.
@@ -112,104 +130,123 @@ export function SAVUtils_DetectType(Data, Size) {
 	}
 };
 
+
 /*
-	Load the SAV.
+	Load the Sav.
 
-	SAVFile: SAVFile.
-	LoadCallback: The Action that happens, after the SAVFile is valid and has been read (Like the Menu Handle).
+	SavFile: The Savefile.
+	LoadCallback: The Action that happens, after the SaveFile is valid and has been read (Like the Menu Handle).
+	ErrorCallback: The Action that happens, after the Savefile is loaded, however invalid (Like an error telling something).
 
-	returns -1 for invalid, 0 for GBA, 1 for NDS.
+	returns -1 for invalid, 0 for GBA, 1, 2 or 3 for NDS.
 */
-export function SAVUtils_LoadSAV(SAVFile, LoadCallback) {
-	if (!SAVFile) {
-		alert("No Savefile selected.");
+export function SavUtils_LoadSav(SavFile, LoadCallback, ErrorCallback) {
+	if (!SavFile) {
+		if (ErrorCallback != undefined) ErrorCallback();
 		return -1;
 	}
 
-	SAVName = SAVFile.name;
-	SAVSize = SAVFile.size;
+	SavName = SavFile.name;
+	SavSize = SavFile.size;
 
 	let Reader = new FileReader();
-	Reader.readAsArrayBuffer(SAVFile);
+	Reader.readAsArrayBuffer(SavFile);
 
 	Reader.onload = function() {
-		SAVBuffer = new Uint8Array(this.result);
-		SAVData = new DataView(SAVBuffer.buffer);
-		SAVType = SAVUtils_DetectType(SAVData, SAVSize); // Detect SAVType.
+		SavBuffer = new Uint8Array(this.result);
+		SavData = new DataView(SavBuffer.buffer);
+		SavType = SavUtils_DetectType(SavData, SavSize); // Detect SavType.
 
-		switch(SAVType) {
-			case 0:
-				SAV = new S2Editor_GBASAV(); // We are using a GBA SAV.
+		switch(SavType) {
+			case 0: // GBA EUR / USA.
+				Sav = new S2Editor_GBASav(); // We are using a GBA Sav.
 				break;
 
-			case 1: // USA.
-			case 2: // EUR.
-			case 3: // JPN.
-				SAV = new S2Editor_NDSSAV(SAVType - 1); // We are using a NDS SAV.
+			case 1: // NDS USA.
+			case 2: // NDS EUR.
+			case 3: // NDS JPN.
+				Sav = new S2Editor_NDSSav(SavType - 1); // We are using a NDS Sav.
 				break;
 
 			default:
-				SAV = undefined; // Invalid SAV.
+				Sav = undefined; // Invalid Sav.
 				break;
 		}
 
-		if (SAV != undefined) {
-			if (SAVType != -1) {
-				if (SAV.GetValid()) LoadCallback();
-			}
+		/*
+			Returns true if the Sav is not undefined and SavType is between 0 and 3, which is
+
+			0: GBA EUR / USA.
+			1: NDS USA.
+			2: NDS EUR.
+			3: NDS JPN.
+		*/
+		const State = (Sav != undefined && SavType != undefined && SavType >= 0 && SavType <= 3);
+
+		/* Handle if doing the Loader Callback or Error Callback. */
+		if (State) {
+			if (LoadCallback != undefined) LoadCallback();
+
+		} else {
+			if (ErrorCallback != undefined) ErrorCallback();
 		}
 	};
 };
+
 
 /*
 	Return, if changes have been made.
 
 	Returns false or true, depending on changes made status.
 */
-export function SAVUtils_ChangesMade() {
-	switch(SAVType) {
-		case 0: // GBA.
-		case 1: // NDS USA.
-		case 2: // NDS EUR.
-		case 3: // NDS JPN.
-			return SAV.GetChangesMade();
+export function SavUtils_ChangesMade() {
+	if (SavType == undefined) return false;
 
-		default: // NONE.
+	switch(SavType) {
+		case 0: // GBA EUR / USA.
+		case 1: // NDS USA (International).
+		case 2: // NDS EUR (International).
+		case 3: // NDS JPN (Japanese).
+			return Sav.GetChangesMade();
+
+		default: // Invalid.
 			return false;
 	}
 };
 
+
 /*
-	Read something from the SAVData.
+	Read something from the SavData.
 
 	Type: The type to read.
 	Offs: Where to read from.
 
 	I used this style, because it seems similar at some point to the C++ version.
 */
-export function SAVUtils_Read(Type, Offs) {
-	if (SAVType == -1 || SAVData == undefined) return 0; // -1 -> Invalid.
+export function SavUtils_Read(Type, Offs) {
+	if (SavType == undefined || SavType == -1 || SavData == undefined) return 0; // -1 -> Invalid.
 
 	switch(Type) {
 		case "uint8_t":
 		case "u8":
-			return SAVData.getUint8(Offs);
+			return SavData.getUint8(Offs);
 
 		case "uint16_t":
 		case "u16":
-			return SAVData.getUint16(Offs, true);
+			return SavData.getUint16(Offs, true);
 
 		case "uint32_t":
 		case "u32":
-			return SAVData.getUint32(Offs, true);
+			return SavData.getUint32(Offs, true);
 
 		default:
 			return 0;
 	}
 };
 
+
 /*
-	Write something to the SAVData.
+	Write something to the SavData.
 
 	Type: The type to write.
 	Offs: Where to write to.
@@ -217,57 +254,60 @@ export function SAVUtils_Read(Type, Offs) {
 
 	I used this style, because it seems similar at some point to the C++ version.
 */
-export function SAVUtils_Write(Type, Offs, Data) {
-	if (SAVType == -1 || SAVData == undefined) return; // -1 -> Invalid.
+export function SavUtils_Write(Type, Offs, Data) {
+	if (SavType == undefined || SavType == -1 || SavData == undefined) return; // -1 -> Invalid.
 
 	switch(Type) {
 		case "uint8_t":
 		case "u8":
-			SAVData.setUint8(Offs, Math.min(0xFF, Data));
-			if (!SAV.GetChangesMade()) SAV.SetChangesMade(true);
+			SavData.setUint8(Offs, Math.min(0xFF, Data));
+			if (!Sav.GetChangesMade()) Sav.SetChangesMade(true);
 			break;
 
 		case "uint16_t":
 		case "u16":
-			SAVData.setUint16(Offs, Math.min(0xFFFF, Data), true);
-			if (!SAV.GetChangesMade()) SAV.SetChangesMade(true);
+			SavData.setUint16(Offs, Math.min(0xFFFF, Data), true);
+			if (!Sav.GetChangesMade()) Sav.SetChangesMade(true);
 			break;
 
 		case "uint32_t":
 		case "u32":
-			SAVData.setUint32(Offs, Math.min(0xFFFFFFFF, Data), true);
-			if (!SAV.GetChangesMade()) SAV.SetChangesMade(true);
+			SavData.setUint32(Offs, Math.min(0xFFFFFFFF, Data), true);
+			if (!Sav.GetChangesMade()) Sav.SetChangesMade(true);
 			break;
 	}
 };
 
+
 /*
-	Return a bit from the SAVData.
+	Return a bit from the SavData.
 
 	Offs: The Offset to read from.
 	BitIndex: The Bit index ( 0 - 7 ).
 */
-export function SAVUtils_ReadBit(Offs, BitIndex) {
-	if (SAVType == -1 || SAVData == undefined) return; // -1 -> Invalid.
+export function SavUtils_ReadBit(Offs, BitIndex) {
+	if (SavType == undefined || SavType == -1 || SavData == undefined) return; // -1 -> Invalid.
 
-	return (SAVUtils_Read("uint8_t", Offs) >> BitIndex & 1) != 0;
+	return (SavUtils_Read("uint8_t", Offs) >> BitIndex & 1) != 0;
 };
 
+
 /*
-	Set a bit to the SAVData.
+	Set a bit to the SavData.
 
 	Offs: The Offset to write to.
 	BitIndex: The Bit index ( 0 - 7 ).
 	IsSet: If it's set (1) or not (0).
 */
-export function SAVUtils_WriteBit(Offs, BitIndex, IsSet) {
-	if (SAVType == -1 || SAVBuffer == undefined) return; // -1 -> Invalid.
+export function SavUtils_WriteBit(Offs, BitIndex, IsSet) {
+	if (SavType == undefined || SavType == -1 || SavBuffer == undefined) return; // -1 -> Invalid.
 
-	SAVBuffer[Offs] &= ~(1 << BitIndex);
-	SAVBuffer[Offs] |= (IsSet ? 1 : 0) << BitIndex;
+	SavBuffer[Offs] &= ~(1 << BitIndex);
+	SavBuffer[Offs] |= (IsSet ? 1 : 0) << BitIndex;
 
-	if (!SAV.GetChangesMade()) SAV.SetChangesMade(true);
+	if (!Sav.GetChangesMade()) Sav.SetChangesMade(true);
 };
+
 
 /*
 	Read Lower / Upper Bits.
@@ -275,12 +315,13 @@ export function SAVUtils_WriteBit(Offs, BitIndex, IsSet) {
 	Offs: The offset where to read from.
 	First: If Reading from the first four bits, or second.
 */
-export function SAVUtils_ReadBits(Offs, First) {
-	if (SAVData == undefined || SAVType == -1) return 0x0;
+export function SavUtils_ReadBits(Offs, First) {
+	if (SavType == undefined || SavType == -1 || SavData == undefined) return 0x0;
 
-	if (First) return (SAVData.getUint8(Offs) & 0xF); // Bit 0 - 3.
-	else return (SAVData.getUint8(Offs) >> 4); // Bit 4 - 7.
+	if (First) return (SavData.getUint8(Offs) & 0xF); // Bit 0 - 3.
+	else return (SavData.getUint8(Offs) >> 4); // Bit 4 - 7.
 };
+
 
 /*
 	Write Lower / Upper Bits.
@@ -289,42 +330,43 @@ export function SAVUtils_ReadBits(Offs, First) {
 	First: If Writing on the first four bits, or second.
 	Data: The Data to write.
 */
-export function SAVUtils_WriteBits(Offs, First, Data) {
-	if (Data > 0xF || SAVData == undefined || SAVType == -1) return;
+export function SavUtils_WriteBits(Offs, First, Data) {
+	if (Data > 0xF || SavData == undefined || SavType == undefined || SavType == -1) return;
 
-	if (First) SAVUtils_Write("uint8_t", Offs, (SAVData.getUint8(Offs) & 0xF0) | (Data & 0xF)); // Bit 0 - 3.
-	else SAVUtils_Write("uint8_t", Offs, (SAVData.getUint8(Offs) & 0x0F) | (Data << 4)); // Bit 4 - 7.
+	if (First) SavUtils_Write("uint8_t", Offs, (SavData.getUint8(Offs) & 0xF0) | (Data & 0xF)); // Bit 0 - 3.
+	else SavUtils_Write("uint8_t", Offs, (SavData.getUint8(Offs) & 0x0F) | (Data << 4)); // Bit 4 - 7.
 };
 
 
 /*
-	Read a String from the SAVData.
+	Read a String from the SavData.
 
 	Offs: Where to read from.
 	Length: The length to read.
 */
-export function SAVUtils_ReadString(Offs, Length) {
-	if (SAVType == -1 || SAVData == undefined) return ""; // -1 -> Invalid.
-	let STR = '';
+export function SavUtils_ReadString(Offs, Length) {
+	if (SavType == undefined || SavType == -1 || SavData == undefined) return ""; // -1 -> Invalid.
+	let Str = '';
 
 	for (let i = 0; i < Length; i++) {
-		if (SAVData.getUint8(Offs + i) == 0x0) break; // Do not continue to read.
+		if (SavData.getUint8(Offs + i) == 0x0) break; // Do not continue to read.
 
-		STR += String.fromCharCode(SAVData.getUint8(Offs + i));
+		Str += String.fromCharCode(SavData.getUint8(Offs + i));
 	}
 
-	return STR;
+	return Str;
 };
 
+
 /*
-	Write a String to the SAVData.
+	Write a String to the SavData.
 
 	Offs: Where to write to.
 	Length: The length to write.
 	STR: What to write.
 */
-export function SAVUtils_WriteString(Offs, Length, STR) {
-	if (SAVType == -1 || STR == undefined || SAVData == undefined) return;
+export function SavUtils_WriteString(Offs, Length, Str) {
+	if (SavType == undefined || SavType == -1 || Str == undefined || SavData == undefined) return;
 	let Index = 0, Filler = false;
 
 	while(Index < Length) {
@@ -333,8 +375,8 @@ export function SAVUtils_WriteString(Offs, Length, STR) {
 
 		if (!Filler) { // As long as it's not the filler, we're able to do this action, else we fill with ZEROs.
 			for (let i = 0; i < 72; i++) {
-				if (STR.charAt(Index - 1) == SAVUtils_CharWhiteList[i]) {
-					SAVData.setUint8(Offs + (Index - 1), STR.charCodeAt(Index - 1));
+				if (Str.charAt(Index - 1) == SavUtils_CharWhiteList[i]) {
+					SavData.setUint8(Offs + (Index - 1), Str.charCodeAt(Index - 1));
 					CouldFind = true;
 					break;
 				}
@@ -343,38 +385,41 @@ export function SAVUtils_WriteString(Offs, Length, STR) {
 
 		if (!CouldFind) {
 			Filler = true;
-			SAVData.setUint8(Offs + (Index - 1), 0x0); // Place 0x0.
+			SavData.setUint8(Offs + (Index - 1), 0x0); // Place 0x0.
 		}
 	}
 
-	if (!SAV.GetChangesMade()) SAV.SetChangesMade(true); // Changes have been made.
+	if (!Sav.GetChangesMade()) Sav.SetChangesMade(true); // Changes have been made.
 };
+
 
 /*
 	Call this when you are done.
 
-	This updates the checksums etc and downloads the SAVFile.
-	NOTE: Everything is being reset which is SAV Related, keep that in mind.
+	This updates the checksums etc and downloads the SavFile.
+	NOTE: Everything is being reset which is Sav Related, keep that in mind.
 */
-export function SAVUtils_Finish() {
-	if (SAVType == -1) return;
+export function SavUtils_Finish(ShouldReset) {
+	if (SavType == undefined || SavType == -1 || SavType == undefined) return;
 
-	SAV.Finish(); // Finish SAV Call.
+	Sav.Finish(); // Finish Sav Call.
 
 	/* Setup and prepare Download Click. */
-	let blob = new Blob([SAVBuffer], { type: "application/octet-stream" });
-	let a = document.createElement('a');
-	let url = window.URL.createObjectURL(blob);
-	a.href = url;
-	a.download = SAVName;
+	let _Blob = new Blob([SavBuffer], { type: "application/octet-stream" });
+	let Element = document.createElement('a');
+	let Url = window.URL.createObjectURL(_Blob);
+	Element.href = Url;
+	Element.download = SavName;
+	Element.click(); // Download the SaveFile.
 
-	a.click(); // Download the SAVFile.
-
-	/* Reset SAV. */
-	SAVType = -1;
-	SAVName = '';
-	SAV = undefined;
-	SAVData = undefined;
-	SAVBuffer = undefined;
-	SAVSize = 0;
+	/* Make the reset optional, i guess. */
+	if (ShouldReset == true) {
+		/* Reset the Sav. */
+		SavType = -1;
+		SavName = '';
+		Sav = undefined;
+		SavData = undefined;
+		SavBuffer = undefined;
+		SavSize = 0;
+	}
 };

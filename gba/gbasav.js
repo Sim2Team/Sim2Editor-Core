@@ -24,11 +24,13 @@
 *         reasonable ways as different from the original version.
 */
 
-import { GBAIdent, SAVData, SAVUtils_Read, SAVUtils_Write } from '../shared/savutils.js';
-import { S2Editor_GBASlot } from './gbaslot.js';
-import { S2Editor_GBASettings } from './gbasettings.js';
 
-export class S2Editor_GBASAV {
+import { GBAIdent, SavData, SavUtils_Read, SavUtils_Write } from "../shared/savutils.js";
+import { S2Editor_GBASlot } from "./gbaslot.js";
+import { S2Editor_GBASettings } from "./gbasettings.js";
+
+
+export class S2Editor_GBASav {
 	constructor() {
 		this.ChangesMade = false;
 		this.ValidationCheck();
@@ -36,20 +38,20 @@ export class S2Editor_GBASAV {
 
 	/* Some Save Validation checks. */
 	ValidationCheck() {
-		if (!SAVData) return;
+		if (!SavData) return;
 
 		/* Now do the Validation check through the Save Header with the GBAIdents. */
 		let Res = true;
 		for (let Idx = 0; Idx < 7; Idx++) {
-			if (SAVUtils_Read("uint8_t", Idx) != GBAIdent[Idx]) {
+			if (SavUtils_Read("uint8_t", Idx) != GBAIdent[Idx]) {
 				Res = false;
 				break;
 			}
 		}
 
 		/* Language Checks as well, because why not. */
-		if (SAVUtils_Read("uint8_t", 0xA) > 5) { // Language Index is 6 or larger, which is "blank" and can break the game.
-			SAVUtils_Write("uint8_t", 0xA, 0); // English.
+		if (SavUtils_Read("uint8_t", 0xA) > 5) { // Language Index is 6 or larger, which is "blank" and can break the game.
+			SavUtils_Write("uint8_t", 0xA, 0); // English.
 			this.ChangesMade = true;
 		}
 
@@ -65,7 +67,7 @@ export class S2Editor_GBASAV {
 		if (Slot < 1 || Slot > 4 || !this.GetValid()) return false;
 
 		for (let Idx = 0; Idx < 10; Idx++) {
-			if (SAVUtils_Read("uint8_t", (Slot * 0x1000) + Idx) != 0) return true;
+			if (SavUtils_Read("uint8_t", (Slot * 0x1000) + Idx) != 0) return true;
 		}
 
 		return false;
@@ -74,7 +76,7 @@ export class S2Editor_GBASAV {
 	/*
 		Return a GBASlot class.
 
-		Slot: The GBASAV Slot ( 1 - 4 ).
+		Slot: The GBASav Slot ( 1 - 4 ).
 	*/
 	Slot(Slot) {
 		if (!this.SlotExist(Slot)) return undefined;
@@ -101,7 +103,7 @@ export class S2Editor_GBASAV {
 		this.Settings().UpdateChecksum();
 	};
 
-	/* Return if the SAV is valid. */
+	/* Return if the Sav is valid. */
 	GetValid() { return this.SavValid; };
 
 	/* Get and Set if changes made. */

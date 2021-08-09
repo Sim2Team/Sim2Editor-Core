@@ -24,7 +24,9 @@
 *         reasonable ways as different from the original version.
 */
 
-import { SAVUtils_Read, SAVUtils_Write } from '../shared/savutils.js';
+
+import { SavUtils_Read, SavUtils_Write } from "../shared/savutils.js";
+
 
 export class S2Editor_GBACast {
 	constructor(Offs, Cast) {
@@ -37,20 +39,20 @@ export class S2Editor_GBACast {
 
 	/* Get and Set Friendly Conversation level. */
 	Friendly(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs, Math.min(3, V));
-		else return SAVUtils_Read("uint8_t", this.Offs);
+		if (V) SavUtils_Write("uint8_t", this.Offs, Math.min(3, V));
+		else return SavUtils_Read("uint8_t", this.Offs);
 	};
 
 	/* Get and Set Romance Conversation level. */
 	Romance(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs + 0x1, Math.min(3, V));
-		else return SAVUtils_Read("uint8_t", this.Offs + 0x1);
+		if (V) SavUtils_Write("uint8_t", this.Offs + 0x1, Math.min(3, V));
+		else return SavUtils_Read("uint8_t", this.Offs + 0x1);
 	};
 
 	/* Get and Set Intimidate Conversation level. */
 	Intimidate(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs + 0x2, Math.min(3, V));
-		else return SAVUtils_Read("uint8_t", this.Offs + 0x2);
+		if (V) SavUtils_Write("uint8_t", this.Offs + 0x2, Math.min(3, V));
+		else return SavUtils_Read("uint8_t", this.Offs + 0x2);
 	};
 
 	/*
@@ -63,21 +65,21 @@ export class S2Editor_GBACast {
 		4+: Invalid.
 	*/
 	Feeling(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs + 0x3, Math.min(4, V));
-		else return SAVUtils_Read("uint8_t", this.Offs + 0x3);
+		if (V) SavUtils_Write("uint8_t", this.Offs + 0x3, Math.min(4, V));
+		else return SavUtils_Read("uint8_t", this.Offs + 0x3);
 	};
 
 
 	/* Get and Set the registered on phone state. */
 	RegisteredOnPhone(V) {
-		if (V != undefined) SAVUtils_Write("uint8_t", this.Offs + 0x7, Math.min(1, V));
-		else return SAVUtils_Read("uint8_t", this.Offs + 0x7) == 1;
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x7, Math.min(1, V));
+		else return SavUtils_Read("uint8_t", this.Offs + 0x7) == 1;
 	};
 
 
 	/* Get and Set Secret Unlock state. */
 	Secret(V) {
-		if (V != undefined) SAVUtils_Write("uint8_t", this.Offs + 0x8, Math.min(1, V));
-		else return SAVUtils_Read("uint8_t", this.Offs + 0x8) == 1;
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x8, Math.min(1, V));
+		else return SavUtils_Read("uint8_t", this.Offs + 0x8) == 1;
 	};
 };

@@ -24,21 +24,23 @@
 *         reasonable ways as different from the original version.
 */
 
-import { SAVUtils_Read, SAVUtils_Write } from '../shared/savutils.js';
+
+import { SavUtils_Read, SavUtils_Write } from "../shared/savutils.js";
+
 
 export class S2Editor_GBAItem {
 	constructor(Offs) { this.Offs = Offs; };
 
 	/* Get and Set Item Count. */
 	Count(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs, Math.min(6, V));
-		else return SAVUtils_Read("uint8_t", this.Offs);
+		if (V) SavUtils_Write("uint8_t", this.Offs, Math.min(6, V));
+		else return SavUtils_Read("uint8_t", this.Offs);
 	};
 
 	/* Get and Set Item ID. */
 	ID(Index, V) {
 		if (V) {
-			SAVUtils_Write("uint8_t", this.Offs + 1 + (Math.min(5, Index) * 0x3), V);
+			SavUtils_Write("uint8_t", this.Offs + 1 + (Math.min(5, Index) * 0x3), V);
 
 			/* Update Item Count. */
 			let Amount = 0;
@@ -49,7 +51,7 @@ export class S2Editor_GBAItem {
 			if (this.Count() != Amount) this.Count(Amount);
 
 		} else {
-			return SAVUtils_Read("uint8_t", this.Offs + 1 + (Math.min(5, Index) * 0x3));
+			return SavUtils_Read("uint8_t", this.Offs + 1 + (Math.min(5, Index) * 0x3));
 		}
 	};
 };

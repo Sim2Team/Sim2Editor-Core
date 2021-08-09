@@ -24,7 +24,9 @@
 *         reasonable ways as different from the original version.
 */
 
-import { SAVData, SAVUtils_Read, SAVUtils_Write } from '../shared/savutils.js';
+
+import { SavData, SavUtils_Read, SavUtils_Write } from "../shared/savutils.js";
+
 
 /*
 	enum class GBAHouseItemDirection : uint8_t {
@@ -41,19 +43,19 @@ export class S2Editor_GBAHouseItem {
 
 	/* Get and Set the Item Count. */
 	Count(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs, Math.min(12, V));
-		else return SAVUtils_Read("uint8_t", this.Offs);
+		if (V) SavUtils_Write("uint8_t", this.Offs, Math.min(12, V));
+		else return SavUtils_Read("uint8_t", this.Offs);
 	};
 
 	/* Get and Set the Item ID. */
 	ID(Index, V) {
 		if (V) {
 			if (this.Count() == 0) return;
-			SAVUtils_Write("uint8_t", this.Offs + 0x1 + (Math.min(this.Count() - 1, Index) * 0x6), V);
+			SavUtils_Write("uint8_t", this.Offs + 0x1 + (Math.min(this.Count() - 1, Index) * 0x6), V);
 
 		} else {
 			if (this.Count() == 0) return 0xE6; // Empty.
-			return SAVUtils_Read("uint8_t", this.Offs + 0x1 + (Math.min(this.Count() - 1, Index) * 0x6));
+			return SavUtils_Read("uint8_t", this.Offs + 0x1 + (Math.min(this.Count() - 1, Index) * 0x6));
 		}
 	};
 
@@ -61,11 +63,11 @@ export class S2Editor_GBAHouseItem {
 	Flag(Index, V) {
 		if (V) {
 			if (this.Count() == 0) return;
-			SAVUtils_Write("uint8_t", this.Offs + 0x2 + (Math.min(this.Count() - 1, Index) * 0x6), V);
+			SavUtils_Write("uint8_t", this.Offs + 0x2 + (Math.min(this.Count() - 1, Index) * 0x6), V);
 
 		} else {
 			if (this.Count() == 0) return 0x0; // No flags.
-			return SAVUtils_Read("uint8_t", this.Offs + 0x2 + (Math.min(this.Count() - 1, Index) * 0x6));
+			return SavUtils_Read("uint8_t", this.Offs + 0x2 + (Math.min(this.Count() - 1, Index) * 0x6));
 		}
 	};
 
@@ -73,11 +75,11 @@ export class S2Editor_GBAHouseItem {
 	UseCount(Index, V) {
 		if (V) {
 			if (this.Count() == 0) return;
-			SAVUtils_Write("uint8_t", this.Offs + 0x3 + (Math.min(this.Count() - 1, Index) * 0x6), V);
+			SavUtils_Write("uint8_t", this.Offs + 0x3 + (Math.min(this.Count() - 1, Index) * 0x6), V);
 
 		} else {
 			if (this.Count() == 0) return 0x0; // No Count.
-			return SAVUtils_Read("uint8_t", this.Offs + 0x3 + (Math.min(this.Count() - 1, Index) * 0x6));
+			return SavUtils_Read("uint8_t", this.Offs + 0x3 + (Math.min(this.Count() - 1, Index) * 0x6));
 		}
 	};
 
@@ -85,11 +87,11 @@ export class S2Editor_GBAHouseItem {
 	XPos(Index, V) {
 		if (V) {
 			if (this.Count() == 0) return;
-			SAVUtils_Write("uint8_t", this.Offs + 0x4 + (Math.min(this.Count() - 1, Index) * 0x6), V);
+			SavUtils_Write("uint8_t", this.Offs + 0x4 + (Math.min(this.Count() - 1, Index) * 0x6), V);
 
 		} else {
 			if (this.Count() == 0) return 0x0; // Position 0.
-			return SAVUtils_Read("uint8_t", this.Offs + 0x4 + (Math.min(this.Count() - 1, Index) * 0x6));
+			return SavUtils_Read("uint8_t", this.Offs + 0x4 + (Math.min(this.Count() - 1, Index) * 0x6));
 		}
 	};
 
@@ -97,11 +99,11 @@ export class S2Editor_GBAHouseItem {
 	YPos(Index, V) {
 		if (V) {
 			if (this.Count() == 0) return;
-			SAVUtils_Write("uint8_t", this.Offs + 0x5 + (Math.min(this.Count() - 1, Index) * 0x6), V);
+			SavUtils_Write("uint8_t", this.Offs + 0x5 + (Math.min(this.Count() - 1, Index) * 0x6), V);
 
 		} else {
 			if (this.Count() == 0) return 0x0; // Position 0.
-			return SAVUtils_Read("uint8_t", this.Offs + 0x5 + (Math.min(this.Count() - 1, Index) * 0x6));
+			return SavUtils_Read("uint8_t", this.Offs + 0x5 + (Math.min(this.Count() - 1, Index) * 0x6));
 		}
 	};
 
@@ -110,12 +112,12 @@ export class S2Editor_GBAHouseItem {
 		if (V) {
 			if (this.Count() == 0 || V > 4) return;
 			const Positions = [ 0x0, 0x1, 0x3, 0x5, 0x7 ];
-			SAVUtils_Write("uint8_t", this.Offs + 0x6 + (Math.min(this.Count() - 1, Index) * 0x6), Positions[V]);
+			SavUtils_Write("uint8_t", this.Offs + 0x6 + (Math.min(this.Count() - 1, Index) * 0x6), Positions[V]);
 
 		} else {
 			if (this.Count() == 0) return 0x0; // Position 0.
 
-			const Res = SAVUtils_Read("uint8_t", this.Offs + 0x6 + (Math.min(this.Count() - 1, Index) * 0x6));
+			const Res = SavUtils_Read("uint8_t", this.Offs + 0x6 + (Math.min(this.Count() - 1, Index) * 0x6));
 			switch(Res) {
 				case 0x1:
 					return 0x1; // Right.
@@ -153,12 +155,12 @@ export class S2Editor_GBAHouseItem {
 		let TMP = new Uint8Array(0xF26 - (this.Count() * 6));
 		/* Copy first to a TMP buffer. */
 		for (let Idx = 0; Idx < 0xF26 - (this.Count() * 6); Idx++) {
-			TMP[Idx] = SAVUtils_Read("uint8_t", (this.Offs + 0x1) + (CT * 0x6) + Idx);
+			TMP[Idx] = SavUtils_Read("uint8_t", (this.Offs + 0x1) + (CT * 0x6) + Idx);
 		}
 
 		/* Then copy to the actual location from the TMP buffer. */
 		for (let Idx = 0; Idx < 0xF26 - (this.Count() * 6); Idx++) {
-			SAVData.setUint8((this.Offs + 0x1) + (this.Count() * 0x6) + Idx, TMP[Idx]);
+			SavData.setUint8((this.Offs + 0x1) + (this.Count() * 0x6) + Idx, TMP[Idx]);
 		}
 
 		/* Set Item Data. */
@@ -184,12 +186,12 @@ export class S2Editor_GBAHouseItem {
 
 		/* Copy first to a TMP buffer. */
 		for (let Idx = 0; Idx < 0xF26 - (this.Count() * 6); Idx++) {
-			TMP[Idx] = SAVUtils_Read("uint8_t", (this.Offs + 0x1) + ((Index + 0x1) * 0x6) + Idx);
+			TMP[Idx] = SavUtils_Read("uint8_t", (this.Offs + 0x1) + ((Index + 0x1) * 0x6) + Idx);
 		}
 
 		/* Then copy to the actual location from the TMP buffer. */
 		for (let Idx = 0; Idx < 0xF26 - (this.Count() * 6); Idx++) {
-			SAVData.setUint8((this.Offs + 0x1) + (Index * 0x6) + Idx, TMP[Idx]);
+			SavData.setUint8((this.Offs + 0x1) + (Index * 0x6) + Idx, TMP[Idx]);
 		}
 
 		return true;

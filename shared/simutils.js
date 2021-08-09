@@ -24,6 +24,7 @@
 *         reasonable ways as different from the original version.
 */
 
+
 /*
 	Format a value with proper 0's.
 
@@ -38,6 +39,7 @@ export function SimUtils_NumberFormat(Value, Nums) {
 	while (Result.length < Nums) { Result = '0' + Result; };
 	return Result;
 };
+
 
 /*
 	Convert the Time into a 'XX:XX' string.
@@ -57,6 +59,7 @@ export function SimUtils_TimeString(Time, AMPM = false) {
 	}
 };
 
+
 /*
 	Convert the Simoleons into an 'XXX.XXX$' string.
 
@@ -74,7 +77,7 @@ export function SimUtils_SimoleonFormat(Simoleons) {
 		case 6:
 			return (SString.substr(0, SString.length - 4) + '.' + SString.substr(SString.length - 4));
 
-		case 7: // Technically, 7 Digits are possible too for the SAV, but that should never happen.
+		case 7: // Technically, 7 Digits are possible too for the Sav, but that should never happen.
 		case 8:
 		case 9:
 			return (SString.substr(0, SString.length - 7) + '.' + SString.substr(SString.length - 7, 3) + '.' + SString.substr(SString.length - 4));
@@ -85,6 +88,7 @@ export function SimUtils_SimoleonFormat(Simoleons) {
 
 	return SString;
 };
+
 
 /*
 	Convert the Ratings into an 'XXXX' string.

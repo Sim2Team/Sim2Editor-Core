@@ -24,10 +24,12 @@
 *         reasonable ways as different from the original version.
 */
 
-import { SAVUtils_Read, NDSIdent, SAVData } from '../shared/savutils.js';
-import { S2Editor_NDSSlot } from './ndsslot.js';
 
-export class S2Editor_NDSSAV {
+import { SavUtils_Read, NDSIdent, SavData } from "../shared/savutils.js";
+import { S2Editor_NDSSlot } from "./ndsslot.js";
+
+
+export class S2Editor_NDSSav {
 	/*
 		Region being passed is:
 		-1: Unknown / Invalid.
@@ -44,14 +46,14 @@ export class S2Editor_NDSSAV {
 
 	/* Some Save Validation checks. */
 	ValidationCheck() {
-		if (!SAVData) return;
+		if (!SavData) return;
 
 		let Count = 0;
 		for (let Slot = 0; Slot < 5; Slot++) { // Check for all 5 possible Slots.
 			Count = 0; // Reset Count here.
 
 			for (let ID = 0; ID < 8; ID++) {
-				if (SAVUtils_Read("uint8_t", (Slot * 0x1000) + ID) == NDSIdent[ID] + (ID == 0x4 ? this.Region : 0x0)) Count++;
+				if (SavUtils_Read("uint8_t", (Slot * 0x1000) + ID) == NDSIdent[ID] + (ID == 0x4 ? this.Region : 0x0)) Count++;
 			}
 
 			if (Count == 8) {
@@ -66,11 +68,11 @@ export class S2Editor_NDSSAV {
 	};
 
 	/*
-		This one is called at NDSSAV class constructor 3 times, to get the proper SAVSlot offset.
+		This one is called at NDSSav class constructor 3 times, to get the proper SavSlot offset.
 
 		This function has been ported of the LSSD Tool, SuperSaiyajinStackZ created.
 	*/
-	FetchSlot(SAVSlot) {
+	FetchSlot(SavSlot) {
 		if (!this.SavValid || this.Region == -1) return -1;
 
 		let LastSavedSlot = -1, IDCount = 0;
@@ -83,21 +85,21 @@ export class S2Editor_NDSSAV {
 
 			/* Check for Identifier. */
 			for (let ID = 0; ID < 8; ID++) {
-				if (SAVUtils_Read("uint8_t", (Slot * 0x1000) + ID) == NDSIdent[ID] + (ID == 0x4 ? this.Region : 0x0)) IDCount++;
+				if (SavUtils_Read("uint8_t", (Slot * 0x1000) + ID) == NDSIdent[ID] + (ID == 0x4 ? this.Region : 0x0)) IDCount++;
 			}
 
 			/* If 8, then it properly passed the slot existence check. */
 			if (IDCount == 8) {
-				/* Check, if current slot is also the actual SAVSlot. It seems 0xC and 0xD added is the Slot, however 0xD seems never be touched from the game and hence like all the time 0x0? */
-				if ((SAVUtils_Read("uint8_t", (Slot * 0x1000) + 0xC) + SAVUtils_Read("uint8_t", (Slot * 0x1000) + 0xD)) == SAVSlot) {
-					/* Now get the SAVCount. */
-					SavCount[Slot] = SAVUtils_Read("uint32_t", (Slot * 0x1000) + 0x8);
+				/* Check, if current slot is also the actual SavSlot. It seems 0xC and 0xD added is the Slot, however 0xD seems never be touched from the game and hence like all the time 0x0? */
+				if ((SavUtils_Read("uint8_t", (Slot * 0x1000) + 0xC) + SavUtils_Read("uint8_t", (Slot * 0x1000) + 0xD)) == SavSlot) {
+					/* Now get the SavCount. */
+					SavCount[Slot] = SavUtils_Read("uint32_t", (Slot * 0x1000) + 0x8);
 					SavSlotExist[Slot] = true;
 				}
 			}
 		}
 
-		/* Here we check and return the proper last saved Slot. */
+		/* Here we check and return the proper last Saved Slot. */
 		let HighestCount = 0;
 
 		for (let Slot = 0; Slot < 5; Slot++) {
@@ -115,7 +117,7 @@ export class S2Editor_NDSSAV {
 	/*
 		Return a NDSSlot class.
 
-		const uint8_t Slot: The NDSSAV Slot ( 0 - 2 ).
+		const uint8_t Slot: The NDSSav Slot ( 0 - 2 ).
 	*/
 	Slot(Slot) {
 		if (!this.SlotExist(Slot)) return undefined;
@@ -135,7 +137,7 @@ export class S2Editor_NDSSAV {
 	};
 
 
-	/* Return if the SAV is valid. */
+	/* Return if the Sav is valid. */
 	GetValid() { return this.SavValid; };
 
 	/* Get and Set if changes made. */

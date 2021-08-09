@@ -24,7 +24,8 @@
 *         reasonable ways as different from the original version.
 */
 
-import { SAVUtils_Read, SAVUtils_Write } from '../shared/savutils.js';
+
+import { SavUtils_Read, SavUtils_Write } from "../shared/savutils.js";
 
 /*
 	enum class SocialMoveFlag : uint8_t {
@@ -33,6 +34,7 @@ import { SAVUtils_Read, SAVUtils_Write } from '../shared/savutils.js';
 		Blocked = 0x2
 	};
 */
+
 
 export class S2Editor_GBASocialMove {
 	constructor(Offs, Move) {
@@ -45,13 +47,13 @@ export class S2Editor_GBASocialMove {
 
 	/* Get and Set the Social Move Flag. See commented enum class C++ version above for reference of values. */
 	Flag(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs + 0x4, Math.min(2, V));
-		else return SAVUtils_Read("uint8_t", this.Offs + 0x4);
+		if (V) SavUtils_Write("uint8_t", this.Offs + 0x4, Math.min(2, V));
+		else return SavUtils_Read("uint8_t", this.Offs + 0x4);
 	};
 
 	/* Get and Set the Social Move Level. */
 	Level(V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs + 0x8, Math.min(3, V));
-		else return SAVUtils_Read("uint8_t", this.Offs + 0x8);
+		if (V) SavUtils_Write("uint8_t", this.Offs + 0x8, Math.min(3, V));
+		else return SavUtils_Read("uint8_t", this.Offs + 0x8);
 	};
 };

@@ -24,9 +24,11 @@
 *         reasonable ways as different from the original version.
 */
 
-import { SAVUtils_Read, SAVUtils_Write } from '../shared/savutils.js';
+
+import { SavUtils_Read, SavUtils_Write } from "../shared/savutils.js";
 
 const EPOffs = [ 0x104, 0x10E, 0x122, 0x11D, 0x131, 0x127, 0x14A, 0x140, 0x118, 0x16D, 0x168 ]; // 11 Episodes.
+
 
 export class S2Editor_GBAEpisode {
 	constructor(Slot, Episode, Move = 0x0) {
@@ -39,14 +41,14 @@ export class S2Editor_GBAEpisode {
 
 	/* Get and Set Episode Ratings. */
 	Rating(Category, V) {
-		if (V) SAVUtils_Write("uint8_t", this.Offs + Math.min(3, Category), Math.min(25, V));
-		else return SAVUtils_Read("uint8_t", this.Offs + Math.min(3, Category));
+		if (V) SavUtils_Write("uint8_t", this.Offs + Math.min(3, Category), Math.min(25, V));
+		else return SavUtils_Read("uint8_t", this.Offs + Math.min(3, Category));
 	};
 
 	/* Get and Set the Unlocked State. */
 	State(V) {
-		if (V != undefined) SAVUtils_Write("uint8_t", this.Offs + 0x4, Math.min(1, V));
-		else return SAVUtils_Read("uint8_t", this.Offs + 0x4);
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x4, Math.min(1, V));
+		else return SavUtils_Read("uint8_t", this.Offs + 0x4);
 	};
 
 	/* Sets the base offset for the Episodes. */
