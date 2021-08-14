@@ -25,13 +25,17 @@
 */
 
 
-import { Checksum_Calc } from "../shared/checksum.js";
+import { Checksum_CalcNDSSlotHeader, Checksum_CalcNDSSlotMain, Checksum_CalcNDSSlotShared } from "../shared/checksum.js";
 import { SavUtils_Read, SavUtils_Write, SavUtils_WriteString, SavUtils_ReadString, SavData } from "../shared/savutils.js";
 
 
 export class S2Editor_NDSSlot {
 	/* Region is important for later i suppose because of Japanese. */
-	constructor(Slot, Region) { this.Offs = (Slot * 0x1000); this.Region = Region; };
+	constructor(Slot, Region) {
+		this.Offs = (Slot * 0x1000);
+		this.Slot = Slot;
+		this.Region = Region;
+	};
 
 	/* Get and Set Simoleons. */
 	Simoleons(V) {
@@ -133,18 +137,36 @@ export class S2Editor_NDSSlot {
 	*/
 	FixChecksum() {
 		if (this.Slot > 4) return false;
-		const CurCHKS = SavUtils_Read("uint16_t", this.Offs + 0x28);
 
-		let SkipOffs = new Uint16Array(0x2);
-		SkipOffs[0] = (this.Offs + 0x12) / 2; SkipOffs[1] = (this.Offs + 0x28) / 2;
-		const Calced = Checksum_Calc(SavData, ((this.Offs + 0x10) / 2), ((this.Offs + 0x1000) / 2), SkipOffs);
+		let Fixed = false;
 
-		/* If the calced result is NOT the current checksum. */
+		/* First: Fix the main part. */
+		let CurCHKS = SavUtils_Read("uint16_t", this.Offs + 0x28);
+		let Calced = Checksum_CalcNDSSlotMain(SavData, this.Slot);
+
 		if (Calced != CurCHKS) {
 			SavUtils_Write("uint16_t", this.Offs + 0x28, Calced);
-			return true;
+			Fixed = true;
 		}
 
-		return false;
+		/* Second: Fix the shared part. */
+		Calced = Checksum_CalcNDSSlotShared(SavData, this.Slot);
+		CurCHKS = SavUtils_Read("uint16_t", this.Offs + 0x10);
+
+		if (CurCHKS != Calced) {
+			SavUtils_Write("uint16_t", this.Offs + 0x10, Calced);
+			Fixed = true;
+		}
+
+		/* Third: Fix the header part. */
+		Calced = Checksum_CalcNDSSlotHeader(SavData, this.Slot);
+		CurCHKS = SavUtils_Read("uint16_t", this.Offs + 0xE);
+
+		if (CurCHKS != Calced) {
+			SavUtils_Write("uint16_t", this.Offs + 0xE, Calced);
+			Fixed = true;
+		}
+
+		return Fixed;
 	};
 };

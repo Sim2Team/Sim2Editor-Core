@@ -25,7 +25,7 @@
 */
 
 
-import { Checksum_Calc } from "../shared/checksum.js";
+import { Checksum_CalcGBASettings } from "../shared/checksum.js";
 import { SavData, SavUtils_Read, SavUtils_Write } from "../shared/savutils.js";
 
 /*
@@ -84,10 +84,7 @@ export class S2Editor_GBASettings {
 	/* Update the Checksum of the GBA Settings. */
 	UpdateChecksum() {
 		const CurCHKS = SavUtils_Read("uint16_t", 0xE);
-
-		let SkipOffs = new Uint8Array(0x1);
-		SkipOffs[0] = 0xE / 2;
-		const Calced = Checksum_Calc(SavData, 0x0, 0x18 / 2, SkipOffs);
+		const Calced = Checksum_CalcGBASettings(SavData);
 
 		/* If the calced result is NOT the current checksum. */
 		if (Calced != CurCHKS) SavUtils_Write("uint16_t", 0xE, Calced);

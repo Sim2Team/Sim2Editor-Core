@@ -25,7 +25,7 @@
 */
 
 
-import { Checksum_Calc } from "../shared/checksum.js";
+import { Checksum_CalcGBASlot } from "../shared/checksum.js";
 import { SavUtils_Read, SavUtils_ReadBits, SavUtils_Write, SavUtils_WriteBits, SavUtils_ReadString, SavUtils_WriteString, SavData, SavUtils_WriteBit, SavUtils_ReadBit } from "../shared/savutils.js";
 
 /* Import Core "sub" classes. */
@@ -387,7 +387,7 @@ export class S2Editor_GBASlot {
 		if (this.Slot < 1 || this.Slot > 4) return false;
 
 		const CurCHKS = SavUtils_Read("uint16_t", this.Offs + 0xFFE);
-		const Calced = Checksum_Calc(SavData, this.Offs / 2, (this.Offs + 0xFFE) / 2);
+		const Calced = Checksum_CalcGBASlot(SavData, this.Slot);
 
 		/* If the calced result is NOT the current checksum. */
 		if (Calced != CurCHKS) {

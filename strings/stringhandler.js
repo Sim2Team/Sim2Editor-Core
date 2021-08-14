@@ -25,71 +25,77 @@
 */
 
 /* English Strings. */
-import S2Editor_GBACasts_EN from './en/gba/casts.js';
-import S2Editor_GBAEpisodes_EN from './en/gba/episodes.js';
-import S2Editor_GBAItemList_EN from './en/gba/itemlist.js';
-import S2Editor_GBAMinigames_EN from './en/gba/minigames.js';
-import S2Editor_GBASkillPoints_EN from './en/gba/skillpoints.js';
-import S2Editor_GBASocialMoves_EN from './en/gba/socialmoves.js';
-import S2Editor_NDSSkillPoints_EN from './en/nds/skillpoints.js';
+import S2Editor_GBACasts_EN from "./en/gba/casts.js";
+import S2Editor_GBAEpisodes_EN from "./en/gba/episodes.js";
+import S2Editor_GBAItemList_EN from "./en/gba/itemlist.js";
+import S2Editor_GBAMinigames_EN from "./en/gba/minigames.js";
+import S2Editor_GBASkillPoints_EN from "./en/gba/skillpoints.js";
+import S2Editor_GBASocialMoves_EN from "./en/gba/socialmoves.js";
+import S2Editor_NDSSkillPoints_EN from "./en/nds/skillpoints.js";
+import S2Editor_NDSPaintingRanks_EN from "./en/nds/paintingranks.js";
 
 /* German Strings. */
-import S2Editor_GBACasts_DE from './de/gba/casts.js';
-import S2Editor_GBAEpisodes_DE from './de/gba/episodes.js';
-import S2Editor_GBAMinigames_DE from './de/gba/minigames.js';
-import S2Editor_GBASkillPoints_DE from './de/gba/skillpoints.js';
-import S2Editor_GBASocialMoves_DE from './de/gba/socialmoves.js';
-import S2Editor_NDSSkillPoints_DE from './de/nds/skillpoints.js';
+import S2Editor_GBACasts_DE from "./de/gba/casts.js";
+import S2Editor_GBAEpisodes_DE from "./de/gba/episodes.js";
+import S2Editor_GBAMinigames_DE from "./de/gba/minigames.js";
+import S2Editor_GBASkillPoints_DE from "./de/gba/skillpoints.js";
+import S2Editor_GBASocialMoves_DE from "./de/gba/socialmoves.js";
+import S2Editor_NDSSkillPoints_DE from "./de/nds/skillpoints.js";
 
 /* Strings which are being initialized and used at the end. */
 export let S2Editor_GBACasts, S2Editor_GBAEpisodes, S2Editor_GBAItemList, S2Editor_GBAMinigames,
-			S2Editor_GBASkillPoints, S2Editor_GBASocialMoves, S2Editor_NDSSkillPoints;
+			S2Editor_GBASkillPoints, S2Editor_GBASocialMoves, S2Editor_NDSSkillPoints, S2Editor_NDSPaintingRanks;
 
 
 /*
 	Load the Strings for the use with the Save Editor.
 
-	SavType: The SavType which strings to load. (0 -> GBA, 1 -> NDS).
-	Language: The language index to load (It uses the GBASettings Language index right now for both, GBA and NDS).
+	SavType: The SavType which strings to load. (0 -> GBA, 1, 2, 3 -> NDS).
+	Language: The language index to load.
 
 	After that, use the exported variables listed above this comment.
 */
 export function S2Editor_LoadStrings(SavType, Language) {
-	/* 0 --> GBA. */
-	if (SavType == 0) {
-		switch(Language) {
-			default:
-			case 0: // English.
-				S2Editor_GBACasts = S2Editor_GBACasts_EN;
-				S2Editor_GBAEpisodes = S2Editor_GBAEpisodes_EN;
-				S2Editor_GBAItemList = S2Editor_GBAItemList_EN;
-				S2Editor_GBAMinigames = S2Editor_GBAMinigames_EN;
-				S2Editor_GBASkillPoints = S2Editor_GBASkillPoints_EN;
-				S2Editor_GBASocialMoves = S2Editor_GBASocialMoves_EN;
-				break;
+	switch(SavType) {
+		case 0: // GBA.
+			switch(Language) {
+				default:
+				case 0: // English.
+					S2Editor_GBACasts = S2Editor_GBACasts_EN;
+					S2Editor_GBAEpisodes = S2Editor_GBAEpisodes_EN;
+					S2Editor_GBAItemList = S2Editor_GBAItemList_EN;
+					S2Editor_GBAMinigames = S2Editor_GBAMinigames_EN;
+					S2Editor_GBASkillPoints = S2Editor_GBASkillPoints_EN;
+					S2Editor_GBASocialMoves = S2Editor_GBASocialMoves_EN;
+					break;
 
-			case 3: // German.
-				S2Editor_GBACasts = S2Editor_GBACasts_DE;
-				S2Editor_GBAEpisodes = S2Editor_GBAEpisodes_DE;
-				S2Editor_GBAItemList = S2Editor_GBAItemList_EN; // Not available in German right now.
-				S2Editor_GBAMinigames = S2Editor_GBAMinigames_DE;
-				S2Editor_GBASkillPoints = S2Editor_GBASkillPoints_DE;
-				S2Editor_GBASocialMoves = S2Editor_GBASocialMoves_DE;
-				break;
-		}
+				case 3: // German.
+					S2Editor_GBACasts = S2Editor_GBACasts_DE;
+					S2Editor_GBAEpisodes = S2Editor_GBAEpisodes_DE;
+					S2Editor_GBAItemList = S2Editor_GBAItemList_EN; // Not available in German right now.
+					S2Editor_GBAMinigames = S2Editor_GBAMinigames_DE;
+					S2Editor_GBASkillPoints = S2Editor_GBASkillPoints_DE;
+					S2Editor_GBASocialMoves = S2Editor_GBASocialMoves_DE;
+					break;
+			}
+			break;
 
-	/* 1 --> NDS. */
-	} else if (SavType == 1) {
-		switch(Language) {
-			default:
-			case 0: // English.
-				S2Editor_NDSSkillPoints = S2Editor_NDSSkillPoints_EN;
-				break;
+		case 1:
+		case 2:
+		case 3: // NDS.
+			switch(Language) {
+				default:
+				case 0: // English.
+					S2Editor_NDSSkillPoints = S2Editor_NDSSkillPoints_EN;
+					S2Editor_NDSPaintingRanks = S2Editor_NDSPaintingRanks_EN;
+					break;
 
-			case 3: // German.
-				S2Editor_NDSSkillPoints = S2Editor_NDSSkillPoints_DE;
-				break;
-		}
+				case 3: // German.
+					S2Editor_NDSSkillPoints = S2Editor_NDSSkillPoints_DE;
+					S2Editor_NDSPaintingRanks = S2Editor_NDSPaintingRanks_EN; // Not available in German right now.
+					break;
+			}
+			break;
 	}
 };
 
@@ -101,5 +107,17 @@ export function S2Editor_LoadStrings(SavType, Language) {
 */
 export function S2Editor_GetGBAItemName(ID) {
 	if (ID < 256 && S2Editor_GBAItemList) return S2Editor_GBAItemList[ID];
-	else return '?';
+	else return "?";
+};
+
+/*
+	Returns the rank's name of the NDS Painting.
+
+	Flag: The Flag byte located at 0x314 of the Painting.
+*/
+export function S2Editor_GetNDSPaintingRank(Flag) {
+	if (Flag >= 0x29) return "?"; // Out of bounds.
+
+	let Category = 1 + Math.floor(Flag / 0x8);
+	return (Flag % 2 == 0 ? S2Editor_NDSPaintingRanks[0] : S2Editor_NDSPaintingRanks[Math.min(5, Category)]);
 };

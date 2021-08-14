@@ -27,6 +27,7 @@
 
 import { SavUtils_Read, NDSIdent, SavData } from "../shared/savutils.js";
 import { S2Editor_NDSSlot } from "./ndsslot.js";
+import { S2Editor_NDSPainting } from "./ndspainting.js";
 
 
 export class S2Editor_NDSSav {
@@ -136,6 +137,8 @@ export class S2Editor_NDSSav {
 		return this.Slots[Slot] != -1;
 	};
 
+	/* Returns a painting class. */
+	Painting(Idx) { return new S2Editor_NDSPainting(0x5000 + (Math.min(19, Idx) * 0x400)); };
 
 	/* Return if the Sav is valid. */
 	GetValid() { return this.SavValid; };
