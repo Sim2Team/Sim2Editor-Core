@@ -49,7 +49,7 @@ export class S2Editor_GBASettings {
 
 	/* Get and Set the Sound Effect Volume. */
 	SFX(V) {
-		if (V) {
+		if (V != undefined) {
 			if (V > 10) return; // 0 - 10 only valid.
 			SavUtils_Write("uint8_t", 0x8, SFXLevels[V]);
 
@@ -60,7 +60,7 @@ export class S2Editor_GBASettings {
 
 	/* Get and Set the Music Volume. */
 	Music(V) {
-		if (V) {
+		if (V != undefined) {
 			if (V > 10) return; // 0 - 10 only valid.
 			SavUtils_Write("uint8_t", 0x9, MUSLevels[V]);
 
@@ -71,7 +71,7 @@ export class S2Editor_GBASettings {
 
 	/* Get and Set the Language. See commented out C++ enum class above for more. */
 	Language(V) {
-		if (V) {
+		if (V != undefined) {
 			if (V > 5) return;
 			SavUtils_Write("uint8_t", 0xA, V);
 

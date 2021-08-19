@@ -37,7 +37,7 @@ export class S2Editor_GBAHouse {
 		Only 0 - 3 SHOULD be used at all, the others aren't actual room designs and instead may cause issues.
 	*/
 	Roomdesign(V) {
-		if (V) SavUtils_WriteBits(this.Offs + 0x2E, true, V);
+		if (V != undefined) SavUtils_WriteBits(this.Offs + 0x2E, true, V);
 		else return SavUtils_ReadBits(this.Offs + 0x2E, true);
 	};
 

@@ -47,13 +47,19 @@ export class S2Editor_GBASocialMove {
 
 	/* Get and Set the Social Move Flag. See commented enum class C++ version above for reference of values. */
 	Flag(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0x4, Math.min(2, V));
-		else return SavUtils_Read("uint8_t", this.Offs + 0x4);
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs, Math.min(2, V));
+		else return SavUtils_Read("uint8_t", this.Offs);
 	};
 
 	/* Get and Set the Social Move Level. */
 	Level(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0x8, Math.min(3, V));
-		else return SavUtils_Read("uint8_t", this.Offs + 0x8);
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x4, Math.min(3, V));
+		else return SavUtils_Read("uint8_t", this.Offs + 0x4);
+	};
+
+	/* Get and Set the Social Move Blocked Hours. */
+	BlockedHours(V) {
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x6, V);
+		else return SavUtils_Read("uint8_t", this.Offs + 0x6);
 	};
 };

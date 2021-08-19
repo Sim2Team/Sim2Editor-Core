@@ -31,16 +31,16 @@ import { SavUtils_Read, SavUtils_Write } from "../shared/savutils.js";
 export class S2Editor_GBAItem {
 	constructor(Offs) { this.Offs = Offs; };
 
-	/* Get and Set Item Count. */
+	/* Get and Set the Item Count. */
 	Count(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs, Math.min(6, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs, Math.min(6, V));
 		else return SavUtils_Read("uint8_t", this.Offs);
 	};
 
-	/* Get and Set Item ID. */
+	/* Get and Set the Item ID. */
 	ID(Index, V) {
-		if (V) {
-			SavUtils_Write("uint8_t", this.Offs + 1 + (Math.min(5, Index) * 0x3), V);
+		if (V != undefined) {
+			SavUtils_Write("uint8_t", this.Offs + 0x1 + (Math.min(5, Index) * 0x3), V);
 
 			/* Update Item Count. */
 			let Amount = 0;
@@ -51,7 +51,19 @@ export class S2Editor_GBAItem {
 			if (this.Count() != Amount) this.Count(Amount);
 
 		} else {
-			return SavUtils_Read("uint8_t", this.Offs + 1 + (Math.min(5, Index) * 0x3));
+			return SavUtils_Read("uint8_t", this.Offs + 0x1 + (Math.min(5, Index) * 0x3));
 		}
+	};
+
+	/* Get and Set the Item's Flag. */
+	Flag(Index, V) {
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x2 + (Math.min(5, Index) * 0x3), V);
+		else return SavUtils_Read("uint8_t", this.Offs + 0x2 + (Math.min(5, Index) * 0x3));
+	};
+
+	/* Get and Set the Item's Use Count. */
+	UseCount(Index, V) {
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x3 + (Math.min(5, Index) * 0x3), V);
+		else return SavUtils_Read("uint8_t", this.Offs + 0x3 + (Math.min(5, Index) * 0x3));
 	};
 };

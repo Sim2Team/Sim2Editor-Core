@@ -39,82 +39,78 @@ export class S2Editor_NDSSlot {
 
 	/* Get and Set Simoleons. */
 	Simoleons(V) {
-		if (V) SavUtils_Write("uint32_t", this.Offs + 0x2C, Math.min(999999, V));
+		if (V != undefined) SavUtils_Write("uint32_t", this.Offs + 0x2C, Math.min(999999, V));
 		else return SavUtils_Read("uint32_t", this.Offs + 0x2C);
 	};
 
 	/* Get and Set Name. */
 	Name(V) {
-		if (V) SavUtils_WriteString(this.Offs + 0x30, 0x7, V);
+		if (V != undefined) SavUtils_WriteString(this.Offs + 0x30, 0x7, V);
 		else return SavUtils_ReadString(this.Offs + 0x30, 0x7);
 	};
 
 	/* Get and Set Nuclear Fuelrods. */
 	Fuelrods(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0xBC, Math.min(250, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0xBC, Math.min(250, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0xBC);
 	};
 
 	/* Get and Set License Plates. */
 	Plates(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0xBD, Math.min(250, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0xBD, Math.min(250, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0xBD);
 	};
 
 	/* Get and Set Strange Gourds. */
 	Gourds(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0xBE, Math.min(250, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0xBE, Math.min(250, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0xBE);
 	};
 
 	/* Get and Set Alien Spaceship Parts. */
 	Spaceship(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0xBF, Math.min(250, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0xBF, Math.min(250, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0xBF);
 	};
 
 	/* Get and Set Creativity Skill Points. */
 	Creativity(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0xDF, Math.min(10, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0xDF, Math.min(10, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0xDF);
 	};
 
 	/* Get and Set Business Skill Points. */
 	Business(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0xE0, Math.min(10, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0xE0, Math.min(10, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0xE0);
 	};
 
 	/* Get and Set Body Skill Points. */
 	Body(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0xE1, Math.min(10, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0xE1, Math.min(10, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0xE1);
 	};
 
 	/* Get and Set Charisma Skill Points. */
 	Charisma(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0xE2, Math.min(10, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0xE2, Math.min(10, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0xE2);
 	};
 
 	/* Get and Set Mechanical Skill Points. */
 	Mechanical(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0xE3, Math.min(10, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0xE3, Math.min(10, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0xE3);
 	};
 
 	/* Get and Set the Pocket Item Count. */
 	PocketCount(V) {
-		if (V) {
-			SavUtils_Write("uint8_t", this.Offs + 0xCF, Math.min(6, V));
-
-		} else {
-			return SavUtils_Read("uint8_t", this.Offs + 0xCF);
-		}
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0xCF, Math.min(6, V));
+		else return SavUtils_Read("uint8_t", this.Offs + 0xCF);
 	};
 
 	PocketID(Index, V) {
-		if (V) {
+		if (V != undefined) {
 			SavUtils_Write("uint16_t", this.Offs + 0xC3 + (Math.min(6, Index) * 2), V);
 
 			let Count = 0;

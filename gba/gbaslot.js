@@ -62,7 +62,7 @@ export class S2Editor_GBASlot {
 
 	/* Get and Set Time. */
 	Time(V) {
-		if (V) {
+		if (V != undefined) {
 			SavUtils_Write("uint8_t", this.Offs + 0x2, V[0]);
 			SavUtils_Write("uint8_t", this.Offs + 0x3, V[1]);
 
@@ -77,25 +77,25 @@ export class S2Editor_GBASlot {
 
 	/* Get and Set Simoleons. */
 	Simoleons(V) {
-		if (V) SavUtils_Write("uint32_t", this.Offs + 0x5, (Math.min(999999, V) << 8));
+		if (V != undefined) SavUtils_Write("uint32_t", this.Offs + 0x5, (Math.min(999999, V) << 8));
 		else return SavUtils_Read("uint32_t", this.Offs + 0x5) >> 8;
 	};
 
 	/* Get and Set Ratings. */
 	Ratings(V) {
-		if (V) SavUtils_Write("uint16_t", this.Offs + 0xA, Math.min(9999, V));
+		if (V != undefined) SavUtils_Write("uint16_t", this.Offs + 0xA, Math.min(9999, V));
 		else return SavUtils_Read("uint16_t", this.Offs + 0xA);
 	};
 
 	/* Get and Set Name. It seems like the name is 16 characters, however only 8 officially in game. */
 	Name(V) {
-		if (V) SavUtils_WriteString(this.Offs + 0xD, 16, V);
+		if (V != undefined) SavUtils_WriteString(this.Offs + 0xD, 16, V);
 		else return SavUtils_ReadString(this.Offs + 0xD, 16);
 	};
 
 	/* Get and Set Hairstyle. */
 	Hairstyle(V) {
-		if (V) {
+		if (V != undefined) {
 			if (V > 7) return;
 			SavUtils_WriteBits(this.Offs + 0x1D, false, (V * 2) + (this.Shirtcolor3() > 15 ? 0x1 : 0x0));
 
@@ -106,7 +106,7 @@ export class S2Editor_GBASlot {
 
 	/* Get and Set third Shirtcolor (Long Sleeves). */
 	Shirtcolor3(V) {
-		if (V) {
+		if (V != undefined) {
 			SavUtils_WriteBits(this.Offs + 0x1D, true, ((V > 15) ? V - 16 : V));
 			SavUtils_WriteBits(this.Offs + 0x1D, false, (this.Hairstyle() * 2) + (V > 15 ? 0x1 : 0x0)); // Refresh Hairstyle as well.
 
@@ -117,7 +117,7 @@ export class S2Editor_GBASlot {
 
 	/* Get and Set Tan / Skin color. */
 	Tan(V) {
-		if (V) {
+		if (V != undefined) {
 			if (V > 7) return;
 			SavUtils_WriteBits(this.Offs + 0x1E, false, (V * 2) + (this.Shirtcolor2() > 15 ? 0x1 : 0x0));
 
@@ -128,7 +128,7 @@ export class S2Editor_GBASlot {
 
 	/* Get and Set second Shirtcolor (Short Sleeves). */
 	Shirtcolor2(V) {
-		if (V) {
+		if (V != undefined) {
 			SavUtils_WriteBits(this.Offs + 0x1E, true, ((V > 15) ? V - 16 : V));
 			SavUtils_WriteBits(this.Offs + 0x1E, false, (this.Tan() * 2) + (V > 15 ? 0x1 : 0x0)); // Refresh Skin / TAN as well.
 
@@ -139,19 +139,19 @@ export class S2Editor_GBASlot {
 
 	/* Get and Set Haircolor. */
 	Haircolor(V) {
-		if (V) SavUtils_WriteBits(this.Offs + 0x1F, false, V);
+		if (V != undefined) SavUtils_WriteBits(this.Offs + 0x1F, false, V);
 		else return SavUtils_ReadBits(this.Offs + 0x1F, false);
 	};
 
 	/* Get the Hatcolor. NOTE: Is also shoe color. */
 	Hatcolor(V) {
-		if (V) SavUtils_WriteBits(this.Offs + 0x1F, true, V);
+		if (V != undefined) SavUtils_WriteBits(this.Offs + 0x1F, true, V);
 		else return SavUtils_ReadBits(this.Offs + 0x1F, true);
 	};
 
 	/* Get and Set Shirt Type. */
 	Shirt(V) {
-		if (V) {
+		if (V != undefined) {
 			if (V > 7) return;
 			SavUtils_WriteBits(this.Offs + 0x20, false, (V * 2) + (this.Shirtcolor1() > 15 ? 0x1 : 0x0));
 
@@ -162,7 +162,7 @@ export class S2Editor_GBASlot {
 
 	/* Get and Set first Shirtcolor (Body). */
 	Shirtcolor1(V) {
-		if (V) {
+		if (V != undefined) {
 			SavUtils_WriteBits(this.Offs + 0x20, true, ((V > 15) ? V - 16 : V));
 			SavUtils_WriteBits(this.Offs + 0x20, false, (this.Shirt() * 2) + (V > 15 ? 0x1 : 0x0)); // Refresh Shirt Type as well.
 
@@ -173,7 +173,7 @@ export class S2Editor_GBASlot {
 
 	/* Get and Set Pants. */
 	Pants(V) {
-		if (V) {
+		if (V != undefined) {
 			if (V > 7) return;
 			SavUtils_WriteBits(this.Offs + 0x21, false, (V * 2) + (this.Pantscolor() > 15 ? 0x1 : 0x0));
 
@@ -184,7 +184,7 @@ export class S2Editor_GBASlot {
 
 	/* Get and Set Pantscolor. */
 	Pantscolor(V) {
-		if (V) {
+		if (V != undefined) {
 			SavUtils_WriteBits(this.Offs + 0x21, true, ((V > 15) ? V - 16 : V));
 			SavUtils_WriteBits(this.Offs + 0x21, false, (this.Pants() * 2) + (V > 15 ? 0x1 : 0x0)); // Refresh Pants as well.
 
@@ -195,49 +195,49 @@ export class S2Editor_GBASlot {
 
 	/* Get and Set the Confidence Skill Points. */
 	Confidence(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0x22, Math.min(5, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x22, Math.min(5, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0x22);
 	};
 
 	/* Get and Set the Mechanical Skill Points. */
 	Mechanical(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0x23, Math.min(5, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x23, Math.min(5, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0x23);
 	};
 
 	/* Get and Set the Strength Skill Points. */
 	Strength(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0x24, Math.min(5, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x24, Math.min(5, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0x24);
 	};
 
 	/* Get and Set the Personality Skill Points. */
 	Personality(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0x25, Math.min(5, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x25, Math.min(5, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0x25);
 	};
 
 	/* Get and Set the Hotness Skill Points. */
 	Hotness(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0x26, Math.min(5, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x26, Math.min(5, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0x26);
 	};
 
 	/* Get and Set the Intellect Skill Points. */
 	Intellect(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0x27, Math.min(5, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x27, Math.min(5, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0x27);
 	};
 
 	/* Get and Set the Sanity. */
 	Sanity(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0x32, Math.min(100, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x32, Math.min(100, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0x32);
 	};
 
 	/* Get and Set the Aspiration. */
 	Aspiration(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + 0x4B, Math.min(2, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x4B, Math.min(2, V));
 		else return SavUtils_Read("uint8_t", this.Offs + 0x4B);
 	};
 
@@ -253,49 +253,49 @@ export class S2Editor_GBASlot {
 
 	/* Get and Set Empty Chug-Chug Cola Cans Amount. */
 	Cans(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offset(0xF6), Math.min(250, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offset(0xF6), Math.min(250, V));
 		else return SavUtils_Read("uint8_t", this.Offset(0xF6));
 	};
 
 	/* Get and Set Cowbells Amount. */
 	Cowbells(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offset(0xF7), Math.min(250, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offset(0xF7), Math.min(250, V));
 		else return SavUtils_Read("uint8_t", this.Offset(0xF7));
 	};
 
 	/* Get and Set Alien Spaceship Parts Amount. */
 	Spaceship(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offset(0xF8), Math.min(250, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offset(0xF8), Math.min(250, V));
 		else return SavUtils_Read("uint8_t", this.Offset(0xF8));
 	};
 
 	/* Get and Set Nuclear Fuelrods Amount. */
 	Fuelrods(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offset(0xF9), Math.min(250, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offset(0xF9), Math.min(250, V));
 		else return SavUtils_Read("uint8_t", this.Offset(0xF9));
 	};
 
 	/* Get and Set Empty Chug-Chug Cola Cans Sell price. */
 	CansPrice(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offset(0xFA), Math.min(255, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offset(0xFA), Math.min(255, V));
 		else return SavUtils_Read("uint8_t", this.Offset(0xFA));
 	};
 
 	/* Get and Set Cowbells Sell price. */
 	CowbellsPrice(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offset(0xFB), Math.min(255, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offset(0xFB), Math.min(255, V));
 		else return SavUtils_Read("uint8_t", this.Offset(0xFB));
 	};
 
 	/* Get and Set Alien Spaceship Parts Sell price. */
 	SpaceshipPrice(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offset(0xFC), Math.min(255, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offset(0xFC), Math.min(255, V));
 		else return SavUtils_Read("uint8_t", this.Offset(0xFC));
 	};
 
 	/* Get and Set Nuclear Fuelrods Sell price. */
 	FuelrodsPrice(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offset(0xFD), Math.min(255, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offset(0xFD), Math.min(255, V));
 		else return SavUtils_Read("uint8_t", this.Offset(0xFD));
 	};
 
@@ -306,7 +306,7 @@ export class S2Editor_GBASlot {
 		ValidCheck: If checking for official Episodes (valid) or not. It is recommended to have this to TRUE if modifying it.
 	*/
 	CurrentEpisode(V, ValidCheck) {
-		if (V) {
+		if (V != undefined) {
 			if (!ValidCheck) { // In case we're not checking for validateness, Set it without checks.
 				SavUtils_Write("uint8_t", this.Offset(0x1A3), V);
 				SavUtils_Write("uint8_t", this.Offs + 0x9, V); // It's better to set that to 0x9 as well for display.
@@ -373,7 +373,7 @@ export class S2Editor_GBASlot {
 	Episode(EP) { return new S2Editor_GBAEpisode(this.Slot, EP, SavUtils_Read("uint8_t", this.Offs + 0xD6)); };
 
 	/* Get a Social Move class. */
-	SocialMove(Move) { return new S2Editor_GBASocialMove(this.Offset(0x3EA) + (Math.min(14, Move) * 0x8), Move); };
+	SocialMove(Move) { return new S2Editor_GBASocialMove(this.Offset(0x3EE) + (Math.min(14, Move) * 0x8), Move); };
 
 	/* Get a Cast class. */
 	Cast(CST) { return new S2Editor_GBACast(this.Offset(0x466) + (Math.min(25, CST) * 0xA), CST); };

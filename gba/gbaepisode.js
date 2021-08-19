@@ -41,7 +41,7 @@ export class S2Editor_GBAEpisode {
 
 	/* Get and Set Episode Ratings. */
 	Rating(Category, V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs + Math.min(3, Category), Math.min(25, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + Math.min(3, Category), Math.min(25, V));
 		else return SavUtils_Read("uint8_t", this.Offs + Math.min(3, Category));
 	};
 

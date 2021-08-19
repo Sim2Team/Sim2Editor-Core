@@ -43,13 +43,13 @@ export class S2Editor_GBAHouseItem {
 
 	/* Get and Set the Item Count. */
 	Count(V) {
-		if (V) SavUtils_Write("uint8_t", this.Offs, Math.min(12, V));
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs, Math.min(12, V));
 		else return SavUtils_Read("uint8_t", this.Offs);
 	};
 
 	/* Get and Set the Item ID. */
 	ID(Index, V) {
-		if (V) {
+		if (V != undefined) {
 			if (this.Count() == 0) return;
 			SavUtils_Write("uint8_t", this.Offs + 0x1 + (Math.min(this.Count() - 1, Index) * 0x6), V);
 
@@ -61,7 +61,7 @@ export class S2Editor_GBAHouseItem {
 
 	/* Get and Set the Item Flag. */
 	Flag(Index, V) {
-		if (V) {
+		if (V != undefined) {
 			if (this.Count() == 0) return;
 			SavUtils_Write("uint8_t", this.Offs + 0x2 + (Math.min(this.Count() - 1, Index) * 0x6), V);
 
@@ -73,7 +73,7 @@ export class S2Editor_GBAHouseItem {
 
 	/* Get and Set the Use Count(?). */
 	UseCount(Index, V) {
-		if (V) {
+		if (V != undefined) {
 			if (this.Count() == 0) return;
 			SavUtils_Write("uint8_t", this.Offs + 0x3 + (Math.min(this.Count() - 1, Index) * 0x6), V);
 
@@ -85,7 +85,7 @@ export class S2Editor_GBAHouseItem {
 
 	/* Get and Set the X Position of the Item. */
 	XPos(Index, V) {
-		if (V) {
+		if (V != undefined) {
 			if (this.Count() == 0) return;
 			SavUtils_Write("uint8_t", this.Offs + 0x4 + (Math.min(this.Count() - 1, Index) * 0x6), V);
 
@@ -97,7 +97,7 @@ export class S2Editor_GBAHouseItem {
 
 	/* Get and Set the Y Position of the Item. */
 	YPos(Index, V) {
-		if (V) {
+		if (V != undefined) {
 			if (this.Count() == 0) return;
 			SavUtils_Write("uint8_t", this.Offs + 0x5 + (Math.min(this.Count() - 1, Index) * 0x6), V);
 
@@ -109,7 +109,7 @@ export class S2Editor_GBAHouseItem {
 
 	/* Get and Set the Item Direction. See commented out code of the C++ enum class version of the direction above for more info. */
 	Direction(Index, V) {
-		if (V) {
+		if (V != undefined) {
 			if (this.Count() == 0 || V > 4) return;
 			const Positions = [ 0x0, 0x1, 0x3, 0x5, 0x7 ];
 			SavUtils_Write("uint8_t", this.Offs + 0x6 + (Math.min(this.Count() - 1, Index) * 0x6), Positions[V]);

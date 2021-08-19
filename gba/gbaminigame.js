@@ -42,7 +42,7 @@ export class S2Editor_GBAMinigame {
 
 	/* Get and Set the Minigame Level. */
 	Level(V, Meta) {
-		if (V) {
+		if (V != undefined) {
 			SavUtils_Write("uint8_t", this.Offs + 0x24 + this.Game, Math.min(5, V));
 
 			/* Optionally: Set to Metadata / Settings as well. */

@@ -56,27 +56,7 @@ export const PaintingPalette = [
 
 
 /*
-	The structure i've figured out a while ago. It isn't finished yet, however some basics are done.
-
-	- A painting is 48x32 from the size, while 1 byte contains 2 pixels.
-	- The first 4 bits are 1 pixel, the second 4 bits are 1 pixel.
-	- The Paintings start at 0x5000, basically after the save slots.
-	- There seem to exist 20 Paintings (0x5000 - 0x9FFF).
-
-	struct NDSPainting {
-		uint8_t Header[0x5] = { 0x70, 0x74, 0x67, 0x0, 0xF }; // "Painting" Header. 0x0 - 0x4.
-		uint8_t Unknown1[0x3] = { 0x0 }; // Unknown. Maybe is for the Header "Painting" as well? 0x5 - 0x7.
-		uint32_t PaintingIndex = 0x0; // Index of the Painting?? 0x8 - 0xB.
-		uint8_t Slot = 0x0; // The slot the painting is being part of. 0xC.
-		uint8_t Unknown2 = 0x0; // Unknown. 0xD.
-		uint16_t HeaderChecksum = 0x0; // Checksum of the Header. 0xE - 0xF.
-		uint16_t MainChecksum = 0x0; // Checksum of the "Main". 0x10 - 0x11.
-		uint8_t Unknown3[0x2] = { 0x0 }; // Unknown. 0x12 - 0x13.
-		uint8_t PaintingData[0x300] = { 0x0 }; // Painting Image Data. 0x14 - 0x313.
-		uint8_t Flag = 0x0; // Flag of the Painting. 0x314.
-		uint8_t Palette = 0x0; // The Palette Index. 0x315.
-		uint8_t Unknown4[0xEA] = { 0x0 }; // Unknown. 0x316 - 0x3FF.
-	};
+	For reference, see here: https://github.com/SuperSaiyajinStackZ/Sims2Research/blob/main/Research/NDS/Painting.md.
 */
 
 export class S2Editor_NDSPainting {
@@ -92,6 +72,12 @@ export class S2Editor_NDSPainting {
 	Slot(V) {
 		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0xC, V);
 		else return SavUtils_Read("uint8_t", this.Offs + 0xC);
+	};
+
+	/* Get and Set the Canvas Index. */
+	CanvasIdx(V) {
+		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0xD, Math.min(0x5, V));
+		else return SavUtils_Read("uint8_t", this.Offs + 0xD);
 	};
 
 	/* Get and Set the Palette Index of the Painting Image. */
