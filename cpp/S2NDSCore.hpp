@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 SuperSaiyajinStackZ
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -31,9 +31,13 @@
 #include <math.h> // std::min<>(), std::max<>(...).
 #include <memory> // std::unique_ptr<>.
 #include <string> // std::string.
-#include <vector> // std::vector.
+#include <vector> // std::vector<>.
 
 namespace S2NDSCore {
+	/* Declare all used enum classes here. */
+	enum class SavRegion : uint8_t { UNKNOWN = 0x0, INT = 0x1, JPN = 0x2 };
+
+
 	/* Declare all used classes here. */
 	class SAV;
 	class Slot;
@@ -61,8 +65,8 @@ namespace S2NDSCore {
 		This is used to load a save and some other utility functions.
 	*/
 	namespace SaveHandler {
-		bool LoadSAV(const std::string &File);
-		bool LoadSAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size); // Overload function for direct pointer passing.
+		bool LoadSav(const std::string &File);
+		bool LoadSav(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size); // Overload function for direct pointer passing.
 		bool WriteBack(const std::string &File);
 	};
 
@@ -91,7 +95,7 @@ namespace S2NDSCore {
 
 
 	/*
-		The Sims 2 NDS SAV SAVEditing class implementation.
+		The Sims 2 NDS SAV Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
 
 		NOTE: NEVER ACCESS THIS CLASS AND OTHER SUB CLASSES OUTSIDE THE S2NDSCore::SaveHandler AND S2NDSCore::Sav CALL!!!
@@ -102,10 +106,14 @@ namespace S2NDSCore {
 		SAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size) :
 			SavData(std::move(Data)), SavSize(Size) { this->SavValid = this->ValidationCheck(); }; // Way 2 with a Buffer.
 
+		/* Validation check for the SaveData. */
 		bool ValidationCheck();
-		int8_t FetchSlot(const uint8_t SavSlot);
+
+		/* Return some stuff. */
+		int8_t FetchSlot(const uint8_t SavSlot, const uint8_t Reg);
 		uint8_t *GetData() const { return this->SavData.get(); };
 		uint32_t GetSize() const { return this->SavSize; };
+		SavRegion GetRegion() const { return this->Region; };
 		bool GetChangesMade() const { return this->ChangesMade; };
 		bool GetValid() const { return this->SavValid; };
 
@@ -132,27 +140,28 @@ namespace S2NDSCore {
 		};
 
 		/* Some other Read and Writes. */
-		const bool ReadBit(const uint32_t Offs, const uint8_t BitIndex);
+		bool ReadBit(const uint32_t Offs, const uint8_t BitIndex) const;
 		void WriteBit(const uint32_t Offs, const uint8_t BitIndex, const bool IsSet);
-		const uint8_t ReadBits(const uint32_t Offs, const bool First);
+		uint8_t ReadBits(const uint32_t Offs, const bool First) const;
 		void WriteBits(const uint32_t Offs, const bool First, const uint8_t Data);
-		const std::string ReadString(const uint32_t Offs, const uint32_t Length);
+		std::string ReadString(const uint32_t Offs, const uint32_t Length) const;
 		void WriteString(const uint32_t Offs, const uint32_t Length, const std::string &Str);
 
-		bool SlotExist(const uint8_t Slot);
-		std::unique_ptr<Slot> _Slot(const uint8_t Slt);
+		bool SlotExist(const uint8_t Slot) const;
+		std::unique_ptr<Slot> _Slot(const uint8_t Slt) const;
 		void Finish();
 	private:
 		std::unique_ptr<uint8_t[]> SavData;
 		uint32_t SavSize = 0;
 		bool ChangesMade = false, SavValid = false;
-		static constexpr uint8_t SlotIdent[8] = { 0x64, 0x61, 0x74, 0x0, 0x20, 0x0, 0x0, 0x0 };
+		SavRegion Region = SavRegion::UNKNOWN;
+		static constexpr uint8_t SlotIdent[8] = { 0x64, 0x61, 0x74, 0x0, 0x1F, 0x0, 0x0, 0x0 };
 		int8_t Slots[3] = { -1, -1, -1 };
 	};
 
 
 	/*
-		The Sims 2 NDS Slot SAVEditing class implementation.
+		The Sims 2 NDS Slot Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
 	*/
 	class Slot {

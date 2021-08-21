@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 SuperSaiyajinStackZ
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -28,56 +28,85 @@
 #include <unistd.h> // access().
 
 /*
-	Brief: The Sims 2 GameBoy Advance Save Editing Core written in C++.
-	Author(s): SuperSaiyajinStackZ.
-	Last updated: 3rd May 2021
-	Changes: Initial GBA Core merged together into one file.
+	--------------------------------------------------
+	The Sims 2 Game Boy Advance Save File Editing Core
+	--------------------------------------------------
 
-	Some explanation of the GBACore:
+	File: B46P.sav
+	Authors: SuperSaiyajinStackZ
+	Version: 0.2
+	Purpose: Easy editing of a The Sims 2 Game Boy Advance Savefile.
+	Category: Save File Editing Core
+	Last Updated: 21 August 2021
+	--------------------------------------------------
 
-	* Use S2GBACore::SaveHandler::LoadSAV(const std::string &) to load a Savefile from your SD Card.
-	* Use S2GBACore::SaveHandler::LoadSAV(std::unique_ptr<uint8_t[]> &, const uint32_t) to load a Savefile from an already existing Buffer.
-	* Use S2GBACore::SaveHandler::WriteBack(const std::string &) to write your changes back to the Savefile.
+	Research used from here: https://github.com/SuperSaiyajinStackZ/Sims2Research.
+
+
+	-----------------------
+	Explanation of the Core
+	-----------------------
+
+	* Use S2GBACore::SaveHandler::LoadSav(const std::string &) to load a SAVFile from your SD Card.
+	* Use S2GBACore::SaveHandler::LoadSav(const std::unique_ptr<uint8_t[]> &) to load a SAVFile from an already existing Buffer.
+	* Use S2GBACore::SaveHandler::Finish() to update all the Checksums.
+	* Use S2GBACore::SaveHandler::WriteBack(const std::string &) to write your changes back to the File.
 	* Use S2GBACore::Sav to access the Save Pointer and with that.. all the sub classes if needed. DO NOT ACCESS THOSE OUTSIDE, BECAUSE THEY RELY ON S2GBACore::Sav's POINTER!!!
 
 	Another Note about THIS Core:
 		THIS IS NOT THREAD-SAFE!!!, because I don't care about it, since I don't really work with Threads anyways.
 
-	Notes about the GBA Savefile itself:
+	To compile, you need to compile this with C++17 or above.
+
+
+	-------------------------------
+	Notes about the GBA Save itself
+	-------------------------------
+
 	* Only 0x5000 of 0x10000 / 0x20000 are used at all. 0x5000+ is unused / 0xFF padding so far I could see.
 	* The Savefile has 5 Checksums in place. (See the Checksum namespace for reference on how to calculate it).
 
 	The Checksum locations are the following:
-	- 0xE - 0xF (Range: 0x0 - 0x18) -- That is the Settings Checksum. This should ALWAYS be valid or it erases the whole Savefile and there is no restore possible anymore!
-	- 0x1FFE - 0x1FFF (Range: 0x1000 - 0x1FFF) -- That is the first Save Slot Checksum.
-	- 0x2FFE - 0x2FFF (Range: 0x2000 - 0x2FFF) -- That is the second Save Slot Checksum.
-	- 0x3FFE - 0x3FFF (Range: 0x3000 - 0x3FFF) -- That is the third Save Slot Checksum.
-	- 0x4FFE - 0x4FFF (Range: 0x4000 - 0x4FFF) -- That is the fourth Save Slot Checksum.
+	* 0xE - 0xF (Range: 0x0 - 0x18) -- That is the Settings Checksum. This should always be valid or it formats the complete Savefile!
+	* 0x1FFE - 0x1FFF (Range: 0x1000 - 0x1FFF) -- That is the first Save Slot Checksum.
+	* 0x2FFE - 0x2FFF (Range: 0x2000 - 0x2FFF) -- That is the second Save Slot Checksum.
+	* 0x3FFE - 0x3FFF (Range: 0x3000 - 0x3FFF) -- That is the third Save Slot Checksum.
+	* 0x4FFE - 0x4FFF (Range: 0x4000 - 0x4FFF) -- That is the fourth Save Slot Checksum.
 
-	Notes about the Save Slots:
+
+	--------------------------
+	Notes about the Save Slots
+	--------------------------
+
 	* Each Slot has a size of 0x1000.
 	* There exist 4 Slots -- so the Slot Size together is 0x4000.
 	* The House Items affect Offsets from the Save Slots. It can be found at offset 0xD6 of the Save Slot.
-
 	-- Per House Item, the things after 0xD7 of the Save Slot move up for 0x6, this needs to be kept in mind.
-		An easy function for that is 'uint32_t S2GBACore::Slot::Offset(const uint32_t DefaultOffs) const;'.
+	--- It is unsure yet, for how much the things move. I still have to research this part, but the Checksum stays at the same place.
 
-	--- I am unsure yet, for how much the things move.
-		I still have to research this part, but the Checksum stays at the same place for sure.
+
+	----------------------------
+	Detecting the Savefile notes
+	----------------------------
 
 	To check that the Savefile is a The Sims 2 GBA Save, check for the following things:
-	1.) Make sure the Savefile has a size of 64 / 128 KB ( 0x10000 / 0x20000 ).
-	2.) Make sure the first 7 byte are those: ( 0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34 ).
-	2.1) So far, all of my Savefiles contain the following bytes from Offset 0x0 - 0x6, so probably a good check to make sure.
+	1.) Make sure the Savefile has a size of 64 / 128 KB. (0x10000 / 0x20000)
+	2.) Make sure the first 7 byte are those: (0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34).
+	2.1) So far, all of my Savefile contains the following bytes from Offset 0x0 - 0x7, so probably a good check to make sure.
 */
 
 namespace S2GBACore {
 	std::unique_ptr<SAV> Sav = nullptr;
 
 	/*
+		////////////////////////////////////////////////
+
 		The Sims 2 GBA Checksum namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		////////////////////////////////////////////////
 	*/
+
 	/*
 		I rewrote the Checksum calculation function, to WORK with both, GBA and NDS versions.
 
@@ -106,13 +135,15 @@ namespace S2GBACore {
 	};
 
 
-
-
-
 	/*
+		///////////////////////////////////////////////////
+
 		The Sims 2 GBA SaveHandler namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		///////////////////////////////////////////////////
 	*/
+
 	/*
 		Main Save Loading method by passing a path to a Savefile.
 
@@ -120,7 +151,7 @@ namespace S2GBACore {
 
 		Returns true, if the save is valid.
 	*/
-	bool SaveHandler::LoadSAV(const std::string &File) {
+	bool SaveHandler::LoadSav(const std::string &File) {
 		S2GBACore::Sav = std::make_unique<S2GBACore::SAV>(File);
 
 		return S2GBACore::Sav->GetValid();
@@ -134,7 +165,7 @@ namespace S2GBACore {
 
 		Returns true, if the save is valid.
 	*/
-	bool SaveHandler::LoadSAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size) {
+	bool SaveHandler::LoadSav(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size) {
 		/* 64 and 128 KB are valid sizes for it. */
 		if (Size == 0x10000 || Size == 0x20000) {
 			S2GBACore::Sav = std::make_unique<S2GBACore::SAV>(Data, Size);
@@ -172,13 +203,15 @@ namespace S2GBACore {
 	};
 
 
-
-
-
 	/*
+		///////////////////////////////////////////////////
+
 		The Sims 2 GBA SimUtils namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		///////////////////////////////////////////////////
 	*/
+
 	/*
 		Returns the current time as a 24 Hour or 12 Hour string.
 
@@ -226,7 +259,7 @@ namespace S2GBACore {
 				break;
 		}
 
-		SString.push_back('$'); // Simoleons sign.
+		SString += "§"; // Simoleons sign.
 		return SString;
 	};
 
@@ -250,8 +283,12 @@ namespace S2GBACore {
 
 
 	/*
+		////////////////////////////////////////////////
+
 		The Sims 2 GBA Strings namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		////////////////////////////////////////////////
 	*/
 	const std::vector<std::string> Strings::CastNames = {
 		"Emperor Xizzle", "Burple", "Ara Fusilli", "Auda Sherif",
@@ -262,12 +299,14 @@ namespace S2GBACore {
 		"Pepper Pete", "Kent Hackett", "Sancho Paco Panza", "Tank Grunt",
 		"Tristan Legend", "Yeti"
 	};
+
 	const std::vector<std::string> Strings::EpisodeNames = {
 		"It All Began", "Buried By the Mob", "What Digs Beneath", "Aliens Arrived",
 		"Blackout!", "A Brand New Scent", "The New Cola", "There Was This Mummy",
 		"Triassic Trouble", "The Doomed Earth", "It All Came to an End", "A Very Special Reunion",
 		"Unofficial episode"
 	};
+
 	const std::vector<std::string> Strings::ItemNames = {
 		"??? (Crash)", "Asteroid", "Balloons", "Crystal", "Cat Clock",
 		"Chug Chug Cola Poster", "Bigfoot Print", "Friendly Fish Tank", "Hearts", "Intimidating Flame",
@@ -317,25 +356,30 @@ namespace S2GBACore {
 		"??? (Crash)", "??? (Crash)", "??? (Crash)", "??? (Crash)", "??? (Crash)", "??? (Crash)", "??? (Crash)", "??? (Crash)",
 		"??? (Crash)", "??? (Crash)", "??? (Crash)"
 	};
+
 	const std::vector<std::string> Strings::MinigameNames = {
 		"Bigfoot Love Chickens", "Car Commercial", "Keelhaulin' Cards", "Cattle Cleanup", "King Chug Chug", "Canyon Jumping", "Chop Shop"
 	};
+
 	const std::vector<std::string> Strings::SkillPointNames = {
 		"Confidence", "Mechanical", "Strength", "Personality", "Hotness", "Intellect"
 	};
+
 	const std::vector<std::string> Strings::SocialMoveNames = {
 		"Chit-Chat", "Entertain", "Hug", "Brag", "Apologize", "Sweet Talk", "Flirt", "Blow Kiss",
 		"Kiss", "Show Off Body", "Annoy", "Insult", "Threaten", "Rude Gesture", "Karate Moves"
 	};
 
 
-
-
-
 	/*
-		The Sims 2 GBA Cast SAVEditing class implementation.
+		////////////////////////////////////////////////////
+
+		The Sims 2 GBA Cast Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		////////////////////////////////////////////////////
 	*/
+
 	/* Get and Set Friendly Conversation level. */
 	uint8_t Cast::Friendly() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs); };
 	void Cast::Friendly(const uint8_t V) { S2GBACore::Sav->Write<uint8_t>(this->Offs, std::min<uint8_t>(3, V)); };
@@ -348,22 +392,32 @@ namespace S2GBACore {
 	uint8_t Cast::Intimidate() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x2); };
 	void Cast::Intimidate(const uint8_t V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x2, std::min<uint8_t>(3, V)); };
 
-	/* Get and Set the Picture. */
-	CastPicture Cast::Picture() const { return (CastPicture)S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x3); };
-	void Cast::Picture(const CastPicture V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x3, (uint8_t)V); };
+	/* Get and Set the Feeling. */
+	CastFeeling Cast::Feeling() const { return (CastFeeling)S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x3); };
+	void Cast::Feeling(const CastFeeling V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x3, (uint8_t)V); };
 
-	/* Get and Set Mystery Unlock state. */
-	bool Cast::Mystery() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x8); };
-	void Cast::Mystery(const bool V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x8, V); };
+	/* Get and Set the Feeling's effect hours. */
+	uint8_t Cast::FeelingEffectHours() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x6); };
+	void Cast::FeelingEffectHours(const uint8_t V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x6, V); };
 
+	/* Get and Set the registered on phone state. */
+	bool Cast::RegisteredOnPhone() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x7); };
+	void Cast::RegisteredOnPhone(const bool V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x7, V); };
 
-
+	/* Get and Set Secret Unlock state. */
+	bool Cast::Secret() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x8); };
+	void Cast::Secret(const bool V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x8, V); };
 
 
 	/*
-		The Sims 2 GBA Episode SAVEditing class implementation.
+		///////////////////////////////////////////////////////
+
+		The Sims 2 GBA Episode Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		///////////////////////////////////////////////////////
 	*/
+
 	/* Get and Set Episode Ratings. */
 	uint8_t Episode::Rating(const uint8_t Category) const {
 		return S2GBACore::Sav->Read<uint8_t>(this->Offs + std::min<uint8_t>(3, Category));
@@ -377,13 +431,15 @@ namespace S2GBACore {
 	void Episode::State(const bool V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x4, V); };
 
 
-
-
-
 	/*
-		The Sims 2 GBA House SAVEditing class implementation.
+		/////////////////////////////////////////////////////
+
+		The Sims 2 GBA House Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		/////////////////////////////////////////////////////
 	*/
+
 	/*
 		Get and Set the Room Design.
 		Only 0 - 3 SHOULD be used at all, the others aren't actual room designs and instead may cause issues.
@@ -395,13 +451,15 @@ namespace S2GBACore {
 	std::unique_ptr<HouseItem> House::Items() const { return std::make_unique<HouseItem>(this->Offs + 0xD6); };
 
 
-
-
-
 	/*
-		The Sims 2 GBA House Item SAVEditing class implementation.
+		//////////////////////////////////////////////////////////
+
+		The Sims 2 GBA House Item Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		//////////////////////////////////////////////////////////
 	*/
+
 	/* Get and Set the Item Count. */
 	uint8_t HouseItem::Count() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs); };
 	void HouseItem::Count(const uint8_t V) { S2GBACore::Sav->Write<uint8_t>(this->Offs, V); };
@@ -578,22 +636,24 @@ namespace S2GBACore {
 	};
 
 
-
-
-
 	/*
-		The Sims 2 GBA Item SAVEditing class implementation.
+		////////////////////////////////////////////////////////////
+
+		The Sims 2 GBA Item Package Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		////////////////////////////////////////////////////////////
 	*/
+
 	/* Get and Set the Item Count. */
-	uint8_t Item::Count() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs); };
-	void Item::Count(const uint8_t V) { S2GBACore::Sav->Write<uint8_t>(this->Offs, V); };
+	uint8_t ItemPackage::Count() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs); };
+	void ItemPackage::Count(const uint8_t V) { S2GBACore::Sav->Write<uint8_t>(this->Offs, V); };
 
 	/* Get and Set the Item's ID. */
-	uint8_t Item::ID(const uint8_t Index) const {
+	uint8_t ItemPackage::ID(const uint8_t Index) const {
 		return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x1 + (std::min<uint8_t>(5, Index) * 0x3));
 	};
-	void Item::ID(const uint8_t Index, const uint8_t V) {
+	void ItemPackage::ID(const uint8_t Index, const uint8_t V) {
 		S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x1 + (std::min<uint8_t>(5, Index) * 0x3), V);
 
 		/* Update Item Count. */
@@ -605,14 +665,24 @@ namespace S2GBACore {
 		if (this->Count() != Amount) this->Count(Amount);
 	};
 
+	/* Get and Set the Item's flag. */
+	uint8_t ItemPackage::Flag(const uint8_t Idx) const { return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x2 + (std::min<uint8_t>(5, Idx) * 0x3)); };
+	void ItemPackage::Flag(const uint8_t Idx, const uint8_t V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x2 + (std::min<uint8_t>(5, Idx) * 0x3), V); };
 
-
+	/* Get and Set the Item's Use Count. */
+	uint8_t ItemPackage::UseCount(const uint8_t Idx) const { return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x3 + (std::min<uint8_t>(5, Idx) * 0x3)); };
+	void ItemPackage::UseCount(const uint8_t Idx, const uint8_t V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x3 + (std::min<uint8_t>(5, Idx) * 0x3), V); };
 
 
 	/*
-		The Sims 2 GBA Minigame SAVEditing class implementation.
+		////////////////////////////////////////////////////////
+
+		The Sims 2 GBA Minigame Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		////////////////////////////////////////////////////////
 	*/
+
 	/* Get and Set if you played that game already today. */
 	bool Minigame::Played() const { return S2GBACore::Sav->ReadBit(this->Offs, this->Game); };
 	void Minigame::Played(const bool V) { S2GBACore::Sav->WriteBit(this->Offs, this->Game, V); };
@@ -627,13 +697,15 @@ namespace S2GBACore {
 	};
 
 
-
-
-
 	/*
-		The Sims 2 GBA SAV SAVEditing class implementation.
+		///////////////////////////////////////////////////
+
+		The Sims 2 GBA SAV Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		///////////////////////////////////////////////////
 	*/
+
 	/*
 		Main Save Constructor by passing over the path to the Savefile.
 
@@ -700,7 +772,7 @@ namespace S2GBACore {
 		const uint32_t Offs: The Offset to read from.
 		const uint8_t BitIndex: The Bit index ( 0 - 7 ).
 	*/
-	const bool SAV::ReadBit(const uint32_t Offs, const uint8_t BitIndex) {
+	bool SAV::ReadBit(const uint32_t Offs, const uint8_t BitIndex) const {
 		if (!this->GetValid() || !this->GetData() || BitIndex > 7) return false;
 
 		return (this->GetData()[Offs] >> BitIndex & 1) != 0;
@@ -727,7 +799,7 @@ namespace S2GBACore {
 		const uint32_t Offs: The offset where to read from.
 		const bool First: If Reading from the first four bits, or second.
 	*/
-	const uint8_t SAV::ReadBits(const uint32_t Offs, const bool First) {
+	uint8_t SAV::ReadBits(const uint32_t Offs, const bool First) const {
 		if (!this->GetValid() || !this->GetData()) return 0x0;
 
 		if (First) return (this->GetData()[Offs] & 0xF); // Bit 0 - 3.
@@ -755,7 +827,7 @@ namespace S2GBACore {
 		const uint32_t Offs: The Offset from where to read from.
 		const uint32_t Length: The Length to read.
 	*/
-	const std::string SAV::ReadString(const uint32_t Offs, const uint32_t Length) {
+	std::string SAV::ReadString(const uint32_t Offs, const uint32_t Length) const {
 		if (!this->GetValid() || !this->GetData()) return "";
 
 		std::string Str;
@@ -791,7 +863,7 @@ namespace S2GBACore {
 
 		const uint8_t Slot: The Slot to check ( 1 - 4).
 	*/
-	bool SAV::SlotExist(const uint8_t Slot) {
+	bool SAV::SlotExist(const uint8_t Slot) const {
 		if (Slot < 1 || Slot > 4) return false;
 
 		for (uint8_t Idx = 0; Idx < 10; Idx++) {
@@ -806,7 +878,7 @@ namespace S2GBACore {
 
 		const uint8_t Slt: The Slot ( 1 - 4 ).
 	*/
-	std::unique_ptr<Slot> SAV::_Slot(const uint8_t Slt) {
+	std::unique_ptr<Slot> SAV::_Slot(const uint8_t Slt) const {
 		if (!this->SlotExist(Slt)) return nullptr;
 
 		return std::make_unique<Slot>(Slt);
@@ -830,13 +902,15 @@ namespace S2GBACore {
 	};
 
 
-
-
-
 	/*
-		The Sims 2 GBA Settings SAVEditing class implementation.
+		////////////////////////////////////////////////////////
+
+		The Sims 2 GBA Settings Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		////////////////////////////////////////////////////////
 	*/
+
 	/* Get and Set the Sound Effect Volume. */
 	uint8_t Settings::SFX() const { return S2GBACore::Sav->Read<uint8_t>(0x8); };
 	void Settings::SFX(const uint8_t V) {
@@ -871,13 +945,15 @@ namespace S2GBACore {
 	};
 
 
-
-
-
 	/*
-		The Sims 2 GBA Slot SAVEditing class implementation.
+		////////////////////////////////////////////////////
+
+		The Sims 2 GBA Slot Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		////////////////////////////////////////////////////
 	*/
+
 	/*
 		The House Item Amount seems to affect some stuff and move things around for 0x6 per Item.
 		So, we get the Item Count of the House from the 0xD6'th Byte from the GBA Slot.
@@ -1005,12 +1081,12 @@ namespace S2GBACore {
 	uint8_t Slot::Aspiration() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x4B); };
 	void Slot::Aspiration(const uint8_t V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x4B, std::min<uint8_t>(2, V)); };
 
-	/* Return some Item Groups of 6 Items each group. */
-	std::unique_ptr<Item> Slot::PawnShop() const { return std::make_unique<Item>(this->Offs + 0x4C); };
-	std::unique_ptr<Item> Slot::Saloon() const { return std::make_unique<Item>(this->Offs + 0x5F); };
-	std::unique_ptr<Item> Slot::Skills() const { return std::make_unique<Item>(this->Offs + 0x72); };
-	std::unique_ptr<Item> Slot::Mailbox() const { return std::make_unique<Item>(this->Offs + 0x98); };
-	std::unique_ptr<Item> Slot::Inventory() const { return std::make_unique<Item>(this->Offs + 0xAB); };
+	/* Return some ItemPackages of 6 Items each package. */
+	std::unique_ptr<ItemPackage> Slot::PawnShop() const { return std::make_unique<ItemPackage>(this->Offs + 0x4C); };
+	std::unique_ptr<ItemPackage> Slot::Saloon() const { return std::make_unique<ItemPackage>(this->Offs + 0x5F); };
+	std::unique_ptr<ItemPackage> Slot::Skills() const { return std::make_unique<ItemPackage>(this->Offs + 0x72); };
+	std::unique_ptr<ItemPackage> Slot::Mailbox() const { return std::make_unique<ItemPackage>(this->Offs + 0x98); };
+	std::unique_ptr<ItemPackage> Slot::Inventory() const { return std::make_unique<ItemPackage>(this->Offs + 0xAB); };
 
 	/* Return House Items. */
 	std::unique_ptr<House> Slot::_House() const { return std::make_unique<House>(this->Offs); };
@@ -1118,7 +1194,7 @@ namespace S2GBACore {
 
 	/* Get a Social Move class. */
 	std::unique_ptr<SocialMove> Slot::_SocialMove(const uint8_t Move) const {
-		return std::make_unique<SocialMove>(this->Offset(0x3EA) + (std::min<uint8_t>(14, Move)) * 0x8, Move);
+		return std::make_unique<SocialMove>(this->Offset(0x3EE) + (std::min<uint8_t>(14, Move)) * 0x8, Move);
 	};
 
 	/* Get a Cast class. */
@@ -1145,18 +1221,24 @@ namespace S2GBACore {
 	};
 
 
-
-
-
 	/*
-		The Sims 2 GBA Social Move SAVEditing class implementation.
+		//////////////////////////////////////////////////////////
+
+		The Sims 2 GBA Social Move Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		//////////////////////////////////////////////////////////
 	*/
+
 	/* Get and Set the Social Move Flag. */
-	SocialMoveFlag SocialMove::Flag() const { return (SocialMoveFlag)S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x4); };
-	void SocialMove::Flag(const SocialMoveFlag V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x4, (uint8_t)V); };
+	SocialMoveFlag SocialMove::Flag() const { return (SocialMoveFlag)S2GBACore::Sav->Read<uint8_t>(this->Offs); };
+	void SocialMove::Flag(const SocialMoveFlag V) { S2GBACore::Sav->Write<uint8_t>(this->Offs, (uint8_t)V); };
 
 	/* Get and Set the Social Move Level. */
-	uint8_t SocialMove::Level() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x8); };
-	void SocialMove::Level(const uint8_t V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x8, std::min<uint8_t>(3, V)); };
+	uint8_t SocialMove::Level() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x4); };
+	void SocialMove::Level(const uint8_t V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x4, std::min<uint8_t>(3, V)); };
+
+	/* Get and Set the Social Move Blocked Hours. */
+	uint8_t SocialMove::BlockedHours() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x6); };
+	void SocialMove::BlockedHours(const uint8_t V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x6, V); };
 };

@@ -8,12 +8,11 @@ They will be available soon as:
 `cpp/S2NDSCore.hpp`, `cpp/S2NDSCore.cpp` for the Nintendo DS version C++ Core.
 
 ## JS-Core
-`js/S2GBACore.js` for the GameBoy Advance version JavaScript Core.
-`js/S2NDSCore.js` for the Nintendo DS version JavaScript Core.
+`js/S2GBACore.js` for the GameBoy Advance version JavaScript Core - TODO.
+`js/S2NDSCore.js` for the Nintendo DS version JavaScript Core - TODO.
 
 ## Credits
-- [SuperSaiyajinStackZ](https://github.com/SuperSaiyajinStackZ): Main Developer of the Core + Main SAV Researcher.
-- [Universal-Team](https://github.com/Universal-Team): Since i'm part of Universal-Team, also the Credits / Copyright goes to Universal-Team.
+- [SuperSaiyajinStackZ](https://github.com/SuperSaiyajinStackZ): Main Developer of the Core + Main Sav Researcher.
 
 
 Licensing:

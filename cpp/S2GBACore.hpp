@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 SuperSaiyajinStackZ
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -31,22 +31,22 @@
 #include <math.h> // std::min<>(), std::max<>(...).
 #include <memory> // std::unique_ptr<>.
 #include <string> // std::string.
-#include <vector> // std::vector.
+#include <vector> // std::vector<>.
 
 namespace S2GBACore {
 	/* Declare all used enum classes here. */
+	enum class CastFeeling : uint8_t { Neutral = 0x0, Friendly = 0x1, Angry = 0x2, Romantic = 0x3 }; // Cast Feelings.
 	enum class HouseItemDirection : uint8_t { Right = 0x1, Down = 0x3, Left = 0x5, Up = 0x7, Invalid = 0xFF }; // House Item Directions.
-	enum class Langs : uint8_t { EN = 0x0, NL = 0x1, FR = 0x2, DE = 0x3, IT = 0x4, ES = 0x5 }; // GBA Settings Languages.
+	enum class Langs : uint8_t { EN = 0x0, NL = 0x1, FR = 0x2, DE = 0x3, IT = 0x4, ES = 0x5 }; // Settings Languages.
 	enum class SocialMoveFlag : uint8_t { Locked = 0x0, Unlocked = 0x1, Blocked = 0x2 }; // Social Move Flags.
-	enum class CastPicture : uint8_t { Neutral = 0x0, Friendly = 0x1, Angry = 0x2 }; // GBA Cast Pictures.
 
 
 	/* Declare all used classes here. */
 	class Cast;
 	class Episode;
-	class Item;
 	class House;
 	class HouseItem;
+	class ItemPackage;
 	class Minigame;
 	class SAV;
 	class Settings;
@@ -76,8 +76,8 @@ namespace S2GBACore {
 		This is used to load a save and some other utility functions.
 	*/
 	namespace SaveHandler {
-		bool LoadSAV(const std::string &File);
-		bool LoadSAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size); // Overload function for direct pointer passing.
+		bool LoadSav(const std::string &File);
+		bool LoadSav(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size); // Overload function for direct pointer passing.
 		bool WriteBack(const std::string &File);
 	};
 
@@ -111,7 +111,7 @@ namespace S2GBACore {
 	};
 
 	/*
-		The Sims 2 GBA Cast SAVEditing class implementation.
+		The Sims 2 GBA Cast Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
 	*/
 	class Cast {
@@ -121,7 +121,7 @@ namespace S2GBACore {
 
 		uint8_t Index() const { return this->Cst; };
 
-		/* Conversation Levels. */
+		/* Interaction Levels. */
 		uint8_t Friendly() const;
 		void Friendly(const uint8_t V);
 		uint8_t Romance() const;
@@ -129,12 +129,17 @@ namespace S2GBACore {
 		uint8_t Intimidate() const;
 		void Intimidate(const uint8_t V);
 
-		CastPicture Picture() const;
-		void Picture(const CastPicture V);
+		/* Feeling Stuff. */
+		CastFeeling Feeling() const;
+		void Feeling(const CastFeeling V);
+		uint8_t FeelingEffectHours() const;
+		void FeelingEffectHours(const uint8_t V);
 
 		/* Unlockables. */
-		bool Mystery() const;
-		void Mystery(const bool V);
+		bool RegisteredOnPhone() const;
+		void RegisteredOnPhone(const bool V);
+		bool Secret() const;
+		void Secret(const bool V);
 	private:
 		uint8_t Cst = 0;
 		uint32_t Offs = 0;
@@ -142,7 +147,7 @@ namespace S2GBACore {
 
 
 	/*
-		The Sims 2 GBA Episode SAVEditing class implementation.
+		The Sims 2 GBA Episode Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
 	*/
 	class Episode {
@@ -169,7 +174,7 @@ namespace S2GBACore {
 
 
 	/*
-		The Sims 2 GBA House SAVEditing class implementation.
+		The Sims 2 GBA House Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
 	*/
 	class House {
@@ -186,7 +191,7 @@ namespace S2GBACore {
 
 
 	/*
-		The Sims 2 GBA HouseItem SAVEditing class implementation.
+		The Sims 2 GBA HouseItem Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
 	*/
 	class HouseItem {
@@ -223,25 +228,31 @@ namespace S2GBACore {
 
 
 	/*
-		The Sims 2 GBA Item SAVEditing class implementation.
+		The Sims 2 GBA Item Package Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
 	*/
-	class Item {
+	class ItemPackage {
 	public:
-		Item(const uint32_t Offset) : Offs(Offset) { };
+		ItemPackage(const uint32_t Offset) : Offs(Offset) { };
 
 		uint8_t Count() const;
 		void Count(const uint8_t V);
 
 		uint8_t ID(const uint8_t Index) const;
 		void ID(const uint8_t Index, const uint8_t V);
+
+		/* Flag and Use count. */
+		uint8_t Flag(const uint8_t Idx) const;
+		void Flag(const uint8_t Idx, const uint8_t V);
+		uint8_t UseCount(const uint8_t Idx) const;
+		void UseCount(const uint8_t Idx, const uint8_t V);
 	private:
 		uint32_t Offs = 0;
 	};
 
 
 	/*
-		The Sims 2 GBA Minigame SAVEditing class implementation.
+		The Sims 2 GBA Minigame Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
 	*/
 	class Minigame {
@@ -262,7 +273,7 @@ namespace S2GBACore {
 
 
 	/*
-		The Sims 2 GBA SAV SAVEditing class implementation.
+		The Sims 2 GBA SAV Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
 
 		NOTE: NEVER ACCESS THIS CLASS AND OTHER SUB CLASSES OUTSIDE THE S2GBACore::SaveHandler AND S2GBACore::Sav CALL!!!
@@ -302,15 +313,15 @@ namespace S2GBACore {
 		};
 
 		/* Some other Read and Writes. */
-		const bool ReadBit(const uint32_t Offs, const uint8_t BitIndex);
+		bool ReadBit(const uint32_t Offs, const uint8_t BitIndex) const;
 		void WriteBit(const uint32_t Offs, const uint8_t BitIndex, const bool IsSet);
-		const uint8_t ReadBits(const uint32_t Offs, const bool First);
+		uint8_t ReadBits(const uint32_t Offs, const bool First) const;
 		void WriteBits(const uint32_t Offs, const bool First, const uint8_t Data);
-		const std::string ReadString(const uint32_t Offs, const uint32_t Length);
+		std::string ReadString(const uint32_t Offs, const uint32_t Length) const;
 		void WriteString(const uint32_t Offs, const uint32_t Length, const std::string &Str);
 
-		bool SlotExist(const uint8_t Slot);
-		std::unique_ptr<Slot> _Slot(const uint8_t Slt);
+		bool SlotExist(const uint8_t Slot) const;
+		std::unique_ptr<Slot> _Slot(const uint8_t Slt) const;
 		std::unique_ptr<Settings> _Settings() const;
 		void Finish();
 	private:
@@ -322,7 +333,7 @@ namespace S2GBACore {
 
 
 	/*
-		The Sims 2 GBA Settings SAVEditing class implementation.
+		The Sims 2 GBA Settings Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
 	*/
 	class Settings {
@@ -346,7 +357,7 @@ namespace S2GBACore {
 
 
 	/*
-		The Sims 2 GBA Slot SAVEditing class implementation.
+		The Sims 2 GBA Slot Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
 	*/
 	class Slot {
@@ -404,11 +415,11 @@ namespace S2GBACore {
 		void Aspiration(const uint8_t V);
 
 		/* Items. */
-		std::unique_ptr<Item> PawnShop() const;
-		std::unique_ptr<Item> Saloon() const;
-		std::unique_ptr<Item> Skills() const;
-		std::unique_ptr<Item> Mailbox() const;
-		std::unique_ptr<Item> Inventory() const;
+		std::unique_ptr<ItemPackage> PawnShop() const;
+		std::unique_ptr<ItemPackage> Saloon() const;
+		std::unique_ptr<ItemPackage> Skills() const;
+		std::unique_ptr<ItemPackage> Mailbox() const;
+		std::unique_ptr<ItemPackage> Inventory() const;
 
 		/* House data. */
 		std::unique_ptr<House> _House() const;
@@ -479,7 +490,7 @@ namespace S2GBACore {
 
 
 	/*
-		The Sims 2 GBA Social Move SAVEditing class implementation.
+		The Sims 2 GBA Social Move Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
 	*/
 	class SocialMove {
@@ -494,6 +505,9 @@ namespace S2GBACore {
 
 		uint8_t Level() const;
 		void Level(const uint8_t V);
+
+		uint8_t BlockedHours() const;
+		void BlockedHours(const uint8_t V);
 	private:
 		uint8_t Move = 0;
 		uint32_t Offs = 0;

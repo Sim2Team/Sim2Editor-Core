@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 SuperSaiyajinStackZ
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -28,31 +28,48 @@
 #include <unistd.h> // access().
 
 /*
-	Brief: The Sims 2 Nintendo DS Save Editing Core written in C++.
-	Author(s): SuperSaiyajinStackZ.
-	Last updated: 3rd May 2021
-	Changes: Initial NDS Core merged together into one file.
+	---------------------------------------------
+	The Sims 2 Nintendo DS Save File Editing Core
+	---------------------------------------------
 
-	Some explanation of the NDSCore:
+	File: ASJP.sav
+	Authors: SuperSaiyajinStackZ
+	Version: 0.2
+	Purpose: Easy editing of a The Sims 2 Nintendo DS Savefile.
+	Category: Save File Editing Core
+	Last Updated: 21 August 2021
+	---------------------------------------------
 
-	* Use S2NDSCore::SaveHandler::LoadSAV(const std::string &) to load a Savefile from your SD Card.
-	* Use S2NDSCore::SaveHandler::LoadSAV(std::unique_ptr<uint8_t[]> &, const uint32_t) to load a Savefile from an already existing Buffer.
+	Research used from here: https://github.com/SuperSaiyajinStackZ/Sims2Research.
+
+
+	-----------------------
+	Explanation of the Core
+	-----------------------
+
+	* Use S2NDSCore::SaveHandler::LoadSav(const std::string &) to load a Savefile from your SD Card.
+	* Use S2NDSCore::SaveHandler::LoadSav(std::unique_ptr<uint8_t[]> &, const uint32_t) to load a Savefile from an already existing Buffer.
 	* Use S2NDSCore::SaveHandler::WriteBack(const std::string &) to update the checksums + write your changes back to the Savefile.
 	* Use S2NDSCore::Sav to access the Save Pointer and with that.. all the sub classes if needed. DO NOT ACCESS THOSE OUTSIDE, BECAUSE THEY RELY ON S2NDSCore::Sav's POINTER!!!
 
 	Another Note about THIS Core:
 		THIS IS NOT THREAD-SAFE!!!, because I don't care about it, since I don't really work with Threads anyways.
 
-	Notes about the NDS Savefile is a TODO.
+	To compile, you need to compile this with C++17 or above.
 */
 
 namespace S2NDSCore {
 	std::unique_ptr<SAV> Sav = nullptr;
 
 	/*
+		////////////////////////////////////////////////
+
 		The Sims 2 NDS Checksum namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		////////////////////////////////////////////////
 	*/
+
 	/*
 		I rewrote the Checksum calculation function, to WORK with both, GBA and NDS versions.
 
@@ -93,13 +110,15 @@ namespace S2NDSCore {
 	};
 
 
-
-
-
 	/*
+		////////////////////////////////////////////////////
+
 		The Sims 2 NDS SaveHandler namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		////////////////////////////////////////////////////
 	*/
+
 	/*
 		Main Save Loading method by passing a path to a Savefile.
 
@@ -107,7 +126,7 @@ namespace S2NDSCore {
 
 		Returns true, if the save is valid.
 	*/
-	bool SaveHandler::LoadSAV(const std::string &File) {
+	bool SaveHandler::LoadSav(const std::string &File) {
 		S2NDSCore::Sav = std::make_unique<S2NDSCore::SAV>(File);
 
 		return S2NDSCore::Sav->GetValid();
@@ -121,7 +140,7 @@ namespace S2NDSCore {
 
 		Returns true, if the save is valid.
 	*/
-	bool SaveHandler::LoadSAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size) {
+	bool SaveHandler::LoadSav(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size) {
 		/* 256 and 512 KB are valid sizes for it. */
 		if (Size == 0x40000 || Size == 0x80000) {
 			S2NDSCore::Sav = std::make_unique<S2NDSCore::SAV>(Data, Size);
@@ -159,13 +178,15 @@ namespace S2NDSCore {
 	};
 
 
-
-
-
 	/*
+		/////////////////////////////////////////////////
+
 		The Sims 2 NDS SimUtils namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		/////////////////////////////////////////////////
 	*/
+
 	/*
 		Returns the current time as a 24 Hour or 12 Hour string.
 
@@ -213,28 +234,31 @@ namespace S2NDSCore {
 				break;
 		}
 
-		SString.push_back('$'); // Simoleons sign.
+		SString += "§"; // Simoleons sign.
 		return SString;
 	};
 
 
-
-
-
 	/*
+		////////////////////////////////////////////////
+
 		The Sims 2 NDS Strings namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		/////////////////////////////////////////////////
 	*/
 	const std::vector<std::string> Strings::SkillPointNames = { "Creativity", "Business", "Body", "Charisma", "Mechanical" };
 
 
-
-
-
 	/*
-		The Sims 2 NDS SAV SAVEditing class implementation.
+		///////////////////////////////////////////////////
+
+		The Sims 2 NDS SAV Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		///////////////////////////////////////////////////
 	*/
+
 	/*
 		Main Save Constructor by passing over the path to the Savefile.
 
@@ -276,23 +300,36 @@ namespace S2NDSCore {
 		if (!this->GetData()) return false;
 
 		bool Res = false;
-		uint8_t Count = 0;
+		uint8_t Count = 0, Region = 0;
 
 		for (uint8_t Slot = 0; Slot < 5; Slot++) { // Check for all 5 possible Slots.
 			Count = 0; // Reset Count here.
 
 			for (uint8_t ID = 0; ID < 8; ID++) {
-				if (this->GetData()[(Slot * 0x1000) + ID] == this->SlotIdent[ID]) Count++;
+				if (ID == 4) { // 4 is region specific.
+					for (Region = 0; Region < 3; Region++) {
+						if (this->GetData()[(Slot * 0x1000) + ID] == this->SlotIdent[ID] + Region) {
+							Count++;
+							break;
+						}
+					}
+
+				} else {
+					if (this->GetData()[(Slot * 0x1000) + ID] == this->SlotIdent[ID]) Count++;
+				}
 			}
 
+			/* If Count == 8, then the header was right. */
 			if (Count == 8) {
+				this->Region = (Region == 2 ? S2NDSCore::SavRegion::JPN : S2NDSCore::SavRegion::INT);
 				Res = true;
 				break;
 			}
 		}
 
+		/* If good -> Fetch all active Slots. */
 		if (Res) {
-			for (uint8_t Idx = 0; Idx < 3; Idx++) this->Slots[Idx] = this->FetchSlot(Idx); // Fetch Slot Locations.
+			for (uint8_t Idx = 0; Idx < 3; Idx++) this->Slots[Idx] = this->FetchSlot(Idx, Region); // Fetch Slot Locations.
 		}
 
 		return Res;
@@ -303,7 +340,7 @@ namespace S2NDSCore {
 
 		This function has been ported of the LSSD Tool, SuperSaiyajinStackZ created.
 	*/
-	int8_t SAV::FetchSlot(const uint8_t SavSlot) {
+	int8_t SAV::FetchSlot(const uint8_t SavSlot, const uint8_t Reg) {
 		if (!this->GetData()) return -1;
 
 		int8_t LastSavedSlot = -1, IDCount = 0;
@@ -316,7 +353,7 @@ namespace S2NDSCore {
 
 			/* Check for Identifier. */
 			for (uint8_t ID = 0; ID < 8; ID++) {
-				if (this->GetData()[(Slot * 0x1000) + ID] == this->SlotIdent[ID]) IDCount++;
+				if (this->GetData()[(Slot * 0x1000) + ID] == this->SlotIdent[ID] + (ID == 0x4 ? Reg : 0x0)) IDCount++;
 			}
 
 			/* If 8, then it properly passed the slot existence check. */
@@ -351,7 +388,7 @@ namespace S2NDSCore {
 		const uint32_t Offs: The Offset to read from.
 		const uint8_t BitIndex: The Bit index ( 0 - 7 ).
 	*/
-	const bool SAV::ReadBit(const uint32_t Offs, const uint8_t BitIndex) {
+	bool SAV::ReadBit(const uint32_t Offs, const uint8_t BitIndex) const {
 		if (!this->GetValid() || !this->GetData() || BitIndex > 7) return false;
 
 		return (this->GetData()[Offs] >> BitIndex & 1) != 0;
@@ -378,7 +415,7 @@ namespace S2NDSCore {
 		const uint32_t Offs: The offset where to read from.
 		const bool First: If Reading from the first four bits, or second.
 	*/
-	const uint8_t SAV::ReadBits(const uint32_t Offs, const bool First) {
+	uint8_t SAV::ReadBits(const uint32_t Offs, const bool First) const {
 		if (!this->GetValid() || !this->GetData()) return 0x0;
 
 		if (First) return (this->GetData()[Offs] & 0xF); // Bit 0 - 3.
@@ -405,8 +442,10 @@ namespace S2NDSCore {
 
 		const uint32_t Offs: The Offset from where to read from.
 		const uint32_t Length: The Length to read.
+
+		TODO: Handle Japanese special signs.
 	*/
-	const std::string SAV::ReadString(const uint32_t Offs, const uint32_t Length) {
+	std::string SAV::ReadString(const uint32_t Offs, const uint32_t Length) const {
 		if (!this->GetValid() || !this->GetData()) return "";
 
 		std::string Str;
@@ -425,6 +464,8 @@ namespace S2NDSCore {
 		const uint32_t Offs: The offset from where to write to.
 		const uint32_t Length: The length to write.
 		const std::string &Str: The string to write.
+
+		TODO: Handle Japanese special signs.
 	*/
 	void SAV::WriteString(const uint32_t Offs, const uint32_t Length, const std::string &Str) {
 		if (!this->GetValid() || !this->GetData()) return;
@@ -443,7 +484,7 @@ namespace S2NDSCore {
 
 		const uint8_t Slot: The Slot to check ( 0 - 2 ).
 	*/
-	bool SAV::SlotExist(const uint8_t Slot) {
+	bool SAV::SlotExist(const uint8_t Slot) const {
 		if (Slot > 2 || !this->GetValid()) return false;
 
 		return this->Slots[Slot] != -1;
@@ -454,7 +495,7 @@ namespace S2NDSCore {
 
 		const uint8_t Slt: The Slot ( 0 - 2 ).
 	*/
-	std::unique_ptr<Slot> SAV::_Slot(const uint8_t Slt) {
+	std::unique_ptr<Slot> SAV::_Slot(const uint8_t Slt) const {
 		if (!this->SlotExist(Slt)) return nullptr;
 
 		return std::make_unique<Slot>(this->Slots[Slt]);
@@ -472,13 +513,15 @@ namespace S2NDSCore {
 	};
 
 
-
-
-
 	/*
-		The Sims 2 NDS Slot SAVEditing class implementation.
+		////////////////////////////////////////////////////
+
+		The Sims 2 NDS Slot Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
+
+		////////////////////////////////////////////////////
 	*/
+
 	/* Get and Set Simoleons. */
 	uint32_t Slot::Simoleons() const { return S2NDSCore::Sav->Read<uint32_t>(this->Offs + 0x2C); };
 	void Slot::Simoleons(uint32_t V) { S2NDSCore::Sav->Write<uint32_t>(this->Offs + 0x2C, (std::min<uint32_t>(999999, V))); };
