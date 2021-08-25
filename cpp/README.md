@@ -27,6 +27,8 @@ You'll find examples how to use Sim2Editor's CPlusPlus compressed Cores below.
 The first example shows you, how you load the SavData from a File by providing the Path to it.
 
 ```cpp
+#include "S2GBACore.hpp"
+
 int main(int ARGC, char *ARGV[]) {
 	if (ARGC == 2) { // Ensure 2 arguments have been provided.
 		const std::string FName = ARGV[1];
@@ -40,7 +42,7 @@ int main(int ARGC, char *ARGV[]) {
 				printf("Name: %s\n", Slot->Name().c_str());
 				printf("Simoleons: %d\n", Slot->Simoleons());
 				printf("Ratings: %d\n", Slot->Ratings());
-				printf("Time: %s\n", S2GBACore::SimUtils::SimoleonsString(Slot->Time()).c_str());
+				printf("Time: %s\n", S2GBACore::SimUtils::TimeString(Slot->Time()).c_str());
 			}
 
 			/* When you're done, use the function below to update checksums etc and write back to file. */
@@ -58,6 +60,8 @@ int main(int ARGC, char *ARGV[]) {
 The second example shows the second way, how to load the SavData directly from a buffer - `std::unique_ptr<uint8_t[]>`.
 
 ```cpp
+#include "S2GBACore.hpp"
+
 int main(int ARGC, char *ARGV[]) {
 	if (ARGC == 2) { // Ensure 2 arguments have been provided.
 		const std::string FName = ARGV[1];
@@ -82,7 +86,7 @@ int main(int ARGC, char *ARGV[]) {
 					printf("Name: %s\n", Slot->Name().c_str());
 					printf("Simoleons: %d\n", Slot->Simoleons());
 					printf("Ratings: %d\n", Slot->Ratings());
-					printf("Time: %s\n", S2GBACore::SimUtils::SimoleonsString(Slot->Time()).c_str());
+					printf("Time: %s\n", S2GBACore::SimUtils::TimeString(Slot->Time()).c_str());
 				}
 
 				/* When you're done, use the function below to update checksums etc. */
