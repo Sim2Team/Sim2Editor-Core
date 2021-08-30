@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -47,4 +47,12 @@ namespace S2Editor {
 
 		if (this->Count() != Amount) this->Count(Amount);
 	};
+
+	/* Get and Set the Item's Flags. */
+	uint8_t GBAItem::Flag(const uint8_t Idx) const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x2 + (std::min<uint8_t>(5, Idx) * 0x3)); };
+	void GBAItem::Flag(const uint8_t Idx, const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x2 + (std::min<uint8_t>(5, Idx) * 0x3), V); };
+
+	/* Get and Set the Item's Use Count. */
+	uint8_t GBAItem::UseCount(const uint8_t Idx) const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x3 + (std::min<uint8_t>(5, Idx) * 0x3)); };
+	void GBAItem::UseCount(const uint8_t Idx, const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x3 + (std::min<uint8_t>(5, Idx) * 0x3), V); };
 };

@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -72,22 +72,33 @@ namespace S2Editor {
 	void NDSSAV::ValidationCheck() {
 		if (!this->GetData()) return;
 
-		uint8_t Count = 0;
+		uint8_t Count = 0, Reg = 0;
 		for (uint8_t Slot = 0; Slot < 5; Slot++) { // Check for all 5 possible Slots.
 			Count = 0; // Reset Count here.
 
 			for (uint8_t ID = 0; ID < 8; ID++) {
-				if (this->GetData()[(Slot * 0x1000) + ID] == this->SlotIdent[ID]) Count++;
+				if (ID == 0x4) {
+					for (Reg = 0; Reg < 3; Reg++) {
+						if (this->GetData()[(Slot * 0x1000) + ID] == this->SlotIdent[ID] + Reg) {
+							Count++;
+							break;
+						}
+					}
+
+				} else {
+					if (this->GetData()[(Slot * 0x1000) + ID] == this->SlotIdent[ID]) Count++;
+				}
 			}
 
 			if (Count == 8) {
 				this->SavValid = true;
+				this->Region = (Reg == 2 ? NDSSavRegion::Jpn : NDSSavRegion::Int);
 				break;
 			}
 		}
 
 		if (this->GetValid()) {
-			for (uint8_t Idx = 0; Idx < 3; Idx++) this->Slots[Idx] = this->FetchSlot(Idx); // Fetch Slot Locations.
+			for (uint8_t Idx = 0; Idx < 3; Idx++) this->Slots[Idx] = this->FetchSlot(Idx, Reg); // Fetch Slot Locations.
 		}
 	};
 
@@ -96,7 +107,7 @@ namespace S2Editor {
 
 		This function has been ported of the LSSD Tool, SuperSaiyajinStackZ created.
 	*/
-	int8_t NDSSAV::FetchSlot(const uint8_t SavSlot) {
+	int8_t NDSSAV::FetchSlot(const uint8_t SavSlot, const uint8_t Reg) {
 		if (!this->GetData()) return -1;
 
 		int8_t LastSavedSlot = -1, IDCount = 0;
@@ -109,14 +120,14 @@ namespace S2Editor {
 
 			/* Check for Identifier. */
 			for (uint8_t ID = 0; ID < 8; ID++) {
-				if (this->GetData()[(Slot * 0x1000) + ID] == this->SlotIdent[ID]) IDCount++;
+				if (this->GetData()[(Slot * 0x1000) + ID] == this->SlotIdent[ID] + (ID == 0x4 ? Reg : 0x0)) IDCount++;
 			}
 
 			/* If 8, then it properly passed the slot existence check. */
 			if (IDCount == 8) {
 				/* Check, if current slot is also the actual SAVSlot. It seems 0xC and 0xD added is the Slot, however 0xD seems never be touched from the game and hence like all the time 0x0? */
 				if ((this->GetData()[(Slot * 0x1000) + 0xC] + this->GetData()[(Slot * 0x1000) + 0xD]) == SavSlot) {
-					/* Now get the SAVCount. */
+					/* Now get the SavCount. */
 					SavCount[Slot] = DataHelper::Read<uint32_t>(this->GetData(), (Slot * 0x1000) + 0x8);
 					SavSlotExist[Slot] = true;
 				}
@@ -147,7 +158,7 @@ namespace S2Editor {
 	std::unique_ptr<NDSSlot> NDSSAV::Slot(const uint8_t Slot) {
 		if (!this->SlotExist(Slot)) return nullptr;
 
-		return std::make_unique<NDSSlot>(this->Slots[Slot]);
+		return std::make_unique<NDSSlot>(this->Slots[Slot], this->Region);
 	};
 
 	/*

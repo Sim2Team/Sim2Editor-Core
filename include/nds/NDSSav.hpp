@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ namespace S2Editor {
 		NDSSAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size);
 
 		void ValidationCheck();
-		int8_t FetchSlot(const uint8_t SavSlot);
+		int8_t FetchSlot(const uint8_t SavSlot, const uint8_t Reg);
 
 		/* Core Returns and Actions. */
 		std::unique_ptr<NDSSlot> Slot(const uint8_t Slot);
@@ -46,6 +46,7 @@ namespace S2Editor {
 		/* Some Returns. */
 		uint32_t GetSize() const { return this->SavSize; };
 		uint8_t *GetData() const { return this->SavData.get(); };
+		NDSSavRegion GetRegion() const { return this->Region; };
 		bool GetValid() const { return this->SavValid; };
 		bool GetChangesMade() const { return this->ChangesMade; };
 		void SetChangesMade(const bool V) { this->ChangesMade = V; };
@@ -54,8 +55,9 @@ namespace S2Editor {
 		uint32_t SavSize = 0;
 		bool SavValid = false, ChangesMade = false;
 
-		static constexpr uint8_t SlotIdent[8] = { 0x64, 0x61, 0x74, 0x0, 0x20, 0x0, 0x0, 0x0 };
+		static constexpr uint8_t SlotIdent[8] = { 0x64, 0x61, 0x74, 0x0, 0x1F, 0x0, 0x0, 0x0 };
 		int8_t Slots[3] = { -1, -1, -1 };
+		NDSSavRegion Region = NDSSavRegion::Unknown;
 	};
 };
 

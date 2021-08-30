@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -84,8 +84,18 @@ namespace S2Editor {
 						Count = 0; // Reset Count here.
 
 						for (uint8_t ID = 0; ID < 8; ID++) {
-							if (Data.get()[(Slot * 0x1000) + ID] == NDSIdent[ID]) Count++;
-						}; // Identifier Check.
+							if (ID == 0x4) {
+								for (uint8_t Reg = 0; Reg < 3; Reg++) {
+									if (Data.get()[(Slot * 0x1000) + ID] == NDSIdent[ID] + Reg) {
+										Count++;
+										break;
+									}
+								}
+							
+							} else {
+								if (Data.get()[(Slot * 0x1000) + ID] == NDSIdent[ID]) Count++;
+							}
+						} // Identifier Check.
 
 						if (Count == 8) {
 							ST = SAVType::_NDS; // It's a NDS SAV.
@@ -117,7 +127,7 @@ namespace S2Editor {
 			case 0x20000: // 64, 128 KB is a GBA Size.
 				for (uint8_t ID = 0; ID < 7; ID++) {
 					if (Data.get()[ID] == GBAIdent[ID]) Count++;
-				}; // Identifier Check.
+				} // Identifier Check.
 
 				if (Count == 7) return SAVType::_GBA; // If Count matches 7, we're good.
 				break;
@@ -128,8 +138,18 @@ namespace S2Editor {
 					Count = 0; // Reset Count here.
 
 					for (uint8_t ID = 0; ID < 8; ID++) {
-						if (Data.get()[(Slot * 0x1000) + ID] == NDSIdent[ID]) Count++;
-					}; // Identifier Check.
+						if (ID == 0x4) {
+							for (uint8_t Reg = 0; Reg < 3; Reg++) {
+								if (Data.get()[(Slot * 0x1000) + ID] == NDSIdent[ID] + Reg) {
+									Count++;
+									break;
+								}
+							}
+							
+						} else {
+							if (Data.get()[(Slot * 0x1000) + ID] == NDSIdent[ID]) Count++;
+						}
+					} // Identifier Check.
 
 					if (Count == 8) return SAVType::_NDS; // It's a NDS SAV.
 				}
@@ -150,7 +170,7 @@ namespace S2Editor {
 
 		Returns True if the Save is Valid and False if Invalid.
 	*/
-	bool SAVUtils::LoadSAV(const std::string &File, const std::string &BasePath, const bool DoBackup) {
+	bool SAVUtils::LoadSav(const std::string &File, const std::string &BasePath, const bool DoBackup) {
 		const SAVType ST = SAVUtils::DetectType(File);
 		bool Good = false;
 
@@ -192,7 +212,7 @@ namespace S2Editor {
 
 		Returns True if the Save is Valid and False if Invalid.
 	*/
-	bool SAVUtils::LoadSAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size, const std::string &BasePath, const bool DoBackup) {
+	bool SAVUtils::LoadSav(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size, const std::string &BasePath, const bool DoBackup) {
 		const SAVType ST = SAVUtils::DetectType(Data, Size);
 		bool Good = false;
 
@@ -378,7 +398,7 @@ namespace S2Editor {
 		if (!GBASAVUtils::SAV || !GBASAVUtils::SAV->GetValid()) return "";
 
 		return DataHelper::ReadString(GBASAVUtils::SAV->GetData(), Offs, Length);
-	}
+	};
 	/*
 		Write a string to the SAVBuffer.
 
@@ -392,7 +412,7 @@ namespace S2Editor {
 		if (DataHelper::WriteString(GBASAVUtils::SAV->GetData(), Offs, Length, Str)) {
 			if (!GBASAVUtils::SAV->GetChangesMade()) GBASAVUtils::SAV->SetChangesMade(true);
 		}
-	}
+	};
 
 
 	/*
@@ -457,7 +477,7 @@ namespace S2Editor {
 		if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid()) return "";
 
 		return DataHelper::ReadString(NDSSAVUtils::SAV->GetData(), Offs, Length);
-	}
+	};
 	/*
 		Write a string to the SAVBuffer.
 
@@ -471,5 +491,14 @@ namespace S2Editor {
 		if (DataHelper::WriteString(NDSSAVUtils::SAV->GetData(), Offs, Length, Str)) {
 			if (!NDSSAVUtils::SAV->GetChangesMade()) NDSSAVUtils::SAV->SetChangesMade(true);
 		}
-	}
+	};
+
+	/*
+		Return the detected Save Region from the Savefile.
+	*/
+	NDSSavRegion NDSSAVUtils::GetRegion() {
+		if (!NDSSAVUtils::SAV || !NDSSAVUtils::SAV->GetValid()) return NDSSavRegion::Unknown;
+
+		return NDSSAVUtils::SAV->GetRegion();
+	};
 };

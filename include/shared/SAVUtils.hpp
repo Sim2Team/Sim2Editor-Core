@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -43,8 +43,8 @@ namespace S2Editor {
 
 		SAVType DetectType(const std::string &File);
 		SAVType DetectType(const std::unique_ptr<uint8_t[]> &Data, const uint32_t Size);
-		bool LoadSAV(const std::string &File, const std::string &BasePath = "", const bool DoBackup = false);
-		bool LoadSAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size, const std::string &BasePath = "", const bool DoBackup = false);
+		bool LoadSav(const std::string &File, const std::string &BasePath = "", const bool DoBackup = false);
+		bool LoadSav(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size, const std::string &BasePath = "", const bool DoBackup = false);
 		bool CreateBackup(const std::string &BasePath);
 		void Finish();
 		bool ChangesMade();
@@ -129,6 +129,8 @@ namespace S2Editor {
 
 		const std::string ReadString(const uint32_t Offs, const uint32_t Length);
 		void WriteString(const uint32_t Offs, const uint32_t Length, const std::string &Str);
+
+		NDSSavRegion GetRegion();
 	};
 };
 

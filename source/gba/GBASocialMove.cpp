@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -29,10 +29,14 @@
 
 namespace S2Editor {
 	/* Get and Set the Social Move Flag. */
-	SocialMoveFlag GBASocialMove::Flag() const { return (SocialMoveFlag)GBASAVUtils::Read<uint8_t>(this->Offs + 0x4); };
-	void GBASocialMove::Flag(const SocialMoveFlag V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x4, (uint8_t)V); };
+	SocialMoveFlag GBASocialMove::Flag() const { return (SocialMoveFlag)GBASAVUtils::Read<uint8_t>(this->Offs); };
+	void GBASocialMove::Flag(const SocialMoveFlag V) { GBASAVUtils::Write<uint8_t>(this->Offs, (uint8_t)V); };
 
 	/* Get and Set the Social Move Level. */
-	uint8_t GBASocialMove::Level() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x8); };
-	void GBASocialMove::Level(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x8, std::min<uint8_t>(3, V)); };
+	uint8_t GBASocialMove::Level() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x4); };
+	void GBASocialMove::Level(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x4, std::min<uint8_t>(3, V)); };
+
+	/* Get and Set the Blocked Hours of the Social Move. */
+	uint8_t GBASocialMove::BlockedHours() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x6); };
+	void GBASocialMove::BlockedHours(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x6, std::min<uint8_t>(3, V)); };
 };

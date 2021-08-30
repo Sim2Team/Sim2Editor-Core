@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -40,11 +40,19 @@ namespace S2Editor {
 	uint8_t GBACast::Intimidate() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x2); };
 	void GBACast::Intimidate(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x2, std::min<uint8_t>(3, V)); };
 
-	/* Get and Set Cast Picture. */
-	GBACastPicture GBACast::Picture() const { return (GBACastPicture)GBASAVUtils::Read<uint8_t>(this->Offs + 0x3); };
-	void GBACast::Picture(const GBACastPicture V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x3, (uint8_t)V); };
+	/* Get and Set Cast Feeling. */
+	GBACastFeeling GBACast::Feeling() const { return (GBACastFeeling)GBASAVUtils::Read<uint8_t>(this->Offs + 0x3); };
+	void GBACast::Feeling(const GBACastFeeling V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x3, (uint8_t)V); };
 
-	/* Get and Set Mystery Unlock state. */
-	bool GBACast::Mystery() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x8); };
-	void GBACast::Mystery(const bool V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x8, V); };
+	/* Get and Set the hours how long the feeling lasts. */
+	uint8_t GBACast::FeelingEffectHours() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x6); };
+	void GBACast::FeelingEffectHours(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x6, V); };
+
+	/* Get and Set registered on phone state. */
+	bool GBACast::RegisteredOnPhone() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x7); };
+	void GBACast::RegisteredOnPhone(const bool V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x7, V); };
+
+	/* Get and Set Secret Unlock state. */
+	bool GBACast::Secret() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x8); };
+	void GBACast::Secret(const bool V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x8, V); };
 };

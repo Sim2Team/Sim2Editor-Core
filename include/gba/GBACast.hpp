@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -30,13 +30,11 @@
 #include "../shared/CoreCommon.hpp"
 
 namespace S2Editor {
-	enum class GBACastPicture : uint8_t { Neutral, Friendly, Angry, Love, Invalid };
+	enum class GBACastFeeling : uint8_t { Neutral, Friendly, Angry, Love, Invalid };
 
 	class GBACast {
 	public:
-		GBACast(const uint32_t Offs, const uint8_t Cast)
-			: Cast(Cast), Offs(Offs) { };
-
+		GBACast(const uint32_t Offs, const uint8_t Cast) : Cast(Cast), Offs(Offs) { };
 		uint8_t Index() const { return this->Cast; };
 
 		/* Conversation Levels. */
@@ -47,12 +45,16 @@ namespace S2Editor {
 		uint8_t Intimidate() const;
 		void Intimidate(const uint8_t V);
 
-		GBACastPicture Picture() const;
-		void Picture(const GBACastPicture V);
+		GBACastFeeling Feeling() const;
+		void Feeling(const GBACastFeeling V);
+		uint8_t FeelingEffectHours() const;
+		void FeelingEffectHours(const uint8_t V);
 
 		/* Unlockables. */
-		bool Mystery() const;
-		void Mystery(const bool V);
+		bool RegisteredOnPhone() const;
+		void RegisteredOnPhone(const bool V);
+		bool Secret() const;
+		void Secret(const bool V);
 	private:
 		uint8_t Cast = 0;
 		uint32_t Offs = 0;

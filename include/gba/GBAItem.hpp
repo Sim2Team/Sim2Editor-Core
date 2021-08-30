@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@
 		The GBAItem class can be moreso seen as like a package of 6 Items.
 		The Pawnshop, Saloon, Skillbook seller, Mailbox and the Inventory have 6 Item Slots.
 		The first byte contains the Item Count, while the following things contain the item data.
-		It still needs to be a bit more researched though, because there is still 0x3 of 0x4 bytes unresearched of the Item.
 
 		0xE6 is known as an Empty Item ID.
 */
@@ -50,6 +49,12 @@ namespace S2Editor {
 
 		uint8_t ID(const uint8_t Index) const;
 		void ID(const uint8_t Index, const uint8_t V);
+
+		/* Flag and Use count. */
+		uint8_t Flag(const uint8_t Idx) const;
+		void Flag(const uint8_t Idx, const uint8_t V);
+		uint8_t UseCount(const uint8_t Idx) const;
+		void UseCount(const uint8_t Idx, const uint8_t V);
 	private:
 		uint32_t Offs = 0;
 	};

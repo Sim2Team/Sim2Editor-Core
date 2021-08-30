@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -269,7 +269,7 @@ namespace S2Editor {
 
 	/* Get a Social Move class. */
 	std::unique_ptr<GBASocialMove> GBASlot::SocialMove(const uint8_t Move) const {
-		return std::make_unique<GBASocialMove>(this->Offset(0x3EA) + (std::min<uint8_t>(14, Move)) * 0x8, Move);
+		return std::make_unique<GBASocialMove>(this->Offset(0x3EE) + (std::min<uint8_t>(14, Move)) * 0x8, Move);
 	};
 
 	/* Get a Cast class. */

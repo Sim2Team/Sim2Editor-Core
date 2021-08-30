@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -79,7 +79,7 @@ namespace S2Editor {
 				break;
 		}
 
-		SString.push_back('$'); // Simoleons sign.
+		SString += "§"; // Simoleons sign.
 		return SString;
 	};
 

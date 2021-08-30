@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ, Universal-Team
+*   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -32,9 +32,7 @@
 namespace S2Editor {
 	class GBAEpisode {
 	public:
-		GBAEpisode(const uint8_t Slot, const uint8_t Episode, const uint8_t Move = 0x0)
-			: Episode(Episode), Offs((Slot * 0x1000) + this->SetOffset(std::min<uint8_t>(Move, 10))) { };
-
+		GBAEpisode(const uint8_t Slot, const uint8_t Episode, const uint8_t Move = 0x0) : Episode(Episode), Offs((Slot * 0x1000) + this->SetOffset(std::min<uint8_t>(Move, 10))) { };
 		uint8_t Index() const { return this->Episode; };
 
 		uint8_t Rating(const uint8_t Category) const;
