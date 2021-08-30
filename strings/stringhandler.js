@@ -110,6 +110,7 @@ export function S2Editor_GetGBAItemName(ID) {
 	else return "?";
 };
 
+
 /*
 	Returns the rank's name of the NDS Painting.
 

@@ -1,10 +1,10 @@
-# Sim2Editor-Core
+# Sim2Editor-JSCore
 
-Sim2Editor's JavaScript Core written by SuperSaiyajinStackZ.
+Sim2Editor's JavaScript Core is written by Sim2Team, however mainly by SuperSaiyajinStackZ.
 
-This Core is being used for [Sim2Editor](https://github.com/SuperSaiyajinStackZ/Sim2Editor)'s web version. I decided to do the Core External, so other apps can make use of this as well, if needed for whatever reason.
+This Core is being used for [Sim2Editor](https://github.com/Sim2Team/Sim2Editor)'s web version. We decided to do the Core External, so other apps can make use of this as well, if needed for whatever reason.
 
-If you want to see the core in action, feel free to go to my [Sim2Editor](https://supersaiyajinstackz.github.io/Sim2Editor) site and try it out! ;P
+If you want to see the core in action, feel free to go to the [Sim2Editor](https://sim2team.github.io/Sim2Editor) site and try it out!
 
 
 ## Core Usage

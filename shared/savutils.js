@@ -118,7 +118,7 @@ export function SavUtils_DetectType(Data, Size) {
 					} else {
 						if (Data.getUint8((Slot * 0x1000) + ID) == NDSIdent[ID]) Count++;
 					}
-				};
+				}
 
 				if (Count == 8) return 1 + Reg;
 			}
