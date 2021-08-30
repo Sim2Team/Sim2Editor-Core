@@ -1,12 +1,12 @@
 # Sim2Editor - CPlusPlus Compressed Cores
 
-Here you'll find C++ variants of the Sim2Editor **Game Boy Advance** and the **Nintendo DS** Core. Both are separate for special version use. If you want to use both, Game Boy Advance and Nintendo DS versions into a single Core, i'd recommend using the Core of the `cpp` branch. It isn't compressed, but honestly there isn't really a need for that.
+Here you'll find C++ variants of the Sim2Editor **Game Boy Advance** and the **Nintendo DS** Core. Both are separate for special version use.
 
 ## Notes about the Cores
 
 * Both Cores require C++17 or above to compile.
 
-* Both Cores are NOT THREAD-SAFE!!! So don't even try to use the same things on multiple threads or you may have problems. I personally don't care about Thread-Safety for Save Editor Cores and I also never will.
+* Both Cores are NOT THREAD-SAFE!!! So don't even try to use the same things on multiple threads or you may have problems.
 
 * Make sure to read the Header of the `cpp` file of the Core for more information.
 
