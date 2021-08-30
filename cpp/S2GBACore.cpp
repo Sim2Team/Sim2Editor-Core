@@ -1,6 +1,6 @@
 /*
 *   This file is part of Sim2Editor-CPPCore
-*   Copyright (C) 2020-2021 SuperSaiyajinStackZ
+*   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -33,14 +33,14 @@
 	--------------------------------------------------
 
 	File: B46P.sav
-	Authors: SuperSaiyajinStackZ
+	Authors: SuperSaiyajinStackZ, Sim2Team
 	Version: 0.2
 	Purpose: Easy editing of a The Sims 2 Game Boy Advance Savefile.
 	Category: Save File Editing Core
 	Last Updated: 21 August 2021
 	--------------------------------------------------
 
-	Research used from here: https://github.com/SuperSaiyajinStackZ/Sims2Research.
+	Research used from here: https://github.com/Sim2Team/Sim2Research.
 
 
 	-----------------------
