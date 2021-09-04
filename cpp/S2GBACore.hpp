@@ -27,11 +27,13 @@
 #ifndef _SIM2EDITOR_GBA_CORE_HPP
 #define _SIM2EDITOR_GBA_CORE_HPP
 
+
 #include <cstring> // memcpy(...).
 #include <math.h> // std::min<>(), std::max<>(...).
 #include <memory> // std::unique_ptr<>.
 #include <string> // std::string.
 #include <vector> // std::vector<>.
+
 
 namespace S2GBACore {
 	/* Declare all used enum classes here. */

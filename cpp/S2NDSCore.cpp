@@ -34,14 +34,16 @@
 
 	File: ASJP.sav
 	Authors: SuperSaiyajinStackZ, Sim2Team
-	Version: 0.2
+	Version: 0.3
 	Purpose: Easy editing of a The Sims 2 Nintendo DS Savefile.
 	Category: Save File Editing Core
-	Last Updated: 21 August 2021
+	Last Updated: 04 September 2021
 	---------------------------------------------
 
 	Research used from here: https://github.com/Sim2Team/Sim2Research.
 
+	If you want to display the Painting Images from the Painting class, you can find the Palette for it to display here:
+		https://github.com/Sim2Team/Sim2Research/blob/main/Research/NDS/Painting.md#imagedata-pixels.
 
 	-----------------------
 	Explanation of the Core
@@ -76,10 +78,10 @@ namespace S2NDSCore {
 		const uint8_t *Buffer: The Save Buffer.
 		const uint16_t StartOffs: The Start offset. (NOTE: You'll have to do '/ 2', because it's 2 byte based).
 		const uint16_t EndOffs: The End offset. Same NOTE as above applies here as well.
-		const std::vector<int> &Skipoffs:
+		const std::vector<uint32_t> &Skipoffs:
 			The Offsets which to skip (Only needed on the NDS version, also same NOTE as above applies as well).
 	*/
-	uint16_t Checksum::Calc(const uint8_t *Buffer, const uint16_t StartOffs, const uint16_t EndOffs, const std::vector<int> &SkipOffs) {
+	uint16_t Checksum::Calc(const uint8_t *Buffer, const uint16_t StartOffs, const uint16_t EndOffs, const std::vector<uint32_t> &SkipOffs) {
 		if (!Buffer) return 0;
 
 		uint8_t Byte1 = 0, Byte2 = 0;
@@ -247,7 +249,95 @@ namespace S2NDSCore {
 
 		/////////////////////////////////////////////////
 	*/
+	const std::vector<std::string> Strings::PaintingRankNames = { "Blank Canvas", "Garbage", "Ordinary", "Respectable", "Masterpiece", "Magnum Opus" };
 	const std::vector<std::string> Strings::SkillPointNames = { "Creativity", "Business", "Body", "Charisma", "Mechanical" };
+
+
+
+	/*
+		//////////////////////////////////////////////////////////
+
+		The Sims 2 NDS Painting Save Editing class implementation.
+		Main Author: SuperSaiyajinStackZ.
+
+		//////////////////////////////////////////////////////////
+	*/
+
+	/*
+		Checks, if the Painting is valid by checking it's 5 byte Identifier.
+	*/
+	bool Painting::Valid() const {
+		for (uint8_t Idx = 0; Idx < 5; Idx++) {
+			if (S2NDSCore::Sav->Read<uint8_t>(this->Offs + Idx) != this->Identifier[Idx]) return false; // Invalid.
+		}
+
+		return true;
+	};
+
+	/* Get and Set the Index of the Painting. It is similar to a creation count though. */
+	uint32_t Painting::Index() const { return S2NDSCore::Sav->Read<uint32_t>(this->Offs + 0x8); };
+	void Painting::Index(const uint32_t V) { S2NDSCore::Sav->Write<uint32_t>(this->Offs + 0x8, V); };
+
+	/* Get and Set to which Slot the Painting exist. */
+	uint8_t Painting::Slot() const { return S2NDSCore::Sav->Read<uint8_t>(this->Offs + 0xC); };
+	void Painting::Slot(const uint8_t V) { S2NDSCore::Sav->Write<uint8_t>(this->Offs + 0xC, std::min<uint8_t>(5, V)); };
+
+	/* Get and Set to which Canvas the Painting is drawn on. */
+	uint8_t Painting::CanvasIdx() const { return S2NDSCore::Sav->Read<uint8_t>(this->Offs + 0xD); };
+	void Painting::CanvasIdx(const uint8_t V) { S2NDSCore::Sav->Write<uint8_t>(this->Offs + 0xD, std::min<uint8_t>(5, V)); };
+
+	/* Get and Set the Pixel of the Painting Image Data. */
+	uint8_t Painting::Pixel(const uint16_t Idx) const {
+		if (Idx >= 0x600) return 0;
+
+		return S2NDSCore::Sav->ReadBits(this->Offs + 0x14 + (Idx / 2), (Idx % 2 == 0));
+	};
+	void Painting::Pixel(const uint16_t Idx, const uint8_t V) {
+		if (Idx >= 0x600 || V > 0xF) return;
+
+		S2NDSCore::Sav->WriteBits(this->Offs + 0x14 + (Idx / 2), (Idx % 2 == 0), V);
+	};
+
+	/* Same as above, but instead of an raw index, it is being done with an X and Y Position. */
+	uint8_t Painting::PixelPos(const uint8_t X, const uint8_t Y) const {
+		if (X >= 32 || Y >= 32) return 0;
+
+		return this->Pixel((Y * 32) + X);
+	};
+	void Painting::PixelPos(const uint8_t X, const uint8_t Y, const uint8_t V) {
+		if (X >= 32 || Y >= 32) return;
+		
+		this->Pixel((Y * 32) + X, V);
+	};
+
+	/* Get and Set the Painting Flag, used for the Painting "Rank". */
+	uint8_t Painting::Flag() const { return S2NDSCore::Sav->Read<uint8_t>(this->Offs + 0x314); };
+	void Painting::Flag(const uint8_t V) { S2NDSCore::Sav->Write<uint8_t>(this->Offs + 0x314, V); };
+
+	/* Get and Set the Painting Palette. */
+	uint8_t Painting::Palette() const { return S2NDSCore::Sav->Read<uint8_t>(this->Offs + 0x315); };
+	void Painting::Palette(const uint8_t V) { S2NDSCore::Sav->Write<uint8_t>(this->Offs + 0x315, std::min<uint8_t>(0xF, V)); };
+
+	/* Get the Rank name of the Painting. */
+	std::string Painting::RankName() const {
+		if (this->Flag() >= 0x29) return S2NDSCore::Strings::PaintingRankNames[0]; // 0x29+ is out of scope. Only range 0x0 - 0x28 is valid.
+
+		const uint8_t Category = 1 + (this->Flag() / 8);
+		return (this->Flag() % 2 == 0 ? S2NDSCore::Strings::PaintingRankNames[0] : S2NDSCore::Strings::PaintingRankNames[std::min<uint8_t>(5, Category)]);
+	};
+
+	/* Update the Checksum of the Painting. */
+	void Painting::UpdateChecksum() {
+		/* First: Main. */
+		uint16_t Calced = S2NDSCore::Checksum::Calc(S2NDSCore::Sav->GetData(), (this->Offs + 0x10) / 2, (this->Offs + 0x400) / 2, { (this->Offs + 0x10) / 2 });
+		uint16_t CurCHKS = S2NDSCore::Sav->Read<uint16_t>(this->Offs + 0x10);
+		if (CurCHKS != Calced) S2NDSCore::Sav->Write<uint16_t>(this->Offs + 0x10, Calced);
+
+		/* Then: Header. */
+		Calced = S2NDSCore::Checksum::Calc(S2NDSCore::Sav->GetData(), (this->Offs) / 2, (this->Offs + 0x13) / 2, { (this->Offs + 0xE) / 2 });
+		CurCHKS = S2NDSCore::Sav->Read<uint16_t>(this->Offs + 0xE);
+		if (CurCHKS != Calced) S2NDSCore::Sav->Write<uint16_t>(this->Offs + 0xE, Calced);
+	};
 
 
 	/*
@@ -480,6 +570,17 @@ namespace S2NDSCore {
 
 
 	/*
+		Return a Painting class.
+
+		const uint8_t Idx: The Painting Index ( 0 - 19 ).
+	*/
+	std::unique_ptr<Painting> SAV::_Painting(const uint8_t Idx) const {
+		if (Idx >= 20) return nullptr;
+
+		return std::make_unique<Painting>(Idx);
+	};
+
+	/*
 		Return, wheter a Slot is valid / exist.
 
 		const uint8_t Slot: The Slot to check ( 0 - 2 ).
@@ -507,8 +608,15 @@ namespace S2NDSCore {
 	void SAV::Finish() {
 		if (!this->GetValid()) return;
 
+		/* Update Slot Checksums. */
 		for (uint8_t Slot = 0; Slot < 3; Slot++) {
 			if (this->SlotExist(Slot)) this->_Slot(Slot)->FixChecksum();
+		}
+
+		/* Update Painting Checksums. */
+		for (uint8_t Idx = 0; Idx < 20; Idx++) {
+			std::unique_ptr<Painting> PTG = this->_Painting(Idx);
+			if (PTG->Valid()) PTG->UpdateChecksum();
 		}
 	};
 
@@ -590,7 +698,7 @@ namespace S2NDSCore {
 	*/
 	bool Slot::FixChecksum() {
 		const uint16_t CurCHKS = S2NDSCore::Sav->Read<uint16_t>(this->Offs + 0x28);
-		const std::vector<int> Offs = { ((int)this->Offs + 0x12) / 2, ((int)this->Offs + 0x28) / 2 };
+		const std::vector<uint32_t> Offs = { (this->Offs + 0x12) / 2, (this->Offs + 0x28) / 2 };
 		const uint16_t Calced = Checksum::Calc(S2NDSCore::Sav->GetData(), (this->Offs + 0x10) / 2, (this->Offs + 0x1000) / 2, Offs);
 
 		if (Calced != CurCHKS) { // If the calced result is NOT the current checksum.

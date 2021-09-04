@@ -27,11 +27,13 @@
 #ifndef _SIM2EDITOR_NDS_CORE_HPP
 #define _SIM2EDITOR_NDS_CORE_HPP
 
+
 #include <cstring> // memcpy(...).
 #include <math.h> // std::min<>(), std::max<>(...).
 #include <memory> // std::unique_ptr<>.
 #include <string> // std::string.
 #include <vector> // std::vector<>.
+
 
 namespace S2NDSCore {
 	/* Declare all used enum classes here. */
@@ -39,6 +41,7 @@ namespace S2NDSCore {
 
 
 	/* Declare all used classes here. */
+	class Painting;
 	class SAV;
 	class Slot;
 
@@ -54,7 +57,7 @@ namespace S2NDSCore {
 		Just containing a function, which handles the Checksum calculation, that returns an uint16_t.
 	*/
 	namespace Checksum {
-		uint16_t Calc(const uint8_t *Buffer, const uint16_t StartOffs, const uint16_t EndOffs, const std::vector<int> &SkipOffs);
+		uint16_t Calc(const uint8_t *Buffer, const uint16_t StartOffs, const uint16_t EndOffs, const std::vector<uint32_t> &SkipOffs);
 	};
 
 
@@ -90,7 +93,43 @@ namespace S2NDSCore {
 		This is used for some string related things.
 	*/
 	namespace Strings {
+		extern const std::vector<std::string> PaintingRankNames; // Painting Ranks.
 		extern const std::vector<std::string> SkillPointNames; // Skill Points.
+	};
+
+
+	/*
+		The Sims 2 NDS Painting Save Editing class implementation.
+		Main Author: SuperSaiyajinStackZ.
+	*/
+	class Painting {
+	public:
+		Painting(const uint8_t Idx) : Offs(0x5000 + (Idx * 0x400)) { };
+
+		bool Valid() const;
+
+		uint32_t Index() const;
+		void Index(const uint32_t V);
+		uint8_t Slot() const;
+		void Slot(const uint8_t V);
+		uint8_t CanvasIdx() const;
+		void CanvasIdx(const uint8_t V);
+
+		uint8_t Pixel(const uint16_t Idx) const;
+		void Pixel(const uint16_t Idx, const uint8_t V);
+		uint8_t PixelPos(const uint8_t X, const uint8_t Y) const;
+		void PixelPos(const uint8_t X, const uint8_t Y, const uint8_t V);
+
+		uint8_t Flag() const;
+		void Flag(const uint8_t V);
+		uint8_t Palette() const;
+		void Palette(const uint8_t V);
+
+		std::string RankName() const;
+		void UpdateChecksum();
+	private:
+		uint32_t Offs = 0;
+		static constexpr uint8_t Identifier[0x5] = { 0x70, 0x74, 0x67, 0x0, 0xF };
 	};
 
 
@@ -147,6 +186,7 @@ namespace S2NDSCore {
 		std::string ReadString(const uint32_t Offs, const uint32_t Length) const;
 		void WriteString(const uint32_t Offs, const uint32_t Length, const std::string &Str);
 
+		std::unique_ptr<Painting> _Painting(const uint8_t Idx) const;
 		bool SlotExist(const uint8_t Slot) const;
 		std::unique_ptr<Slot> _Slot(const uint8_t Slt) const;
 		void Finish();
