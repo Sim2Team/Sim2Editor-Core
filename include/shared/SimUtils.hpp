@@ -29,6 +29,7 @@
 
 #include <string>
 
+
 namespace S2Editor {
 	namespace SimUtils {
 		const std::string TimeString(const uint16_t Time, const bool AMPM = false);

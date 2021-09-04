@@ -27,6 +27,7 @@
 #include "GBACast.hpp"
 #include "../shared/SAVUtils.hpp"
 
+
 namespace S2Editor {
 	/* Get and Set Friendly Conversation level. */
 	uint8_t GBACast::Friendly() const { return GBASAVUtils::Read<uint8_t>(this->Offs); };

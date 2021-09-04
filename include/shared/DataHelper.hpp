@@ -29,6 +29,7 @@
 
 #include "CoreCommon.hpp"
 
+
 namespace S2Editor {
 	namespace DataHelper {
 		/*

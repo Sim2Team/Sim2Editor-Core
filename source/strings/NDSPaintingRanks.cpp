@@ -24,40 +24,11 @@
 *         reasonable ways as different from the original version.
 */
 
-#ifndef _SIM2EDITOR_CPP_CORE_GBA_SAV_HPP
-#define _SIM2EDITOR_CPP_CORE_GBA_SAV_HPP
-
-#include "GBASettings.hpp"
-#include "GBASlot.hpp"
+#include "Strings.hpp"
 
 
 namespace S2Editor {
-	class GBASAV {
-	public:
-		GBASAV(const std::string &SAVFile);
-		GBASAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size);
-
-		void ValidationCheck();
-
-		bool SlotExist(const uint8_t Slot);
-
-		/* Core Returns and Actions. */
-		std::unique_ptr<GBASlot> Slot(const uint8_t Slot);
-		std::unique_ptr<GBASettings> Settings() const;
-		void Finish();
-
-		/* Some Returns. */
-		uint32_t GetSize() const { return this->SavSize; };
-		uint8_t *GetData() const { return this->SavData.get(); };
-		bool GetValid() const { return this->SavValid; };
-		bool GetChangesMade() const { return this->ChangesMade; };
-		void SetChangesMade(const bool V) { this->ChangesMade = V; };
-	private:
-		std::unique_ptr<uint8_t[]> SavData = nullptr;
-		uint32_t SavSize = 0;
-		bool SavValid = false, ChangesMade = false;
-		static constexpr uint8_t GBAIdent[7] = { 0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34 };
+	const std::vector<std::string> Strings::NDSPaintingRankNames_EN = {
+		"Blank Canvas", "Garbage", "Ordinary", "Respectable", "Masterpiece", "Magnum Opus"
 	};
 };
-
-#endif

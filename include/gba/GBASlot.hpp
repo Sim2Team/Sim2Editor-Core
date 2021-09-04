@@ -27,18 +27,20 @@
 #ifndef _SIM2EDITOR_CPP_CORE_GBA_SLOT_HPP
 #define _SIM2EDITOR_CPP_CORE_GBA_SLOT_HPP
 
-#include "CoreCommon.hpp"
 #include "GBACast.hpp"
 #include "GBAEpisode.hpp"
 #include "GBAHouse.hpp"
 #include "GBAItem.hpp"
 #include "GBAMinigame.hpp"
 #include "GBASocialMove.hpp"
+#include "../shared/CoreCommon.hpp"
+
 
 namespace S2Editor {
 	class GBASlot {
 	public:
-		GBASlot(const uint8_t Slot) : Slot(Slot), Offs(Slot * 0x1000) { };
+		GBASlot(const uint8_t Slot)
+			: Slot(Slot), Offs(Slot * 0x1000) { };
 
 		/* Main things. */
 		uint16_t Time() const;

@@ -30,16 +30,20 @@
 #include <string>
 #include <vector>
 
+
 namespace S2Editor {
 	namespace Strings {
+		/* GBA Strings. */
 		extern const std::vector<std::string> GBACastNames_DE, GBACastNames_EN; // GBA Casts.
 		extern const std::vector<std::string> GBASocialMoveNames_DE, GBASocialMoveNames_EN; // GBA Social Moves.
 		extern const std::vector<std::string> GBAEpisodeNames_DE, GBAEpisodeNames_EN; // GBA Episodes.
 		extern const std::vector<std::string> GBASkillPointNames_DE, GBASkillPointNames_EN; // GBA Skill Points.
-		extern const std::vector<std::string> GBAItemNames_EN; // GBA Item Names.
+		extern const std::vector<std::string> GBAItemNames_EN; // GBA Items.
 		extern const std::vector<std::string> GBAMinigameNames_DE, GBAMinigameNames_EN; // GBA Minigames.
 
-		extern const std::vector<std::string> NDSSkillPointNames_DE, NDSSkillPointNames_EN;
+		/* NDS Strings. */
+		extern const std::vector<std::string> NDSPaintingRankNames_EN; // NDS Painting Ranks.
+		extern const std::vector<std::string> NDSSkillPointNames_DE, NDSSkillPointNames_EN; // NDS Skill Points.
 	};
 };
 

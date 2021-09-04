@@ -26,6 +26,7 @@
 
 #include "Strings.hpp"
 
+
 namespace S2Editor {
 	const std::vector<std::string> Strings::GBAEpisodeNames_DE = {
 		"Wie alles begann", "Von Gangstern vergraben", "Plan eines Maulwurfs", "Ankunft der Außerirdischen",

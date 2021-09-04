@@ -26,6 +26,7 @@
 
 #include "Strings.hpp"
 
+
 namespace S2Editor {
 	const std::vector<std::string> Strings::GBAMinigameNames_DE = {
 		"Bigfoot liebt Hühnchen", "Autowerbung", "Piraten-Kartenspiel",

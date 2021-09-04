@@ -29,12 +29,14 @@
 
 #include "../shared/CoreCommon.hpp"
 
+
 namespace S2Editor {
 	enum class GBACastFeeling : uint8_t { Neutral, Friendly, Angry, Love, Invalid };
 
 	class GBACast {
 	public:
-		GBACast(const uint32_t Offs, const uint8_t Cast) : Cast(Cast), Offs(Offs) { };
+		GBACast(const uint32_t Offs, const uint8_t Cast)
+			: Cast(Cast), Offs(Offs) { };
 		uint8_t Index() const { return this->Cast; };
 
 		/* Conversation Levels. */

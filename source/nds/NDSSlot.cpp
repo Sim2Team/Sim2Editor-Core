@@ -28,6 +28,7 @@
 #include "../shared/Checksum.hpp"
 #include "../shared/SAVUtils.hpp"
 
+
 namespace S2Editor {
 	/* Get and Set Simoleons. */
 	uint32_t NDSSlot::Simoleons() const { return NDSSAVUtils::Read<uint32_t>(this->Offs + 0x2C); };
@@ -97,7 +98,7 @@ namespace S2Editor {
 	*/
 	bool NDSSlot::FixChecksum() {
 		const uint16_t CurCHKS = NDSSAVUtils::Read<uint16_t>(this->Offs + 0x28);
-		const std::vector<int> Offs = { ((int)this->Offs + 0x12) / 2, ((int)this->Offs + 0x28) / 2 };
+		const std::vector<uint32_t> Offs = { (this->Offs + 0x12) / 2, (this->Offs + 0x28) / 2 };
 		const uint16_t Calced = Checksum::Calc(NDSSAVUtils::SAV->GetData(), (this->Offs + 0x10) / 2, (this->Offs + 0x1000) / 2, Offs);
 
 		/* If the calced result is NOT the current checksum. */

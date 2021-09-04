@@ -28,6 +28,7 @@
 #include "../shared/Checksum.hpp"
 #include "../shared/SAVUtils.hpp"
 
+
 namespace S2Editor {
 	/* Get and Set the Sound Effect Volume. */
 	uint8_t GBASettings::SFX() const { return GBASAVUtils::Read<uint8_t>(0x8); };

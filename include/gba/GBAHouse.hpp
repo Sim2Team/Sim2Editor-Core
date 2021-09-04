@@ -27,13 +27,15 @@
 #ifndef _SIM2EDITOR_CPP_CORE_GBA_HOUSE_HPP
 #define _SIM2EDITOR_CPP_CORE_GBA_HOUSE_HPP
 
-#include "CoreCommon.hpp"
 #include "GBAHouseItem.hpp"
+#include "../shared/CoreCommon.hpp"
+
 
 namespace S2Editor {
 	class GBAHouse {
 	public:
-		GBAHouse(const uint32_t Offset) : Offs(Offset) { };
+		GBAHouse(const uint32_t Offset)
+			: Offs(Offset) { };
 
 		uint8_t Roomdesign() const;
 		void Roomdesign(const uint8_t V);

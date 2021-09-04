@@ -27,6 +27,7 @@
 #include "GBAMinigame.hpp"
 #include "../shared/SAVUtils.hpp"
 
+
 namespace S2Editor {
 	/* Get and Set if you played that game already today. */
 	bool GBAMinigame::Played() const { return GBASAVUtils::ReadBit(this->Offs, this->Game); };

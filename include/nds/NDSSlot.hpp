@@ -29,10 +29,12 @@
 
 #include "CoreCommon.hpp"
 
+
 namespace S2Editor {
 	class NDSSlot {
 	public:
-		NDSSlot(const uint8_t Slot, const NDSSavRegion Reg) : Slot(Slot), Offs(Slot * 0x1000), Region(Reg) { };
+		NDSSlot(const uint8_t Slot, const NDSSavRegion Reg)
+			: Slot(Slot), Offs(Slot * 0x1000), Region(Reg) { };
 
 		/* Main things. */
 		uint32_t Simoleons() const;

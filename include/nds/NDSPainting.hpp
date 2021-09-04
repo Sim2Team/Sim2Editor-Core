@@ -24,39 +24,42 @@
 *         reasonable ways as different from the original version.
 */
 
-#ifndef _SIM2EDITOR_CPP_CORE_GBA_SAV_HPP
-#define _SIM2EDITOR_CPP_CORE_GBA_SAV_HPP
+#ifndef _SIM2EDITOR_CPP_CORE_NDS_PAINTING_HPP
+#define _SIM2EDITOR_CPP_CORE_NDS_PAINTING_HPP
 
-#include "GBASettings.hpp"
-#include "GBASlot.hpp"
+#include "CoreCommon.hpp"
 
 
 namespace S2Editor {
-	class GBASAV {
+	class NDSPainting {
 	public:
-		GBASAV(const std::string &SAVFile);
-		GBASAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size);
+		NDSPainting(const uint8_t Idx)
+			: Offs(0x5000 + (Idx * 0x400)) { };
 
-		void ValidationCheck();
+		bool Valid() const;
 
-		bool SlotExist(const uint8_t Slot);
+		uint32_t Index() const;
+		void Index(const uint32_t V);
+		uint8_t Slot() const;
+		void Slot(const uint8_t V);
+		uint8_t CanvasIdx() const;
+		void CanvasIdx(const uint8_t V);
 
-		/* Core Returns and Actions. */
-		std::unique_ptr<GBASlot> Slot(const uint8_t Slot);
-		std::unique_ptr<GBASettings> Settings() const;
-		void Finish();
+		uint8_t Pixel(const uint16_t Idx) const;
+		void Pixel(const uint16_t Idx, const uint8_t V);
+		uint8_t PixelPos(const uint8_t X, const uint8_t Y) const;
+		void PixelPos(const uint8_t X, const uint8_t Y, const uint8_t V);
 
-		/* Some Returns. */
-		uint32_t GetSize() const { return this->SavSize; };
-		uint8_t *GetData() const { return this->SavData.get(); };
-		bool GetValid() const { return this->SavValid; };
-		bool GetChangesMade() const { return this->ChangesMade; };
-		void SetChangesMade(const bool V) { this->ChangesMade = V; };
+		uint8_t Flag() const;
+		void Flag(const uint8_t V);
+		uint8_t Palette() const;
+		void Palette(const uint8_t V);
+
+		std::string RankName() const;
+		void UpdateChecksum();
 	private:
-		std::unique_ptr<uint8_t[]> SavData = nullptr;
-		uint32_t SavSize = 0;
-		bool SavValid = false, ChangesMade = false;
-		static constexpr uint8_t GBAIdent[7] = { 0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34 };
+		uint32_t Offs = 0;
+		static constexpr uint8_t Identifier[0x5] = { 0x70, 0x74, 0x67, 0x0, 0xF };
 	};
 };
 

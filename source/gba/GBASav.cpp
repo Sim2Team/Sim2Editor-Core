@@ -27,6 +27,7 @@
 #include "GBASav.hpp"
 #include "../shared/Checksum.hpp"
 
+
 namespace S2Editor {
 	/*
 		Initialize the GBA SAV.

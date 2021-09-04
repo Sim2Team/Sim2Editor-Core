@@ -29,11 +29,12 @@
 
 #include "../shared/CoreCommon.hpp"
 
+
 namespace S2Editor {
 	class GBAMinigame {
 	public:
-		GBAMinigame(const uint32_t Offs, const uint8_t Game) : Game(std::min<uint8_t>(6, Game)), Offs(Offs) { };
-
+		GBAMinigame(const uint32_t Offs, const uint8_t Game)
+			: Game(std::min<uint8_t>(6, Game)), Offs(Offs) { };
 		uint8_t Index() const { return this->Game; };
 
 		bool Played() const;

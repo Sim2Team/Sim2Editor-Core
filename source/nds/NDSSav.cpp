@@ -28,6 +28,7 @@
 #include "../shared/Checksum.hpp"
 #include "../shared/DataHelper.hpp"
 
+
 namespace S2Editor {
 	/*
 		Initialize the NDS SAV.
@@ -149,13 +150,23 @@ namespace S2Editor {
 		return LastSavedSlot;
 	};
 
+	/*
+		Return a NDSPainting class.
+
+		const uint8_t Idx: The Painting Index ( 0 - 19 ).
+	*/
+	std::unique_ptr<NDSPainting> NDSSAV::Painting(const uint8_t Idx) const {
+		if (Idx >= 20) return nullptr;
+
+		return std::make_unique<NDSPainting>(Idx);
+	};
 
 	/*
 		Return a NDSSlot class.
 
 		const uint8_t Slot: The NDSSAV Slot ( 0 - 2 ).
 	*/
-	std::unique_ptr<NDSSlot> NDSSAV::Slot(const uint8_t Slot) {
+	std::unique_ptr<NDSSlot> NDSSAV::Slot(const uint8_t Slot) const {
 		if (!this->SlotExist(Slot)) return nullptr;
 
 		return std::make_unique<NDSSlot>(this->Slots[Slot], this->Region);
@@ -169,8 +180,16 @@ namespace S2Editor {
 	void NDSSAV::Finish() {
 		if (!this->GetValid()) return;
 
+		/* Update the Checksum of the Sav Slots. */
 		for (uint8_t Slot = 0; Slot < 3; Slot++) {
 			if (this->SlotExist(Slot)) this->Slot(Slot)->FixChecksum();
+		}
+
+		/* Update the Checksum of the Paintings. */
+		for (uint8_t Idx = 0; Idx < 20; Idx++) {
+			std::unique_ptr<NDSPainting> PTG = this->Painting(Idx);
+
+			if (PTG->Valid()) PTG->UpdateChecksum();
 		}
 	};
 
@@ -179,7 +198,7 @@ namespace S2Editor {
 
 		const uint8_t Slot: The Slot to check.
 	*/
-	bool NDSSAV::SlotExist(const uint8_t Slot) {
+	bool NDSSAV::SlotExist(const uint8_t Slot) const {
 		if (Slot > 2 || !this->GetValid()) return false;
 
 		return this->Slots[Slot] != -1;

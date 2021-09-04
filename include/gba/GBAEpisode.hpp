@@ -29,10 +29,12 @@
 
 #include "../shared/CoreCommon.hpp"
 
+
 namespace S2Editor {
 	class GBAEpisode {
 	public:
-		GBAEpisode(const uint8_t Slot, const uint8_t Episode, const uint8_t Move = 0x0) : Episode(Episode), Offs((Slot * 0x1000) + this->SetOffset(std::min<uint8_t>(Move, 10))) { };
+		GBAEpisode(const uint8_t Slot, const uint8_t Episode, const uint8_t Move = 0x0)
+			: Episode(Episode), Offs((Slot * 0x1000) + this->SetOffset(std::min<uint8_t>(Move, 10))) { };
 		uint8_t Index() const { return this->Episode; };
 
 		uint8_t Rating(const uint8_t Category) const;

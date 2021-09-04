@@ -31,6 +31,7 @@
 #include "../gba/GBASav.hpp"
 #include "../nds/NDSSav.hpp"
 
+
 namespace S2Editor {
 	/*
 		SAVUtils for common things.

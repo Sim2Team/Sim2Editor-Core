@@ -26,6 +26,7 @@
 
 #include "DataHelper.hpp"
 
+
 namespace S2Editor {
 	/*
 		Return a bit from a Buffer.

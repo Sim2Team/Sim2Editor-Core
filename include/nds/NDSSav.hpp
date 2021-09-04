@@ -27,7 +27,9 @@
 #ifndef _SIM2EDITOR_CPP_CORE_NDS_SAV_HPP
 #define _SIM2EDITOR_CPP_CORE_NDS_SAV_HPP
 
+#include "NDSPainting.hpp"
 #include "NDSSlot.hpp"
+
 
 namespace S2Editor {
 	class NDSSAV {
@@ -39,9 +41,10 @@ namespace S2Editor {
 		int8_t FetchSlot(const uint8_t SavSlot, const uint8_t Reg);
 
 		/* Core Returns and Actions. */
-		std::unique_ptr<NDSSlot> Slot(const uint8_t Slot);
+		std::unique_ptr<NDSPainting> Painting(const uint8_t Idx) const;
+		std::unique_ptr<NDSSlot> Slot(const uint8_t Slot) const;
 		void Finish();
-		bool SlotExist(const uint8_t Slot);
+		bool SlotExist(const uint8_t Slot) const;
 
 		/* Some Returns. */
 		uint32_t GetSize() const { return this->SavSize; };

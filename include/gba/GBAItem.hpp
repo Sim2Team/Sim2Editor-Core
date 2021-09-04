@@ -27,7 +27,8 @@
 #ifndef _SIM2EDITOR_CPP_CORE_GBA_ITEM_HPP
 #define _SIM2EDITOR_CPP_CORE_GBA_ITEM_HPP
 
-#include "CoreCommon.hpp"
+#include "../shared/CoreCommon.hpp"
+
 
 /*
 	NOTE:
@@ -42,7 +43,8 @@
 namespace S2Editor {
 	class GBAItem {
 	public:
-		GBAItem(const uint32_t Offset) : Offs(Offset) { };
+		GBAItem(const uint32_t Offset)
+			: Offs(Offset) { };
 
 		uint8_t Count() const;
 		void Count(const uint8_t V);

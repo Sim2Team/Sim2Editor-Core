@@ -32,8 +32,9 @@
 #include <memory>
 #include <string>
 
+
 namespace S2Editor {
-	enum class SAVType { _GBA, _NDS, _NONE };
+	enum class SAVType : uint8_t { _GBA = 0x0, _NDS, _NONE };
 	enum class NDSSavRegion : uint8_t { Unknown = 0x0, Int, Jpn };
 };
 

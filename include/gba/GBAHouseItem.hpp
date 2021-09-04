@@ -27,7 +27,8 @@
 #ifndef _SIM2EDITOR_CPP_CORE_GBA_HOUSE_ITEM_HPP
 #define _SIM2EDITOR_CPP_CORE_GBA_HOUSE_ITEM_HPP
 
-#include "CoreCommon.hpp"
+#include "../shared/CoreCommon.hpp"
+
 
 /*
 	NOTE:
@@ -36,13 +37,12 @@
 		Each item of the room changes the offsets to + 0x6 for data after 0xD6 of the SAVSlot.
 */
 namespace S2Editor {
-	enum class GBAHouseItemDirection : uint8_t {
-		Right = 0x1, Down = 0x3, Left = 0x5, Up = 0x7, Invalid = 0xFF
-	};
+	enum class GBAHouseItemDirection : uint8_t { Right = 0x1, Down = 0x3, Left = 0x5, Up = 0x7, Invalid = 0xFF };
 
 	class GBAHouseItem {
 	public:
-		GBAHouseItem(const uint32_t Offset) : Offs(Offset) { };
+		GBAHouseItem(const uint32_t Offset)
+			: Offs(Offset) { };
 
 		uint8_t Count() const;
 		void Count(const uint8_t V);

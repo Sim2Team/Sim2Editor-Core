@@ -26,6 +26,7 @@
 
 #include "Checksum.hpp"
 
+
 namespace S2Editor {
 	/*
 		I rewrote the Checksum calculation function, to WORK with both, GBA and NDS versions.
@@ -33,10 +34,10 @@ namespace S2Editor {
 		const uint8_t *Buffer: The SAVBuffer.
 		const uint16_t StartOffs: The Start offset. (NOTE: You'll have to do '/ 2', because it's 2 byte based).
 		const uint16_t EndOffs: The End offset. Same NOTE as above applies here as well.
-		const std::vector<int> &Skipoffs:
+		const std::vector<uint32_t> &Skipoffs:
 			The Offsets which to skip (Only needed on the NDS version, also same NOTE as above applies as well).
 	*/
-	uint16_t Checksum::Calc(const uint8_t *Buffer, const uint16_t StartOffs, const uint16_t EndOffs, const std::vector<int> &SkipOffs) {
+	uint16_t Checksum::Calc(const uint8_t *Buffer, const uint16_t StartOffs, const uint16_t EndOffs, const std::vector<uint32_t> &SkipOffs) {
 		uint8_t Byte1 = 0, Byte2 = 0;
 		bool Skip = false;
 

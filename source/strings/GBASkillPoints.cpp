@@ -26,6 +26,7 @@
 
 #include "Strings.hpp"
 
+
 namespace S2Editor {
 	const std::vector<std::string> Strings::GBASkillPointNames_DE = {
 		"Vertrauen", "Mechanik", "Stärke", "Persönlichkeit",

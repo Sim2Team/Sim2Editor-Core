@@ -28,6 +28,7 @@
 #include "../shared/Checksum.hpp"
 #include "../shared/SAVUtils.hpp"
 
+
 namespace S2Editor {
 	/*
 		The House Item Amount seems to affect some stuff and move things around for 0x6 per Item.

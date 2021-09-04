@@ -27,6 +27,7 @@
 #include "GBASocialMove.hpp"
 #include "../shared/SAVUtils.hpp"
 
+
 namespace S2Editor {
 	/* Get and Set the Social Move Flag. */
 	SocialMoveFlag GBASocialMove::Flag() const { return (SocialMoveFlag)GBASAVUtils::Read<uint8_t>(this->Offs); };

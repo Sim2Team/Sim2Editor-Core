@@ -27,6 +27,7 @@
 #include "GBAEpisode.hpp"
 #include "../shared/SAVUtils.hpp"
 
+
 namespace S2Editor {
 	/* Get and Set Episode Ratings. */
 	uint8_t GBAEpisode::Rating(const uint8_t Category) const {
