@@ -25,19 +25,19 @@
 */
 
 #include "GBAEpisode.hpp"
-#include "../shared/SAVUtils.hpp"
+#include "../shared/SavUtils.hpp"
 
 
 namespace S2Editor {
 	/* Get and Set Episode Ratings. */
 	uint8_t GBAEpisode::Rating(const uint8_t Category) const {
-		return GBASAVUtils::Read<uint8_t>(this->Offs + std::min<uint8_t>(3, Category));
+		return GBASavUtils::Read<uint8_t>(this->Offs + std::min<uint8_t>(3, Category));
 	};
 	void GBAEpisode::Rating(const uint8_t Category, const uint8_t V) {
-		GBASAVUtils::Write<uint8_t>(this->Offs + std::min<uint8_t>(3, Category), std::min<uint8_t>(25, V));
+		GBASavUtils::Write<uint8_t>(this->Offs + std::min<uint8_t>(3, Category), std::min<uint8_t>(25, V));
 	};
 
 	/* Get and Set the Unlocked State. */
-	bool GBAEpisode::State() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x4); };
-	void GBAEpisode::State(const bool V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x4, V); };
+	bool GBAEpisode::State() const { return GBASavUtils::Read<uint8_t>(this->Offs + 0x4); };
+	void GBAEpisode::State(const bool V) { GBASavUtils::Write<uint8_t>(this->Offs + 0x4, V); };
 };

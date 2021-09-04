@@ -30,26 +30,26 @@
 
 namespace S2Editor {
 	/*
-		Initialize the GBA SAV.
+		Initialize the GBA Sav.
 
-		const std::string &SAVFile: The SAVFile path.
+		const std::string &SavFile: The SavFile path.
 	*/
-	GBASAV::GBASAV(const std::string &SAVFile) {
-		FILE *SAV = fopen(SAVFile.c_str(), "r");
+	GBASav::GBASav(const std::string &SavFile) {
+		FILE *Sav = fopen(SavFile.c_str(), "r");
 
-		if (SAV) {
-			fseek(SAV, 0, SEEK_END);
-			this->SavSize = ftell(SAV);
-			fseek(SAV, 0, SEEK_SET);
+		if (Sav) {
+			fseek(Sav, 0, SEEK_END);
+			this->SavSize = ftell(Sav);
+			fseek(Sav, 0, SEEK_SET);
 
 			if (this->SavSize == 0x10000 || this->SavSize == 0x20000) {
 				this->SavData = std::make_unique<uint8_t[]>(this->GetSize());
-				fread(this->SavData.get(), 1, this->GetSize(), SAV);
+				fread(this->SavData.get(), 1, this->GetSize(), Sav);
 
 				this->ValidationCheck();
 			}
 
-			fclose(SAV);
+			fclose(Sav);
 		}
 	};
 
@@ -59,7 +59,7 @@ namespace S2Editor {
 		std::unique_ptr<uint8_t[]> &Data: The raw Save Buffer.
 		const uint32_t Size: The size of the Save Buffer.
 	*/
-	GBASAV::GBASAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size) {
+	GBASav::GBASav(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size) {
 		if (Size == 0x10000 || Size == 0x20000) {
 			this->SavData = std::move(Data);
 			this->SavSize = Size;
@@ -70,7 +70,7 @@ namespace S2Editor {
 
 
 	/* Some Save Validation checks. */
-	void GBASAV::ValidationCheck() {
+	void GBASav::ValidationCheck() {
 		if (!this->GetData()) return;
 
 		/* Now do the Validation check through the Save Header with the GBAIdents. */
@@ -96,7 +96,7 @@ namespace S2Editor {
 
 		const uint8_t Slot: The Slot to check.
 	*/
-	bool GBASAV::SlotExist(const uint8_t Slot) const {
+	bool GBASav::SlotExist(const uint8_t Slot) const {
 		if (Slot < 1 || Slot > 4 || !this->GetValid()) return false;
 
 		for (uint8_t Idx = 0; Idx < 10; Idx++) {
@@ -109,23 +109,23 @@ namespace S2Editor {
 	/*
 		Return a GBASlot class.
 
-		const uint8_t Slot: The GBASAV Slot ( 1 - 4 ).
+		const uint8_t Slot: The GBASav Slot ( 1 - 4 ).
 	*/
-	std::unique_ptr<GBASlot> GBASAV::Slot(const uint8_t Slot) const {
+	std::unique_ptr<GBASlot> GBASav::Slot(const uint8_t Slot) const {
 		if (!this->SlotExist(Slot)) return nullptr;
 
 		return std::make_unique<GBASlot>(Slot);
 	};
 
 	/* Get a Settings class. */
-	std::unique_ptr<GBASettings> GBASAV::Settings() const { return std::make_unique<GBASettings>(); };
+	std::unique_ptr<GBASettings> GBASav::Settings() const { return std::make_unique<GBASettings>(); };
 
 	/*
 		Finish call before writting to file.
 
 		Fix the Checksum of all existing Slots and the Settings, if invalid.
 	*/
-	void GBASAV::Finish() {
+	void GBASav::Finish() {
 		if (!this->GetValid()) return;
 
 		for (uint8_t Slot = 1; Slot < 5; Slot++) {

@@ -26,37 +26,37 @@
 
 #include "GBASettings.hpp"
 #include "../shared/Checksum.hpp"
-#include "../shared/SAVUtils.hpp"
+#include "../shared/SavUtils.hpp"
 
 
 namespace S2Editor {
 	/* Get and Set the Sound Effect Volume. */
-	uint8_t GBASettings::SFX() const { return GBASAVUtils::Read<uint8_t>(0x8); };
+	uint8_t GBASettings::SFX() const { return GBASavUtils::Read<uint8_t>(0x8); };
 	void GBASettings::SFX(const uint8_t V) {
 		if (V > 10) return; // 0 - 10 only valid.
-		GBASAVUtils::Write<uint8_t>(0x8, this->SFXLevels[V]);
+		GBASavUtils::Write<uint8_t>(0x8, this->SFXLevels[V]);
 	};
 
 	/* Get and Set the Music Volume. */
-	uint8_t GBASettings::Music() const { return GBASAVUtils::Read<uint8_t>(0x9); };
+	uint8_t GBASettings::Music() const { return GBASavUtils::Read<uint8_t>(0x9); };
 	void GBASettings::Music(const uint8_t V) {
 		if (V > 10) return; // 0 - 10 only valid.
-		GBASAVUtils::Write<uint8_t>(0x9, this->MusicLevels[V]);
+		GBASavUtils::Write<uint8_t>(0x9, this->MusicLevels[V]);
 	};
 
 	/* Get and Set the Language. */
 	GBALanguage GBASettings::Language() const {
-		if (GBASAVUtils::Read<uint8_t>(0xA) > 5) return GBALanguage::EN; // Technically, that would be a "blank" Language in game, but ehh that's not good.
-		return (GBALanguage)GBASAVUtils::Read<uint8_t>(0xA);
+		if (GBASavUtils::Read<uint8_t>(0xA) > 5) return GBALanguage::EN; // Technically, that would be a "blank" Language in game, but ehh that's not good.
+		return (GBALanguage)GBASavUtils::Read<uint8_t>(0xA);
 	};
-	void GBASettings::Language(const GBALanguage V) { GBASAVUtils::Write<uint8_t>(0xA, (uint8_t)V); };
+	void GBASettings::Language(const GBALanguage V) { GBASavUtils::Write<uint8_t>(0xA, (uint8_t)V); };
 
 	/* Update the Checksum of the GBA Settings. */
 	void GBASettings::UpdateChecksum() {
-		const uint16_t CurCHKS = GBASAVUtils::Read<uint16_t>(0xE);
-		const uint16_t Calced = Checksum::Calc(GBASAVUtils::SAV->GetData(), 0x0, 0x18 / 2, { 0xE / 2 });
+		const uint16_t CurCHKS = GBASavUtils::Read<uint16_t>(0xE);
+		const uint16_t Calced = Checksum::Calc(GBASavUtils::Sav->GetData(), 0x0, 0x18 / 2, { 0xE / 2 });
 
 		/* If the calced result is NOT the current checksum. */
-		if (Calced != CurCHKS) GBASAVUtils::Write<uint16_t>(0xE, Calced);
+		if (Calced != CurCHKS) GBASavUtils::Write<uint16_t>(0xE, Calced);
 	};
 };

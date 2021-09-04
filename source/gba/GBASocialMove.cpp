@@ -25,19 +25,19 @@
 */
 
 #include "GBASocialMove.hpp"
-#include "../shared/SAVUtils.hpp"
+#include "../shared/SavUtils.hpp"
 
 
 namespace S2Editor {
 	/* Get and Set the Social Move Flag. */
-	SocialMoveFlag GBASocialMove::Flag() const { return (SocialMoveFlag)GBASAVUtils::Read<uint8_t>(this->Offs); };
-	void GBASocialMove::Flag(const SocialMoveFlag V) { GBASAVUtils::Write<uint8_t>(this->Offs, (uint8_t)V); };
+	SocialMoveFlag GBASocialMove::Flag() const { return (SocialMoveFlag)GBASavUtils::Read<uint8_t>(this->Offs); };
+	void GBASocialMove::Flag(const SocialMoveFlag V) { GBASavUtils::Write<uint8_t>(this->Offs, (uint8_t)V); };
 
 	/* Get and Set the Social Move Level. */
-	uint8_t GBASocialMove::Level() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x4); };
-	void GBASocialMove::Level(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x4, std::min<uint8_t>(3, V)); };
+	uint8_t GBASocialMove::Level() const { return GBASavUtils::Read<uint8_t>(this->Offs + 0x4); };
+	void GBASocialMove::Level(const uint8_t V) { GBASavUtils::Write<uint8_t>(this->Offs + 0x4, std::min<uint8_t>(3, V)); };
 
 	/* Get and Set the Blocked Hours of the Social Move. */
-	uint8_t GBASocialMove::BlockedHours() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x6); };
-	void GBASocialMove::BlockedHours(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x6, std::min<uint8_t>(3, V)); };
+	uint8_t GBASocialMove::BlockedHours() const { return GBASavUtils::Read<uint8_t>(this->Offs + 0x6); };
+	void GBASocialMove::BlockedHours(const uint8_t V) { GBASavUtils::Write<uint8_t>(this->Offs + 0x6, std::min<uint8_t>(3, V)); };
 };

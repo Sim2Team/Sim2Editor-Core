@@ -31,26 +31,26 @@
 
 namespace S2Editor {
 	/*
-		Initialize the NDS SAV.
+		Initialize the NDS Sav.
 
-		const std::string &SAVFile: The SAVFile path.
+		const std::string &SavFile: The SavFile path.
 	*/
-	NDSSAV::NDSSAV(const std::string &SAVFile) {
-		FILE *SAV = fopen(SAVFile.c_str(), "r");
+	NDSSav::NDSSav(const std::string &SavFile) {
+		FILE *Sav = fopen(SavFile.c_str(), "r");
 
-		if (SAV) {
-			fseek(SAV, 0, SEEK_END);
-			this->SavSize = ftell(SAV);
-			fseek(SAV, 0, SEEK_SET);
+		if (Sav) {
+			fseek(Sav, 0, SEEK_END);
+			this->SavSize = ftell(Sav);
+			fseek(Sav, 0, SEEK_SET);
 
 			if (this->SavSize == 0x40000 || this->SavSize == 0x80000) {
 				this->SavData = std::make_unique<uint8_t[]>(this->GetSize());
-				fread(this->SavData.get(), 1, this->GetSize(), SAV);
+				fread(this->SavData.get(), 1, this->GetSize(), Sav);
 
 				this->ValidationCheck();
 			}
 
-			fclose(SAV);
+			fclose(Sav);
 		}
 	};
 
@@ -60,7 +60,7 @@ namespace S2Editor {
 		std::unique_ptr<uint8_t[]> &Data: The raw Save Buffer.
 		const uint32_t Size: The size of the Save Buffer.
 	*/
-	NDSSAV::NDSSAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size) {
+	NDSSav::NDSSav(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size) {
 		if (Size == 0x40000 || Size == 0x80000) {
 			this->SavData = std::move(Data);
 			this->SavSize = Size;
@@ -70,7 +70,7 @@ namespace S2Editor {
 	};
 
 	/* Some Save Validation checks. */
-	void NDSSAV::ValidationCheck() {
+	void NDSSav::ValidationCheck() {
 		if (!this->GetData()) return;
 
 		uint8_t Count = 0, Reg = 0;
@@ -104,11 +104,11 @@ namespace S2Editor {
 	};
 
 	/*
-		This one is called at NDSSAV class constructor 3 times, to get the proper SAVSlot offset.
+		This one is called at NDSSav class constructor 3 times, to get the proper SavSlot offset.
 
 		This function has been ported of the LSSD Tool, SuperSaiyajinStackZ created.
 	*/
-	int8_t NDSSAV::FetchSlot(const uint8_t SavSlot, const uint8_t Reg) {
+	int8_t NDSSav::FetchSlot(const uint8_t SavSlot, const uint8_t Reg) {
 		if (!this->GetData()) return -1;
 
 		int8_t LastSavedSlot = -1, IDCount = 0;
@@ -126,7 +126,7 @@ namespace S2Editor {
 
 			/* If 8, then it properly passed the slot existence check. */
 			if (IDCount == 8) {
-				/* Check, if current slot is also the actual SAVSlot. It seems 0xC and 0xD added is the Slot, however 0xD seems never be touched from the game and hence like all the time 0x0? */
+				/* Check, if current slot is also the actual SavSlot. It seems 0xC and 0xD added is the Slot, however 0xD seems never be touched from the game and hence like all the time 0x0? */
 				if ((this->GetData()[(Slot * 0x1000) + 0xC] + this->GetData()[(Slot * 0x1000) + 0xD]) == SavSlot) {
 					/* Now get the SavCount. */
 					SavCount[Slot] = DataHelper::Read<uint32_t>(this->GetData(), (Slot * 0x1000) + 0x8);
@@ -135,7 +135,7 @@ namespace S2Editor {
 			}
 		}
 
-		/* Here we check and return the proper last saved Slot. */
+		/* Here we check and return the proper last Saved Slot. */
 		uint32_t HighestCount = 0;
 
 		for (uint8_t Slot = 0; Slot < 5; Slot++) {
@@ -155,7 +155,7 @@ namespace S2Editor {
 
 		const uint8_t Idx: The Painting Index ( 0 - 19 ).
 	*/
-	std::unique_ptr<NDSPainting> NDSSAV::Painting(const uint8_t Idx) const {
+	std::unique_ptr<NDSPainting> NDSSav::Painting(const uint8_t Idx) const {
 		if (Idx >= 20) return nullptr;
 
 		return std::make_unique<NDSPainting>(Idx);
@@ -164,9 +164,9 @@ namespace S2Editor {
 	/*
 		Return a NDSSlot class.
 
-		const uint8_t Slot: The NDSSAV Slot ( 0 - 2 ).
+		const uint8_t Slot: The NDSSav Slot ( 0 - 2 ).
 	*/
-	std::unique_ptr<NDSSlot> NDSSAV::Slot(const uint8_t Slot) const {
+	std::unique_ptr<NDSSlot> NDSSav::Slot(const uint8_t Slot) const {
 		if (!this->SlotExist(Slot)) return nullptr;
 
 		return std::make_unique<NDSSlot>(this->Slots[Slot], this->Region);
@@ -177,7 +177,7 @@ namespace S2Editor {
 
 		Fix the Checksum of all existing Slots, if invalid.
 	*/
-	void NDSSAV::Finish() {
+	void NDSSav::Finish() {
 		if (!this->GetValid()) return;
 
 		/* Update the Checksum of the Sav Slots. */
@@ -198,7 +198,7 @@ namespace S2Editor {
 
 		const uint8_t Slot: The Slot to check.
 	*/
-	bool NDSSAV::SlotExist(const uint8_t Slot) const {
+	bool NDSSav::SlotExist(const uint8_t Slot) const {
 		if (Slot > 2 || !this->GetValid()) return false;
 
 		return this->Slots[Slot] != -1;

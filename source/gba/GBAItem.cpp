@@ -25,20 +25,20 @@
 */
 
 #include "GBAItem.hpp"
-#include "../shared/SAVUtils.hpp"
+#include "../shared/SavUtils.hpp"
 
 
 namespace S2Editor {
 	/* Get and Set the Item Count. */
-	uint8_t GBAItem::Count() const { return GBASAVUtils::Read<uint8_t>(this->Offs); };
-	void GBAItem::Count(const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs, V); };
+	uint8_t GBAItem::Count() const { return GBASavUtils::Read<uint8_t>(this->Offs); };
+	void GBAItem::Count(const uint8_t V) { GBASavUtils::Write<uint8_t>(this->Offs, V); };
 
 	/* Get and Set the Item's ID. */
 	uint8_t GBAItem::ID(const uint8_t Index) const {
-		return GBASAVUtils::Read<uint8_t>(this->Offs + 0x1 + (std::min<uint8_t>(5, Index) * 0x3));
+		return GBASavUtils::Read<uint8_t>(this->Offs + 0x1 + (std::min<uint8_t>(5, Index) * 0x3));
 	};
 	void GBAItem::ID(const uint8_t Index, const uint8_t V) {
-		GBASAVUtils::Write<uint8_t>(this->Offs + 0x1 + (std::min<uint8_t>(5, Index) * 0x3), V);
+		GBASavUtils::Write<uint8_t>(this->Offs + 0x1 + (std::min<uint8_t>(5, Index) * 0x3), V);
 
 		/* Update Item Count. */
 		uint8_t Amount = 0;
@@ -50,10 +50,10 @@ namespace S2Editor {
 	};
 
 	/* Get and Set the Item's Flags. */
-	uint8_t GBAItem::Flag(const uint8_t Idx) const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x2 + (std::min<uint8_t>(5, Idx) * 0x3)); };
-	void GBAItem::Flag(const uint8_t Idx, const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x2 + (std::min<uint8_t>(5, Idx) * 0x3), V); };
+	uint8_t GBAItem::Flag(const uint8_t Idx) const { return GBASavUtils::Read<uint8_t>(this->Offs + 0x2 + (std::min<uint8_t>(5, Idx) * 0x3)); };
+	void GBAItem::Flag(const uint8_t Idx, const uint8_t V) { GBASavUtils::Write<uint8_t>(this->Offs + 0x2 + (std::min<uint8_t>(5, Idx) * 0x3), V); };
 
 	/* Get and Set the Item's Use Count. */
-	uint8_t GBAItem::UseCount(const uint8_t Idx) const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x3 + (std::min<uint8_t>(5, Idx) * 0x3)); };
-	void GBAItem::UseCount(const uint8_t Idx, const uint8_t V) { GBASAVUtils::Write<uint8_t>(this->Offs + 0x3 + (std::min<uint8_t>(5, Idx) * 0x3), V); };
+	uint8_t GBAItem::UseCount(const uint8_t Idx) const { return GBASavUtils::Read<uint8_t>(this->Offs + 0x3 + (std::min<uint8_t>(5, Idx) * 0x3)); };
+	void GBAItem::UseCount(const uint8_t Idx, const uint8_t V) { GBASavUtils::Write<uint8_t>(this->Offs + 0x3 + (std::min<uint8_t>(5, Idx) * 0x3), V); };
 };

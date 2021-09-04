@@ -25,7 +25,7 @@
 */
 
 #include "GBAHouse.hpp"
-#include "../shared/SAVUtils.hpp"
+#include "../shared/SavUtils.hpp"
 
 
 namespace S2Editor {
@@ -33,8 +33,8 @@ namespace S2Editor {
 		Get and Set the Room Design.
 		Only 0 - 3 SHOULD be used at all, the others aren't actual room designs and instead may cause issues.
 	*/
-	uint8_t GBAHouse::Roomdesign() const { return GBASAVUtils::ReadBits(this->Offs + 0x2E, true); };
-	void GBAHouse::Roomdesign(const uint8_t V) { GBASAVUtils::WriteBits(this->Offs + 0x2E, true, V); };
+	uint8_t GBAHouse::Roomdesign() const { return GBASavUtils::ReadBits(this->Offs + 0x2E, true); };
+	void GBAHouse::Roomdesign(const uint8_t V) { GBASavUtils::WriteBits(this->Offs + 0x2E, true, V); };
 
 	/* Get the Items of your House / Room. */
 	std::unique_ptr<GBAHouseItem> GBAHouse::Items() const { return std::make_unique<GBAHouseItem>(this->Offs + 0xD6); };

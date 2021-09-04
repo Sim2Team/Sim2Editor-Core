@@ -31,7 +31,7 @@ namespace S2Editor {
 	/*
 		I rewrote the Checksum calculation function, to WORK with both, GBA and NDS versions.
 
-		const uint8_t *Buffer: The SAVBuffer.
+		const uint8_t *Buffer: The SavBuffer.
 		const uint16_t StartOffs: The Start offset. (NOTE: You'll have to do '/ 2', because it's 2 byte based).
 		const uint16_t EndOffs: The End offset. Same NOTE as above applies here as well.
 		const std::vector<uint32_t> &Skipoffs:

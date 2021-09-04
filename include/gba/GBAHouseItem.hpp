@@ -34,7 +34,7 @@
 	NOTE:
 		Items from your Inventory and the ones from your House have different structures, hence it's a separate class.
 		Also the House Items are annoying handled as well.
-		Each item of the room changes the offsets to + 0x6 for data after 0xD6 of the SAVSlot.
+		Each item of the room changes the offsets to + 0x6 for data after 0xD6 of the SavSlot.
 */
 namespace S2Editor {
 	enum class GBAHouseItemDirection : uint8_t { Right = 0x1, Down = 0x3, Left = 0x5, Up = 0x7, Invalid = 0xFF };

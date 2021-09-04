@@ -32,10 +32,10 @@
 
 
 namespace S2Editor {
-	class GBASAV {
+	class GBASav {
 	public:
-		GBASAV(const std::string &SAVFile);
-		GBASAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size);
+		GBASav(const std::string &SavFile);
+		GBASav(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size);
 
 		void ValidationCheck();
 

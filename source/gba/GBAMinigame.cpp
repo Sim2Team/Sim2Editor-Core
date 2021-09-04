@@ -25,20 +25,20 @@
 */
 
 #include "GBAMinigame.hpp"
-#include "../shared/SAVUtils.hpp"
+#include "../shared/SavUtils.hpp"
 
 
 namespace S2Editor {
 	/* Get and Set if you played that game already today. */
-	bool GBAMinigame::Played() const { return GBASAVUtils::ReadBit(this->Offs, this->Game); };
-	void GBAMinigame::Played(const bool V) { GBASAVUtils::WriteBit(this->Offs, this->Game, V); };
+	bool GBAMinigame::Played() const { return GBASavUtils::ReadBit(this->Offs, this->Game); };
+	void GBAMinigame::Played(const bool V) { GBASavUtils::WriteBit(this->Offs, this->Game, V); };
 
 	/* Get and Set the Minigame Level. */
-	uint8_t GBAMinigame::Level() const { return GBASAVUtils::Read<uint8_t>(this->Offs + 0x24 + this->Game); };
+	uint8_t GBAMinigame::Level() const { return GBASavUtils::Read<uint8_t>(this->Offs + 0x24 + this->Game); };
 	void GBAMinigame::Level(const uint8_t V, const bool MetaData) {
-		GBASAVUtils::Write<uint8_t>(this->Offs + 0x24 + this->Game, std::min<uint8_t>(5, V));
+		GBASavUtils::Write<uint8_t>(this->Offs + 0x24 + this->Game, std::min<uint8_t>(5, V));
 
 		/* Optionally: Set to Metadata / Settings as well. */
-		if (MetaData) GBASAVUtils::WriteBits(0x10 + (this->Game / 2), ((this->Game % 2) == 0), std::min<uint8_t>(5, V));
+		if (MetaData) GBASavUtils::WriteBits(0x10 + (this->Game / 2), ((this->Game % 2) == 0), std::min<uint8_t>(5, V));
 	};
 };

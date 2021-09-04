@@ -27,7 +27,7 @@
 #include "NDSPainting.hpp"
 #include "../Strings.hpp"
 #include "../shared/Checksum.hpp"
-#include "../shared/SAVUtils.hpp"
+#include "../shared/SavUtils.hpp"
 
 
 namespace S2Editor {
@@ -36,34 +36,34 @@ namespace S2Editor {
 	*/
 	bool NDSPainting::Valid() const {
 		for (uint8_t Idx = 0; Idx < 5; Idx++) {
-			if (NDSSAVUtils::Read<uint8_t>(this->Offs + Idx) != this->Identifier[Idx]) return false; // Invalid.
+			if (NDSSavUtils::Read<uint8_t>(this->Offs + Idx) != this->Identifier[Idx]) return false; // Invalid.
 		}
 
 		return true;
 	};
 
 	/* Get and Set the Index of the Painting. It is similar to a creation count though. */
-	uint32_t NDSPainting::Index() const { return NDSSAVUtils::Read<uint32_t>(this->Offs + 0x8); };
-	void NDSPainting::Index(const uint32_t V) { NDSSAVUtils::Write<uint32_t>(this->Offs + 0x8, V); };
+	uint32_t NDSPainting::Index() const { return NDSSavUtils::Read<uint32_t>(this->Offs + 0x8); };
+	void NDSPainting::Index(const uint32_t V) { NDSSavUtils::Write<uint32_t>(this->Offs + 0x8, V); };
 
 	/* Get and Set to which Slot the Painting exist. */
-	uint8_t NDSPainting::Slot() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0xC); };
-	void NDSPainting::Slot(const uint8_t V) { NDSSAVUtils::Write<uint8_t>(this->Offs + 0xC, std::min<uint8_t>(5, V)); };
+	uint8_t NDSPainting::Slot() const { return NDSSavUtils::Read<uint8_t>(this->Offs + 0xC); };
+	void NDSPainting::Slot(const uint8_t V) { NDSSavUtils::Write<uint8_t>(this->Offs + 0xC, std::min<uint8_t>(5, V)); };
 
 	/* Get and Set to which Canvas the Painting is drawn on. */
-	uint8_t NDSPainting::CanvasIdx() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0xD); };
-	void NDSPainting::CanvasIdx(const uint8_t V) { NDSSAVUtils::Write<uint8_t>(this->Offs + 0xD, std::min<uint8_t>(5, V)); };
+	uint8_t NDSPainting::CanvasIdx() const { return NDSSavUtils::Read<uint8_t>(this->Offs + 0xD); };
+	void NDSPainting::CanvasIdx(const uint8_t V) { NDSSavUtils::Write<uint8_t>(this->Offs + 0xD, std::min<uint8_t>(5, V)); };
 
 	/* Get and Set the Pixel of the Painting Image Data. */
 	uint8_t NDSPainting::Pixel(const uint16_t Idx) const {
 		if (Idx >= 0x600) return 0;
 
-		return NDSSAVUtils::ReadBits(this->Offs + 0x14 + (Idx / 2), (Idx % 2 == 0));
+		return NDSSavUtils::ReadBits(this->Offs + 0x14 + (Idx / 2), (Idx % 2 == 0));
 	};
 	void NDSPainting::Pixel(const uint16_t Idx, const uint8_t V) {
 		if (Idx >= 0x600 || V > 0xF) return;
 
-		NDSSAVUtils::WriteBits(this->Offs + 0x14 + (Idx / 2), (Idx % 2 == 0), V);
+		NDSSavUtils::WriteBits(this->Offs + 0x14 + (Idx / 2), (Idx % 2 == 0), V);
 	};
 
 	/* Same as above, but instead of an raw index, it is being done with an X and Y Position. */
@@ -79,12 +79,12 @@ namespace S2Editor {
 	};
 
 	/* Get and Set the Painting Flag, used for the Painting "Rank". */
-	uint8_t NDSPainting::Flag() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0x314); };
-	void NDSPainting::Flag(const uint8_t V) { NDSSAVUtils::Write<uint8_t>(this->Offs + 0x314, V); };
+	uint8_t NDSPainting::Flag() const { return NDSSavUtils::Read<uint8_t>(this->Offs + 0x314); };
+	void NDSPainting::Flag(const uint8_t V) { NDSSavUtils::Write<uint8_t>(this->Offs + 0x314, V); };
 
 	/* Get and Set the Painting Palette. */
-	uint8_t NDSPainting::Palette() const { return NDSSAVUtils::Read<uint8_t>(this->Offs + 0x315); };
-	void NDSPainting::Palette(const uint8_t V) { NDSSAVUtils::Write<uint8_t>(this->Offs + 0x315, std::min<uint8_t>(0xF, V)); };
+	uint8_t NDSPainting::Palette() const { return NDSSavUtils::Read<uint8_t>(this->Offs + 0x315); };
+	void NDSPainting::Palette(const uint8_t V) { NDSSavUtils::Write<uint8_t>(this->Offs + 0x315, std::min<uint8_t>(0xF, V)); };
 
 	/* Get the Rank name of the Painting. */
 	std::string NDSPainting::RankName() const {
@@ -97,13 +97,13 @@ namespace S2Editor {
 	/* Update the Checksum of the Painting. */
 	void NDSPainting::UpdateChecksum() {
 		/* First: Main. */
-		uint16_t Calced = S2Editor::Checksum::Calc(NDSSAVUtils::SAV->GetData(), (this->Offs + 0x10) / 2, (this->Offs + 0x400) / 2, { (this->Offs + 0x10) / 2 });
-		uint16_t CurCHKS = NDSSAVUtils::Read<uint16_t>(this->Offs + 0x10);
-		if (CurCHKS != Calced) NDSSAVUtils::Write<uint16_t>(this->Offs + 0x10, Calced);
+		uint16_t Calced = S2Editor::Checksum::Calc(NDSSavUtils::Sav->GetData(), (this->Offs + 0x10) / 2, (this->Offs + 0x400) / 2, { (this->Offs + 0x10) / 2 });
+		uint16_t CurCHKS = NDSSavUtils::Read<uint16_t>(this->Offs + 0x10);
+		if (CurCHKS != Calced) NDSSavUtils::Write<uint16_t>(this->Offs + 0x10, Calced);
 
 		/* Then: Header. */
-		Calced = S2Editor::Checksum::Calc(NDSSAVUtils::SAV->GetData(), (this->Offs) / 2, (this->Offs + 0x13) / 2, { (this->Offs + 0xE) / 2 });
-		CurCHKS = NDSSAVUtils::Read<uint16_t>(this->Offs + 0xE);
-		if (CurCHKS != Calced) NDSSAVUtils::Write<uint16_t>(this->Offs + 0xE, Calced);
+		Calced = S2Editor::Checksum::Calc(NDSSavUtils::Sav->GetData(), (this->Offs) / 2, (this->Offs + 0x13) / 2, { (this->Offs + 0xE) / 2 });
+		CurCHKS = NDSSavUtils::Read<uint16_t>(this->Offs + 0xE);
+		if (CurCHKS != Calced) NDSSavUtils::Write<uint16_t>(this->Offs + 0xE, Calced);
 	};
 };

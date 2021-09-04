@@ -69,7 +69,7 @@ namespace S2Editor {
 				SString.insert(SString.end() - 3, '.');
 				break;
 
-			case 7: // Technically, 7 Digits are possible too for the SAV, but that should never happen.
+			case 7: // Technically, 7 Digits are possible too for the Sav, but that should never happen.
 			case 8:
 			case 9:
 				SString.insert(SString.end() - 6, '.');

@@ -94,7 +94,7 @@ namespace S2Editor {
 	/*
 		Read a string from a Buffer.
 
-		const uint8_t *Buffer: The SAVBuffer.
+		const uint8_t *Buffer: The SavBuffer.
 		const uint32_t Offs: The Offset from where to read from.
 		const uint32_t Length: The Length to read.
 	*/
@@ -113,7 +113,7 @@ namespace S2Editor {
 	/*
 		Write a string to a Buffer.
 
-		uint8_t *Buffer: The SAVBuffer.
+		uint8_t *Buffer: The SavBuffer.
 		const uint32_t Offs: The offset from where to write to.
 		const uint32_t Length: The length to write.
 		const std::string &Str: The string to write.
