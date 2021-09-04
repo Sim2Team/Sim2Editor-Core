@@ -181,7 +181,8 @@ namespace S2GBACore {
 	*/
 	class House {
 	public:
-		House(const uint32_t Offset) : Offs(Offset) { };
+		House(const uint32_t Offset)
+			: Offs(Offset) { };
 
 		uint8_t Roomdesign() const;
 		void Roomdesign(const uint8_t V);
@@ -198,7 +199,8 @@ namespace S2GBACore {
 	*/
 	class HouseItem {
 	public:
-		HouseItem(const uint32_t Offset) : Offs(Offset) { };
+		HouseItem(const uint32_t Offset)
+			: Offs(Offset) { };
 
 		uint8_t Count() const;
 		void Count(const uint8_t V);
@@ -235,7 +237,8 @@ namespace S2GBACore {
 	*/
 	class ItemPackage {
 	public:
-		ItemPackage(const uint32_t Offset) : Offs(Offset) { };
+		ItemPackage(const uint32_t Offset)
+			: Offs(Offset) { };
 
 		uint8_t Count() const;
 		void Count(const uint8_t V);
@@ -259,7 +262,8 @@ namespace S2GBACore {
 	*/
 	class Minigame {
 	public:
-		Minigame(const uint32_t Offs, const uint8_t Game) : Game(std::min<uint8_t>(6, Game)), Offs(Offs) { };
+		Minigame(const uint32_t Offs, const uint8_t Game)
+			: Game(std::min<uint8_t>(6, Game)), Offs(Offs) { };
 
 		uint8_t Index() const { return this->Game; };
 
@@ -283,8 +287,8 @@ namespace S2GBACore {
 	class SAV {
 	public:
 		SAV(const std::string &File); // Way 1 with a file.
-		SAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size) :
-			SavData(std::move(Data)), SavSize(Size) { this->SavValid = this->ValidationCheck(); }; // Way 2 with a Buffer.
+		SAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size)
+			: SavData(std::move(Data)), SavSize(Size) { this->SavValid = this->ValidationCheck(); }; // Way 2 with a Buffer.
 
 		bool ValidationCheck();
 		uint8_t *GetData() const { return this->SavData.get(); };
@@ -364,7 +368,8 @@ namespace S2GBACore {
 	*/
 	class Slot {
 	public:
-		Slot(const uint8_t Slt) : Slt(Slt), Offs(Slt * 0x1000) { };
+		Slot(const uint8_t Slt)
+			: Slt(Slt), Offs(Slt * 0x1000) { };
 
 		/* Main things. */
 		uint16_t Time() const;

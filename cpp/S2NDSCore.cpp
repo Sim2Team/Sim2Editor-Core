@@ -253,7 +253,6 @@ namespace S2NDSCore {
 	const std::vector<std::string> Strings::SkillPointNames = { "Creativity", "Business", "Body", "Charisma", "Mechanical" };
 
 
-
 	/*
 		//////////////////////////////////////////////////////////
 

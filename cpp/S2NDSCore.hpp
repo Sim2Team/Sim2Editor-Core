@@ -104,7 +104,8 @@ namespace S2NDSCore {
 	*/
 	class Painting {
 	public:
-		Painting(const uint8_t Idx) : Offs(0x5000 + (Idx * 0x400)) { };
+		Painting(const uint8_t Idx)
+			: Offs(0x5000 + (Idx * 0x400)) { };
 
 		bool Valid() const;
 
@@ -142,8 +143,8 @@ namespace S2NDSCore {
 	class SAV {
 	public:
 		SAV(const std::string &File); // Way 1 with a file.
-		SAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size) :
-			SavData(std::move(Data)), SavSize(Size) { this->SavValid = this->ValidationCheck(); }; // Way 2 with a Buffer.
+		SAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size)
+			: SavData(std::move(Data)), SavSize(Size) { this->SavValid = this->ValidationCheck(); }; // Way 2 with a Buffer.
 
 		/* Validation check for the SaveData. */
 		bool ValidationCheck();
@@ -206,7 +207,8 @@ namespace S2NDSCore {
 	*/
 	class Slot {
 	public:
-		Slot(const uint8_t Slt) : Slt(Slt), Offs(Slt * 0x1000) { };
+		Slot(const uint8_t Slt)
+			: Slt(Slt), Offs(Slt * 0x1000) { };
 
 		/* Main things. */
 		uint32_t Simoleons() const;
