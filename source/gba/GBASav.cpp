@@ -96,7 +96,7 @@ namespace S2Editor {
 
 		const uint8_t Slot: The Slot to check.
 	*/
-	bool GBASAV::SlotExist(const uint8_t Slot) {
+	bool GBASAV::SlotExist(const uint8_t Slot) const {
 		if (Slot < 1 || Slot > 4 || !this->GetValid()) return false;
 
 		for (uint8_t Idx = 0; Idx < 10; Idx++) {
@@ -111,7 +111,7 @@ namespace S2Editor {
 
 		const uint8_t Slot: The GBASAV Slot ( 1 - 4 ).
 	*/
-	std::unique_ptr<GBASlot> GBASAV::Slot(const uint8_t Slot) {
+	std::unique_ptr<GBASlot> GBASAV::Slot(const uint8_t Slot) const {
 		if (!this->SlotExist(Slot)) return nullptr;
 
 		return std::make_unique<GBASlot>(Slot);

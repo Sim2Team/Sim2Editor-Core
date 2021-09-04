@@ -39,10 +39,10 @@ namespace S2Editor {
 
 		void ValidationCheck();
 
-		bool SlotExist(const uint8_t Slot);
+		bool SlotExist(const uint8_t Slot) const;
 
 		/* Core Returns and Actions. */
-		std::unique_ptr<GBASlot> Slot(const uint8_t Slot);
+		std::unique_ptr<GBASlot> Slot(const uint8_t Slot) const;
 		std::unique_ptr<GBASettings> Settings() const;
 		void Finish();
 
