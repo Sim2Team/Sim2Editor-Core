@@ -40,16 +40,16 @@ namespace S2Editor {
 		const std::string &BasePath: The base path where to create the Backups (Optional).
 		const bool DoBackup: If creating a backup or not after loading the SavFile (Optional).
 
-		Returns True if the Save is Valid and False if Invalid.
+		Returns the SavType of the detected Save.
 	*/
-	bool SavUtils::LoadSav(const std::string &File, const std::string &BasePath, const bool DoBackup) {
+	SavType SavUtils::LoadSav(const std::string &File, const std::string &BasePath, const bool DoBackup) {
 		SavUtils::Sav = std::make_unique<SAV>(File);
 
 		if (SavUtils::Sav->GetType() != SavType::_NONE) {
 			if (DoBackup && SavUtils::Sav->GetValid()) SavUtils::CreateBackup(BasePath); // Create Backup, if true.
 		}
 
-		return SavUtils::Sav->GetValid();
+		return SavUtils::Sav->GetType();
 	};
 
 
@@ -61,16 +61,16 @@ namespace S2Editor {
 		const std::string &BasePath: The base path where to create the Backups (Optional).
 		const bool DoBackup: If creating a backup or not after loading the SavFile (Optional).
 
-		Returns True if the Save is Valid and False if Invalid.
+		Returns the SavType of the detected Save.
 	*/
-	bool SavUtils::LoadSav(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size, const std::string &BasePath, const bool DoBackup) {
+	SavType SavUtils::LoadSav(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size, const std::string &BasePath, const bool DoBackup) {
 		SavUtils::Sav = std::make_unique<SAV>(Data, Size);
 
 		if (SavUtils::Sav->GetType() != SavType::_NONE) {
 			if (DoBackup && SavUtils::Sav->GetValid()) SavUtils::CreateBackup(BasePath); // Create Backup, if true.
 		}
 
-		return SavUtils::Sav->GetValid();
+		return SavUtils::Sav->GetType();
 	};
 
 
@@ -125,8 +125,10 @@ namespace S2Editor {
 
 	/*
 		Finish Sav Editing and unload everything.
+
+		const bool Reset: If resetting the Sav Pointer to nullptr after the action or not (True by Default).
 	*/
-	void SavUtils::Finish() {
+	void SavUtils::Finish(const bool Reset) {
 		if (!SavUtils::Sav || !SavUtils::Sav->GetValid() || SavUtils::Sav->GetPath() == "") return;
 
 		/* Ensure that we made changes, otherwise writing is useless. */
@@ -141,8 +143,7 @@ namespace S2Editor {
 			}
 		}
 
-		/* Now at this point, reset the SavType + unique_ptr of the Sav. */
-		SavUtils::Sav = nullptr;
+		if (Reset) SavUtils::Sav = nullptr;
 	};
 
 
@@ -152,8 +153,8 @@ namespace S2Editor {
 	bool SavUtils::ChangesMade() {
 		if (SavUtils::Sav && SavUtils::Sav->GetValid()) {
 			switch(SavUtils::Sav->GetType()) {
-				case S2Editor::SavType::_GBA:
-				case S2Editor::SavType::_NDS:
+				case SavType::_GBA:
+				case SavType::_NDS:
 					return SavUtils::Sav->GetChangesMade();
 
 				case SavType::_NONE:
@@ -176,6 +177,7 @@ namespace S2Editor {
 
 		return DataHelper::ReadBit(SavUtils::Sav->GetData(), Offs, BitIndex);
 	};
+
 	/*
 		Write a bit to the SavData.
 
@@ -203,6 +205,7 @@ namespace S2Editor {
 
 		return DataHelper::ReadBits(SavUtils::Sav->GetData(), Offs, First);
 	};
+
 	/*
 		Write Lower / Upperbits to the SavBuffer.
 
@@ -230,6 +233,7 @@ namespace S2Editor {
 
 		return DataHelper::ReadString(SavUtils::Sav->GetData(), Offs, Length);
 	};
+	
 	/*
 		Write a string to the SavBuffer.
 

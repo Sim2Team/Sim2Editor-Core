@@ -36,9 +36,7 @@ namespace S2Editor {
 
 		const uint32_t DefaultOffs: The Default Offset, for things without an Item in your house.
 	*/
-	uint32_t GBASlot::Offset(const uint32_t DefaultOffs) const {
-		return (this->Offs + DefaultOffs) + (SavUtils::Read<uint8_t>(this->Offs + 0xD6) * 0x6);
-	};
+	uint32_t GBASlot::Offset(const uint32_t DefaultOffs) const { return (this->Offs + DefaultOffs) + (SavUtils::Read<uint8_t>(this->Offs + 0xD6) * 0x6); };
 
 
 	/* Get and Set Time. */
@@ -205,7 +203,7 @@ namespace S2Editor {
 			if (SavUtils::Read<uint8_t>(this->Offset(0x1A3)) == this->EPVals[Idx]) return Idx;
 		}
 
-		return 12; // 12 -> "Unofficial Episode". ;P
+		return 12; // 12 -> "Unofficial Episode".
 	};
 
 	/*
@@ -230,7 +228,7 @@ namespace S2Editor {
 		}
 	};
 
-	/* Get a Minigame class. */
+	/* Return a Minigame class Pointer. */
 	std::unique_ptr<GBAMinigame> GBASlot::Minigame(const uint8_t Game) {
 		return std::make_unique<GBAMinigame>(this->Offset(0x1AD), Game);
 	};
@@ -263,17 +261,17 @@ namespace S2Editor {
 	uint8_t GBASlot::TheChopperColor() const { return SavUtils::ReadBits(this->Offset(0x1F2), true); };
 	void GBASlot::TheChopperColor(const uint8_t V) { SavUtils::WriteBits(this->Offset(0x1F2), true, std::min<uint8_t>(9, V)); };
 
-	/* Get an Episode class. */
+	/* Return an Episode class Pointer. */
 	std::unique_ptr<GBAEpisode> GBASlot::Episode(const uint8_t EP) const {
 		return std::make_unique<GBAEpisode>(this->Slot, EP, SavUtils::Read<uint8_t>(this->Offs + 0xD6));
 	};
 
-	/* Get a Social Move class. */
+	/* Return a Social Move class Pointer. */
 	std::unique_ptr<GBASocialMove> GBASlot::SocialMove(const uint8_t Move) const {
 		return std::make_unique<GBASocialMove>(this->Offset(0x3EE) + (std::min<uint8_t>(14, Move)) * 0x8, Move);
 	};
 
-	/* Get a Cast class. */
+	/* Return a Cast class Pointer. */
 	std::unique_ptr<GBACast> GBASlot::Cast(const uint8_t CST) const {
 		return std::make_unique<GBACast>(this->Offset(0x466) + (std::min<uint8_t>(25, CST)) * 0xA, CST);
 	};

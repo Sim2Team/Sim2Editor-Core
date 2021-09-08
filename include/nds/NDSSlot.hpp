@@ -27,7 +27,7 @@
 #ifndef _SIM2EDITOR_CPP_CORE_NDS_SLOT_HPP
 #define _SIM2EDITOR_CPP_CORE_NDS_SLOT_HPP
 
-#include "CoreCommon.hpp"
+#include "../shared/CoreCommon.hpp"
 
 
 namespace S2Editor {

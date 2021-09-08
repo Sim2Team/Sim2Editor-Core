@@ -34,9 +34,7 @@ namespace S2Editor {
 	void GBAItem::Count(const uint8_t V) { SavUtils::Write<uint8_t>(this->Offs, V); };
 
 	/* Get and Set the Item's ID. */
-	uint8_t GBAItem::ID(const uint8_t Index) const {
-		return SavUtils::Read<uint8_t>(this->Offs + 0x1 + (std::min<uint8_t>(5, Index) * 0x3));
-	};
+	uint8_t GBAItem::ID(const uint8_t Index) const { return SavUtils::Read<uint8_t>(this->Offs + 0x1 + (std::min<uint8_t>(5, Index) * 0x3)); };
 	void GBAItem::ID(const uint8_t Index, const uint8_t V) {
 		SavUtils::Write<uint8_t>(this->Offs + 0x1 + (std::min<uint8_t>(5, Index) * 0x3), V);
 

@@ -34,6 +34,7 @@ namespace S2Editor {
 	uint8_t GBASettings::SFX() const { return SavUtils::Read<uint8_t>(0x8); };
 	void GBASettings::SFX(const uint8_t V) {
 		if (V > 10) return; // 0 - 10 only valid.
+
 		SavUtils::Write<uint8_t>(0x8, this->SFXLevels[V]);
 	};
 
@@ -41,12 +42,14 @@ namespace S2Editor {
 	uint8_t GBASettings::Music() const { return SavUtils::Read<uint8_t>(0x9); };
 	void GBASettings::Music(const uint8_t V) {
 		if (V > 10) return; // 0 - 10 only valid.
+
 		SavUtils::Write<uint8_t>(0x9, this->MusicLevels[V]);
 	};
 
 	/* Get and Set the Language. */
 	GBALanguage GBASettings::Language() const {
 		if (SavUtils::Read<uint8_t>(0xA) > 5) return GBALanguage::EN; // Technically, that would be a "blank" Language in game, but ehh that's not good.
+		
 		return (GBALanguage)SavUtils::Read<uint8_t>(0xA);
 	};
 	void GBASettings::Language(const GBALanguage V) { SavUtils::Write<uint8_t>(0xA, (uint8_t)V); };

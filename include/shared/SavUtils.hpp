@@ -40,10 +40,10 @@ namespace S2Editor {
 	namespace SavUtils {
 		extern std::unique_ptr<SAV> Sav;
 
-		bool LoadSav(const std::string &File, const std::string &BasePath = "", const bool DoBackup = false);
-		bool LoadSav(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size, const std::string &BasePath = "", const bool DoBackup = false);
+		SavType LoadSav(const std::string &File, const std::string &BasePath = "", const bool DoBackup = false);
+		SavType LoadSav(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size, const std::string &BasePath = "", const bool DoBackup = false);
 		bool CreateBackup(const std::string &BasePath);
-		void Finish();
+		void Finish(const bool Reset = true);
 		bool ChangesMade();
 
 

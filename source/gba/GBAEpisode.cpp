@@ -30,12 +30,8 @@
 
 namespace S2Editor {
 	/* Get and Set Episode Ratings. */
-	uint8_t GBAEpisode::Rating(const uint8_t Category) const {
-		return SavUtils::Read<uint8_t>(this->Offs + std::min<uint8_t>(3, Category));
-	};
-	void GBAEpisode::Rating(const uint8_t Category, const uint8_t V) {
-		SavUtils::Write<uint8_t>(this->Offs + std::min<uint8_t>(3, Category), std::min<uint8_t>(25, V));
-	};
+	uint8_t GBAEpisode::Rating(const uint8_t Category) const { return SavUtils::Read<uint8_t>(this->Offs + std::min<uint8_t>(3, Category)); };
+	void GBAEpisode::Rating(const uint8_t Category, const uint8_t V) { SavUtils::Write<uint8_t>(this->Offs + std::min<uint8_t>(3, Category), std::min<uint8_t>(25, V)); };
 
 	/* Get and Set the Unlocked State. */
 	bool GBAEpisode::State() const { return SavUtils::Read<uint8_t>(this->Offs + 0x4); };

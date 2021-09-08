@@ -88,21 +88,21 @@ namespace S2Editor {
 
 	/* Get the Rank name of the Painting. */
 	std::string NDSPainting::RankName() const {
-		if (this->Flag() >= 0x29) return S2Editor::Strings::NDSPaintingRankNames_EN[0]; // 0x29+ is out of scope. Only range 0x0 - 0x28 is valid.
+		if (this->Flag() >= 0x29) return Strings::NDSPaintingRankNames_EN[0]; // 0x29+ is out of scope. Only range 0x0 - 0x28 is valid.
 
 		const uint8_t Category = 1 + (this->Flag() / 8);
-		return (this->Flag() % 2 == 0 ? S2Editor::Strings::NDSPaintingRankNames_EN[0] : S2Editor::Strings::NDSPaintingRankNames_EN[std::min<uint8_t>(5, Category)]);
+		return (this->Flag() % 2 == 0 ? Strings::NDSPaintingRankNames_EN[0] : Strings::NDSPaintingRankNames_EN[std::min<uint8_t>(5, Category)]);
 	};
 
 	/* Update the Checksum of the Painting. */
 	void NDSPainting::UpdateChecksum() {
 		/* First: Main. */
-		uint16_t Calced = S2Editor::Checksum::Calc(SavUtils::Sav->GetData(), (this->Offs + 0x10) / 2, (this->Offs + 0x400) / 2, { (this->Offs + 0x10) / 2 });
+		uint16_t Calced = Checksum::Calc(SavUtils::Sav->GetData(), (this->Offs + 0x10) / 2, (this->Offs + 0x400) / 2, { (this->Offs + 0x10) / 2 });
 		uint16_t CurCHKS = SavUtils::Read<uint16_t>(this->Offs + 0x10);
 		if (CurCHKS != Calced) SavUtils::Write<uint16_t>(this->Offs + 0x10, Calced);
 
 		/* Then: Header. */
-		Calced = S2Editor::Checksum::Calc(SavUtils::Sav->GetData(), (this->Offs) / 2, (this->Offs + 0x13) / 2, { (this->Offs + 0xE) / 2 });
+		Calced = Checksum::Calc(SavUtils::Sav->GetData(), (this->Offs) / 2, (this->Offs + 0x13) / 2, { (this->Offs + 0xE) / 2 });
 		CurCHKS = SavUtils::Read<uint16_t>(this->Offs + 0xE);
 		if (CurCHKS != Calced) SavUtils::Write<uint16_t>(this->Offs + 0xE, Calced);
 	};

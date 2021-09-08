@@ -138,6 +138,12 @@ namespace S2Editor {
 
 				break;
 			}
+
+			/* Invalid. */
+			default:
+				this->SavValid = false;
+				this->SType = SavType::_NONE;
+				break;
 		}
 	};
 
@@ -220,7 +226,7 @@ namespace S2Editor {
 
 
 	/*
-		Return a GBASlot class.
+		Return a GBASlot class pointer.
 
 		const uint8_t Slot: The GBASav Slot ( 1 - 4 ).
 	*/
@@ -231,7 +237,7 @@ namespace S2Editor {
 	};
 
 
-	/* Get a GBASettings class. */
+	/* Return a GBASettings class pointer. */
 	std::unique_ptr<GBASettings> SAV::_GBASettings() const {
 		if (this->SType != SavType::_GBA) return nullptr;
 
@@ -240,7 +246,7 @@ namespace S2Editor {
 
 
 	/*
-		Return a NDSSlot class.
+		Return a NDSSlot class pointer.
 
 		const uint8_t Slot: The NDSSav Slot ( 0 - 2 ).
 	*/
@@ -252,7 +258,7 @@ namespace S2Editor {
 
 
 	/*
-		Return a NDSPainting class.
+		Return a NDSPainting class pointer.
 
 		const uint8_t Idx: The Painting Index ( 0 - 19 ).
 	*/

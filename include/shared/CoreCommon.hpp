@@ -27,10 +27,10 @@
 #ifndef _SIM2EDITOR_CPP_CORE_COMMON_HPP
 #define _SIM2EDITOR_CPP_CORE_COMMON_HPP
 
-#include <cstring>
-#include <math.h>
-#include <memory>
-#include <string>
+#include <cstring> // std::memcpy.
+#include <math.h> // std::min and std::max.
+#include <memory> // std::unique_ptr.
+#include <string> // Base include.
 
 
 namespace S2Editor {

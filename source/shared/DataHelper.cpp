@@ -40,6 +40,7 @@ namespace S2Editor {
 
 		return (Buffer[Offs] >> BitIndex & 1) != 0;
 	};
+
 	/*
 		Set a bit to a Buffer.
 
@@ -73,6 +74,7 @@ namespace S2Editor {
 		if (First) return (Buffer[Offs] & 0xF); // Bit 0 - 3.
 		else return (Buffer[Offs] >> 4); // Bit 4 - 7.
 	};
+
 	/*
 		Write Lower / Upper Bits.
 
@@ -99,6 +101,8 @@ namespace S2Editor {
 		const uint8_t *Buffer: The SavBuffer.
 		const uint32_t Offs: The Offset from where to read from.
 		const uint32_t Length: The Length to read.
+
+		TODO: Japanese NDS Version String Handling.
 	*/
 	const std::string DataHelper::ReadString(const uint8_t *Buffer, const uint32_t Offs, const uint32_t Length) {
 		if (!Buffer) return "";
@@ -112,6 +116,7 @@ namespace S2Editor {
 
 		return Str;
 	};
+
 	/*
 		Write a string to a Buffer.
 
@@ -119,6 +124,8 @@ namespace S2Editor {
 		const uint32_t Offs: The offset from where to write to.
 		const uint32_t Length: The length to write.
 		const std::string &Str: The string to write.
+
+		TODO: Japanese NDS Version String Handling.
 
 		Returns true if success, false if not.
 	*/

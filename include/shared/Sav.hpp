@@ -42,6 +42,7 @@ namespace S2Editor {
 
 		void ValidationCheck();
 		bool SlotExist(const uint8_t Slot) const;
+		void SetChangesMade(const bool V) { this->ChangesMade = V; };
 		void Finish();
 
 		/* GBA Core returns. */
@@ -52,15 +53,16 @@ namespace S2Editor {
 		std::unique_ptr<NDSSlot> _NDSSlot(const uint8_t Slot) const;
 		std::unique_ptr<NDSPainting> _NDSPainting(const uint8_t Idx) const;
 
-		/* Some Returns. */
+		/* Some basic returns. */
 		uint32_t GetSize() const { return this->SavSize; };
 		uint8_t *GetData() const { return this->SavData.get(); };
 		SavType GetType() const { return this->SType; };
-		NDSSavRegion GetRegion() const { return this->Region; };
-		bool GetValid() const { return this->SavValid; };
 		bool GetChangesMade() const { return this->ChangesMade; };
-		void SetChangesMade(const bool V) { this->ChangesMade = V; };
+		bool GetValid() const { return this->SavValid; };
 		std::string GetPath() const { return this->SavPath; };
+
+		/* NDS returns. */
+		NDSSavRegion GetRegion() const { return this->Region; };
 	private:
 		/* Some basic vars. */
 		std::unique_ptr<uint8_t[]> SavData = nullptr;
@@ -77,8 +79,8 @@ namespace S2Editor {
 		int8_t InitNDSSlotIdxs(const uint8_t SavSlot, const uint8_t Reg);
 
 		/* Identifiers to check for Savetypes. */
-		static constexpr uint8_t GBAIdent[7] = { 0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34 };
-		static constexpr uint8_t NDSIdent[8] = { 0x64, 0x61, 0x74, 0x0, 0x1F, 0x0, 0x0, 0x0 };
+		static constexpr uint8_t GBAIdent[0x7] = { 0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34 };
+		static constexpr uint8_t NDSIdent[0x8] = { 0x64, 0x61, 0x74, 0x0, 0x1F, 0x0, 0x0, 0x0 };
 	};
 };
 
