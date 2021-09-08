@@ -59,6 +59,7 @@ namespace S2Editor {
 		return true;
 	};
 
+
 	/*
 		Read Lower / Upper Bits.
 
@@ -90,6 +91,7 @@ namespace S2Editor {
 
 		return true;
 	};
+
 
 	/*
 		Read a string from a Buffer.

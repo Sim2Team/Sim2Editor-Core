@@ -33,8 +33,8 @@
 namespace S2Editor {
 	class NDSSlot {
 	public:
-		NDSSlot(const uint8_t Slot, const NDSSavRegion Reg)
-			: Slot(Slot), Offs(Slot * 0x1000), Region(Reg) { };
+		NDSSlot(const uint8_t Slot)
+			: Slot(Slot), Offs(Slot * 0x1000) { };
 
 		/* Main things. */
 		uint32_t Simoleons() const;
@@ -74,7 +74,6 @@ namespace S2Editor {
 	private:
 		uint8_t Slot = 0;
 		uint32_t Offs = 0;
-		NDSSavRegion Region = NDSSavRegion::Unknown;
 	};
 };
 

@@ -31,32 +31,32 @@
 
 namespace S2Editor {
 	/* Get and Set the Sound Effect Volume. */
-	uint8_t GBASettings::SFX() const { return GBASavUtils::Read<uint8_t>(0x8); };
+	uint8_t GBASettings::SFX() const { return SavUtils::Read<uint8_t>(0x8); };
 	void GBASettings::SFX(const uint8_t V) {
 		if (V > 10) return; // 0 - 10 only valid.
-		GBASavUtils::Write<uint8_t>(0x8, this->SFXLevels[V]);
+		SavUtils::Write<uint8_t>(0x8, this->SFXLevels[V]);
 	};
 
 	/* Get and Set the Music Volume. */
-	uint8_t GBASettings::Music() const { return GBASavUtils::Read<uint8_t>(0x9); };
+	uint8_t GBASettings::Music() const { return SavUtils::Read<uint8_t>(0x9); };
 	void GBASettings::Music(const uint8_t V) {
 		if (V > 10) return; // 0 - 10 only valid.
-		GBASavUtils::Write<uint8_t>(0x9, this->MusicLevels[V]);
+		SavUtils::Write<uint8_t>(0x9, this->MusicLevels[V]);
 	};
 
 	/* Get and Set the Language. */
 	GBALanguage GBASettings::Language() const {
-		if (GBASavUtils::Read<uint8_t>(0xA) > 5) return GBALanguage::EN; // Technically, that would be a "blank" Language in game, but ehh that's not good.
-		return (GBALanguage)GBASavUtils::Read<uint8_t>(0xA);
+		if (SavUtils::Read<uint8_t>(0xA) > 5) return GBALanguage::EN; // Technically, that would be a "blank" Language in game, but ehh that's not good.
+		return (GBALanguage)SavUtils::Read<uint8_t>(0xA);
 	};
-	void GBASettings::Language(const GBALanguage V) { GBASavUtils::Write<uint8_t>(0xA, (uint8_t)V); };
+	void GBASettings::Language(const GBALanguage V) { SavUtils::Write<uint8_t>(0xA, (uint8_t)V); };
 
 	/* Update the Checksum of the GBA Settings. */
 	void GBASettings::UpdateChecksum() {
-		const uint16_t CurCHKS = GBASavUtils::Read<uint16_t>(0xE);
-		const uint16_t Calced = Checksum::Calc(GBASavUtils::Sav->GetData(), 0x0, 0x18 / 2, { 0xE / 2 });
+		const uint16_t CurCHKS = SavUtils::Read<uint16_t>(0xE);
+		const uint16_t Calced = Checksum::Calc(SavUtils::Sav->GetData(), 0x0, 0x18 / 2, { 0xE / 2 });
 
 		/* If the calced result is NOT the current checksum. */
-		if (Calced != CurCHKS) GBASavUtils::Write<uint16_t>(0xE, Calced);
+		if (Calced != CurCHKS) SavUtils::Write<uint16_t>(0xE, Calced);
 	};
 };

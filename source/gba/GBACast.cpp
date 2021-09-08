@@ -30,30 +30,30 @@
 
 namespace S2Editor {
 	/* Get and Set Friendly Conversation level. */
-	uint8_t GBACast::Friendly() const { return GBASavUtils::Read<uint8_t>(this->Offs); };
-	void GBACast::Friendly(const uint8_t V) { GBASavUtils::Write<uint8_t>(this->Offs, std::min<uint8_t>(3, V)); };
+	uint8_t GBACast::Friendly() const { return SavUtils::Read<uint8_t>(this->Offs); };
+	void GBACast::Friendly(const uint8_t V) { SavUtils::Write<uint8_t>(this->Offs, std::min<uint8_t>(3, V)); };
 
 	/* Get and Set Romance Conversation level. */
-	uint8_t GBACast::Romance() const { return GBASavUtils::Read<uint8_t>(this->Offs + 0x1); };
-	void GBACast::Romance(const uint8_t V) { GBASavUtils::Write<uint8_t>(this->Offs + 0x1, std::min<uint8_t>(3, V)); };
+	uint8_t GBACast::Romance() const { return SavUtils::Read<uint8_t>(this->Offs + 0x1); };
+	void GBACast::Romance(const uint8_t V) { SavUtils::Write<uint8_t>(this->Offs + 0x1, std::min<uint8_t>(3, V)); };
 
 	/* Get and Set Intimidate Conversation level. */
-	uint8_t GBACast::Intimidate() const { return GBASavUtils::Read<uint8_t>(this->Offs + 0x2); };
-	void GBACast::Intimidate(const uint8_t V) { GBASavUtils::Write<uint8_t>(this->Offs + 0x2, std::min<uint8_t>(3, V)); };
+	uint8_t GBACast::Intimidate() const { return SavUtils::Read<uint8_t>(this->Offs + 0x2); };
+	void GBACast::Intimidate(const uint8_t V) { SavUtils::Write<uint8_t>(this->Offs + 0x2, std::min<uint8_t>(3, V)); };
 
 	/* Get and Set Cast Feeling. */
-	GBACastFeeling GBACast::Feeling() const { return (GBACastFeeling)GBASavUtils::Read<uint8_t>(this->Offs + 0x3); };
-	void GBACast::Feeling(const GBACastFeeling V) { GBASavUtils::Write<uint8_t>(this->Offs + 0x3, (uint8_t)V); };
+	GBACastFeeling GBACast::Feeling() const { return (GBACastFeeling)SavUtils::Read<uint8_t>(this->Offs + 0x3); };
+	void GBACast::Feeling(const GBACastFeeling V) { SavUtils::Write<uint8_t>(this->Offs + 0x3, (uint8_t)V); };
 
 	/* Get and Set the hours how long the feeling lasts. */
-	uint8_t GBACast::FeelingEffectHours() const { return GBASavUtils::Read<uint8_t>(this->Offs + 0x6); };
-	void GBACast::FeelingEffectHours(const uint8_t V) { GBASavUtils::Write<uint8_t>(this->Offs + 0x6, V); };
+	uint8_t GBACast::FeelingEffectHours() const { return SavUtils::Read<uint8_t>(this->Offs + 0x6); };
+	void GBACast::FeelingEffectHours(const uint8_t V) { SavUtils::Write<uint8_t>(this->Offs + 0x6, V); };
 
 	/* Get and Set registered on phone state. */
-	bool GBACast::RegisteredOnPhone() const { return GBASavUtils::Read<uint8_t>(this->Offs + 0x7); };
-	void GBACast::RegisteredOnPhone(const bool V) { GBASavUtils::Write<uint8_t>(this->Offs + 0x7, V); };
+	bool GBACast::RegisteredOnPhone() const { return SavUtils::Read<uint8_t>(this->Offs + 0x7); };
+	void GBACast::RegisteredOnPhone(const bool V) { SavUtils::Write<uint8_t>(this->Offs + 0x7, V); };
 
 	/* Get and Set Secret Unlock state. */
-	bool GBACast::Secret() const { return GBASavUtils::Read<uint8_t>(this->Offs + 0x8); };
-	void GBACast::Secret(const bool V) { GBASavUtils::Write<uint8_t>(this->Offs + 0x8, V); };
+	bool GBACast::Secret() const { return SavUtils::Read<uint8_t>(this->Offs + 0x8); };
+	void GBACast::Secret(const bool V) { SavUtils::Write<uint8_t>(this->Offs + 0x8, V); };
 };

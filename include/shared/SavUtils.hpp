@@ -28,8 +28,7 @@
 #define _SIM2EDITOR_CPP_CORE_SAV_UTILS_HPP
 
 #include "DataHelper.hpp"
-#include "../gba/GBASav.hpp"
-#include "../nds/NDSSav.hpp"
+#include "Sav.hpp"
 
 
 namespace S2Editor {
@@ -39,22 +38,14 @@ namespace S2Editor {
 		Used for SavType Detection and various other common things.
 	*/
 	namespace SavUtils {
-		extern SavType Sav; // Active SavType.
-		extern std::string SavName;
+		extern std::unique_ptr<SAV> Sav;
 
-		SavType DetectType(const std::string &File);
-		SavType DetectType(const std::unique_ptr<uint8_t[]> &Data, const uint32_t Size);
 		bool LoadSav(const std::string &File, const std::string &BasePath = "", const bool DoBackup = false);
 		bool LoadSav(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size, const std::string &BasePath = "", const bool DoBackup = false);
 		bool CreateBackup(const std::string &BasePath);
 		void Finish();
 		bool ChangesMade();
-	};
 
-
-	/* SavUtils for GBA. */
-	namespace GBASavUtils {
-		extern std::unique_ptr<GBASav> Sav;
 
 		/*
 			Read from the SavBuffer.
@@ -63,8 +54,8 @@ namespace S2Editor {
 		*/
 		template <typename T>
 		T Read(const uint32_t Offs) {
-			if (!GBASavUtils::Sav || !GBASavUtils::Sav->GetValid() || !GBASavUtils::Sav->GetData()) return 0;
-			return DataHelper::Read<T>(GBASavUtils::Sav->GetData(), Offs);
+			if (!SavUtils::Sav || !SavUtils::Sav->GetValid() || !SavUtils::Sav->GetData()) return 0;
+			return DataHelper::Read<T>(SavUtils::Sav->GetData(), Offs);
 		};
 
 		/*
@@ -75,50 +66,10 @@ namespace S2Editor {
 		*/
 		template <typename T>
 		void Write(const uint32_t Offs, T Data) {
-			if (!GBASavUtils::Sav || !GBASavUtils::Sav->GetValid()) return;
+			if (!SavUtils::Sav || !SavUtils::Sav->GetValid()) return;
 
-			if (DataHelper::Write<T>(GBASavUtils::Sav->GetData(), Offs, Data)) {
-				if (!GBASavUtils::Sav->GetChangesMade()) GBASavUtils::Sav->SetChangesMade(true);
-			}
-		};
-
-		/* BIT stuff. */
-		const bool ReadBit(const uint32_t Offs, const uint8_t BitIndex);
-		void WriteBit(const uint32_t Offs, const uint8_t BitIndex, const bool IsSet);
-		const uint8_t ReadBits(const uint32_t Offs, const bool First = true);
-		void WriteBits(const uint32_t Offs, const bool First = true, const uint8_t Data = 0x0);
-
-		const std::string ReadString(const uint32_t Offs, const uint32_t Length);
-		void WriteString(const uint32_t Offs, const uint32_t Length, const std::string &Str);
-	};
-
-	/* SavUtils for NDS. */
-	namespace NDSSavUtils {
-		extern std::unique_ptr<NDSSav> Sav;
-
-		/*
-			Read from the SavBuffer.
-
-			const uint32_t Offs: The Offset from where to read.
-		*/
-		template <typename T>
-		T Read(const uint32_t Offs) {
-			if (!NDSSavUtils::Sav || !NDSSavUtils::Sav->GetValid() || !NDSSavUtils::Sav->GetData()) return 0;
-			return DataHelper::Read<T>(NDSSavUtils::Sav->GetData(), Offs);
-		};
-
-		/*
-			Write to the SavBuffer.
-
-			const uint32_t Offs: The Offset where to write to.
-			T Data: The data which to write.
-		*/
-		template <typename T>
-		void Write(const uint32_t Offs, T Data) {
-			if (!NDSSavUtils::Sav || !NDSSavUtils::Sav->GetValid()) return;
-
-			if (DataHelper::Write<T>(NDSSavUtils::Sav->GetData(), Offs, Data)) {
-				if (!NDSSavUtils::Sav->GetChangesMade()) NDSSavUtils::Sav->SetChangesMade(true);
+			if (DataHelper::Write<T>(SavUtils::Sav->GetData(), Offs, Data)) {
+				if (!SavUtils::Sav->GetChangesMade()) SavUtils::Sav->SetChangesMade(true);
 			}
 		};
 

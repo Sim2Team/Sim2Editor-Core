@@ -51,6 +51,7 @@ namespace S2Editor {
 		return TimeBuffer;
 	};
 
+
 	/*
 		Returns the current Simoleon amount as a string.
 
@@ -84,6 +85,7 @@ namespace S2Editor {
 		return SString;
 	};
 
+
 	/*
 		Returns the current Ratings as a string.
 
@@ -98,6 +100,7 @@ namespace S2Editor {
 		if (RString.size() > 3) RString.insert(RString.end() - 3, '.');
 		return RString;
 	};
+
 
 	/*
 		Return the Name from an GBA Item.

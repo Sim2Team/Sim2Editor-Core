@@ -24,39 +24,61 @@
 *         reasonable ways as different from the original version.
 */
 
-#ifndef _SIM2EDITOR_CPP_CORE_GBA_SAV_HPP
-#define _SIM2EDITOR_CPP_CORE_GBA_SAV_HPP
+#ifndef _SIM2EDITOR_CPP_CORE_SAV_HPP
+#define _SIM2EDITOR_CPP_CORE_SAV_HPP
 
-#include "GBASettings.hpp"
-#include "GBASlot.hpp"
+#include "CoreCommon.hpp"
+#include "../gba/GBASettings.hpp"
+#include "../gba/GBASlot.hpp"
+#include "../nds/NDSPainting.hpp"
+#include "../nds/NDSSlot.hpp"
 
 
 namespace S2Editor {
-	class GBASav {
+	class SAV {
 	public:
-		GBASav(const std::string &SavFile);
-		GBASav(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size);
+		SAV(const std::string &SavFile);
+		SAV(std::unique_ptr<uint8_t[]> &Data, const uint32_t Size);
 
 		void ValidationCheck();
-
 		bool SlotExist(const uint8_t Slot) const;
-
-		/* Core Returns and Actions. */
-		std::unique_ptr<GBASlot> Slot(const uint8_t Slot) const;
-		std::unique_ptr<GBASettings> Settings() const;
 		void Finish();
+
+		/* GBA Core returns. */
+		std::unique_ptr<GBASlot> _GBASlot(const uint8_t Slot) const;
+		std::unique_ptr<GBASettings> _GBASettings() const;
+
+		/* NDS Core returns. */
+		std::unique_ptr<NDSSlot> _NDSSlot(const uint8_t Slot) const;
+		std::unique_ptr<NDSPainting> _NDSPainting(const uint8_t Idx) const;
 
 		/* Some Returns. */
 		uint32_t GetSize() const { return this->SavSize; };
 		uint8_t *GetData() const { return this->SavData.get(); };
+		SavType GetType() const { return this->SType; };
+		NDSSavRegion GetRegion() const { return this->Region; };
 		bool GetValid() const { return this->SavValid; };
 		bool GetChangesMade() const { return this->ChangesMade; };
 		void SetChangesMade(const bool V) { this->ChangesMade = V; };
+		std::string GetPath() const { return this->SavPath; };
 	private:
+		/* Some basic vars. */
 		std::unique_ptr<uint8_t[]> SavData = nullptr;
 		uint32_t SavSize = 0;
 		bool SavValid = false, ChangesMade = false;
+		std::string SavPath = "";
+
+		/* Savtype & NDS Region. */
+		SavType SType = SavType::_NONE;
+		NDSSavRegion Region = NDSSavRegion::Unknown;
+
+		/* NDS only Related things. */
+		int8_t NDSSlots[3] = { -1, -1, -1 };
+		int8_t InitNDSSlotIdxs(const uint8_t SavSlot, const uint8_t Reg);
+
+		/* Identifiers to check for Savetypes. */
 		static constexpr uint8_t GBAIdent[7] = { 0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34 };
+		static constexpr uint8_t NDSIdent[8] = { 0x64, 0x61, 0x74, 0x0, 0x1F, 0x0, 0x0, 0x0 };
 	};
 };
 
