@@ -28,7 +28,7 @@
 #include "../shared/SavUtils.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	/* Get and Set the Item Count. */
 	uint8_t GBAItem::Count() const { return SavUtils::Read<uint8_t>(this->Offs); };
 	void GBAItem::Count(const uint8_t V) { SavUtils::Write<uint8_t>(this->Offs, V); };

@@ -33,7 +33,7 @@
 #include <string> // Base include.
 
 
-namespace S2Editor {
+namespace S2Core {
 	enum class SavType : uint8_t { _GBA = 0x0, _NDS, _NONE };
 	enum class NDSSavRegion : uint8_t { Unknown = 0x0, Int, Jpn };
 };

@@ -30,7 +30,7 @@
 #include "CoreCommon.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	namespace DataHelper {
 		/*
 			Read from a Buffer.

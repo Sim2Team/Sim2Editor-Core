@@ -29,7 +29,7 @@
 #include "../shared/SavUtils.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	/*
 		The House Item Amount seems to affect some stuff and move things around for 0x6 per Item.
 		So, we get the Item Count of the House from the 0xD6'th Byte from the GBASlot.

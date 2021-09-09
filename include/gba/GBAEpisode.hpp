@@ -30,7 +30,7 @@
 #include "../shared/CoreCommon.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	class GBAEpisode {
 	public:
 		GBAEpisode(const uint8_t Slot, const uint8_t Episode, const uint8_t Move = 0x0)

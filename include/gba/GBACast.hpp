@@ -30,7 +30,7 @@
 #include "../shared/CoreCommon.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	enum class GBACastFeeling : uint8_t { Neutral, Friendly, Angry, Love, Invalid };
 
 	class GBACast {

@@ -27,7 +27,7 @@
 #include "Strings.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	const std::vector<std::string> Strings::GBASocialMoveNames_DE = {
 		"Plaudern", "Unterhalten", "Umarmen", "Prahlen",
 		"Entschuldigen", "Schmeicheln", "Flirten", "Kuss zuwerfen",

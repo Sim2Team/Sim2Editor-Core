@@ -27,7 +27,7 @@
 #include "Checksum.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	/*
 		I rewrote the Checksum calculation function, to WORK with both, GBA and NDS versions.
 

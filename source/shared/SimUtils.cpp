@@ -28,7 +28,7 @@
 #include "../Strings.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	/*
 		Returns the current time as a 24 Hr or 12 Hr string.
 

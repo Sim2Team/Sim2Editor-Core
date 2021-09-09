@@ -29,7 +29,7 @@
 #include "../shared/SavUtils.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	/* Get and Set Simoleons. */
 	uint32_t NDSSlot::Simoleons() const { return SavUtils::Read<uint32_t>(this->Offs + 0x2C); };
 	void NDSSlot::Simoleons(uint32_t V) { SavUtils::Write<uint32_t>(this->Offs + 0x2C, (std::min<uint32_t>(999999, V))); };

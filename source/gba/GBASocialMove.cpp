@@ -28,7 +28,7 @@
 #include "../shared/SavUtils.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	/* Get and Set the Social Move Flag. */
 	SocialMoveFlag GBASocialMove::Flag() const { return (SocialMoveFlag)SavUtils::Read<uint8_t>(this->Offs); };
 	void GBASocialMove::Flag(const SocialMoveFlag V) { SavUtils::Write<uint8_t>(this->Offs, (uint8_t)V); };

@@ -30,7 +30,7 @@
 #include "../shared/CoreCommon.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	class GBAMinigame {
 	public:
 		GBAMinigame(const uint32_t Offs, const uint8_t Game)

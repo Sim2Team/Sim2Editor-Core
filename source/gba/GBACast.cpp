@@ -28,7 +28,7 @@
 #include "../shared/SavUtils.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	/* Get and Set Friendly Conversation level. */
 	uint8_t GBACast::Friendly() const { return SavUtils::Read<uint8_t>(this->Offs); };
 	void GBACast::Friendly(const uint8_t V) { SavUtils::Write<uint8_t>(this->Offs, std::min<uint8_t>(3, V)); };

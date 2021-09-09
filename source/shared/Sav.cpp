@@ -29,7 +29,7 @@
 #include "Sav.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	/*
 		Initialize the Sav.
 

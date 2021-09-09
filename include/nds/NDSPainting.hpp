@@ -30,7 +30,7 @@
 #include "../shared/CoreCommon.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	class NDSPainting {
 	public:
 		NDSPainting(const uint8_t Idx)

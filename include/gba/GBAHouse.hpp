@@ -31,7 +31,7 @@
 #include "../shared/CoreCommon.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	class GBAHouse {
 	public:
 		GBAHouse(const uint32_t Offset)

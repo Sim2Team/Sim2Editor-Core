@@ -30,7 +30,7 @@
 #include "../shared/CoreCommon.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	class NDSSlot {
 	public:
 		NDSSlot(const uint8_t Slot)

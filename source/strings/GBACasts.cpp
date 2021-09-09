@@ -27,7 +27,7 @@
 #include "Strings.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	const std::vector<std::string> Strings::GBACastNames_DE = {
 		"Imperator Xizzle", "Burpel", "Ara Fusilli", "Kulio Raubein",
 		"Avra Kadavra", "Bigfoot", "Frankie Fusilli", "Eber-Eddie",

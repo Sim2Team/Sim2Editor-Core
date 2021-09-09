@@ -30,7 +30,7 @@
 #include <string>
 
 
-namespace S2Editor {
+namespace S2Core {
 	namespace SimUtils {
 		const std::string TimeString(const uint16_t Time, const bool AMPM = false);
 		const std::string SimoleonsString(const uint32_t Simoleons);

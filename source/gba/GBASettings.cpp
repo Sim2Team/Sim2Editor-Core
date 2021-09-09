@@ -29,7 +29,7 @@
 #include "../shared/SavUtils.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	/* Get and Set the Sound Effect Volume. */
 	uint8_t GBASettings::SFX() const { return SavUtils::Read<uint8_t>(0x8); };
 	void GBASettings::SFX(const uint8_t V) {

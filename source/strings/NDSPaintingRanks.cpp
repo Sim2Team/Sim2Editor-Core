@@ -27,7 +27,7 @@
 #include "Strings.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	const std::vector<std::string> Strings::NDSPaintingRankNames_EN = {
 		"Blank Canvas", "Garbage", "Ordinary", "Respectable", "Masterpiece", "Magnum Opus"
 	};

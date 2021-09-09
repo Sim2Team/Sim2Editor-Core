@@ -29,8 +29,7 @@
 #include <unistd.h>
 
 
-
-namespace S2Editor {
+namespace S2Core {
 	std::unique_ptr<SAV> SavUtils::Sav = nullptr;
 
 	/*

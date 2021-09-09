@@ -31,7 +31,7 @@
 #include <vector>
 
 
-namespace S2Editor {
+namespace S2Core {
 	namespace Strings {
 		/* GBA Strings. */
 		extern const std::vector<std::string> GBACastNames_DE, GBACastNames_EN; // GBA Casts.

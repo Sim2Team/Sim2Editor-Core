@@ -30,7 +30,7 @@
 #include "../shared/CoreCommon.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	/* GBA Languages. */
 	enum class GBALanguage : uint8_t {
 		EN, // English

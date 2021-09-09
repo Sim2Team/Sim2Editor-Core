@@ -34,7 +34,7 @@
 #include "../nds/NDSSlot.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	class SAV {
 	public:
 		SAV(const std::string &SavFile);

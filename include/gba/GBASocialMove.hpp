@@ -30,7 +30,7 @@
 #include "../shared/CoreCommon.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	enum class SocialMoveFlag : uint8_t { Locked = 0x0, Unlocked = 0x1, Blocked = 0x2 };
 
 	class GBASocialMove {

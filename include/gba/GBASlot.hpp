@@ -36,7 +36,7 @@
 #include "../shared/CoreCommon.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	class GBASlot {
 	public:
 		GBASlot(const uint8_t Slot)

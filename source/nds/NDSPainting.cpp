@@ -30,7 +30,7 @@
 #include "../shared/SavUtils.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	/*
 		Checks, if the Painting is valid by checking it's 5 byte Identifier.
 	*/

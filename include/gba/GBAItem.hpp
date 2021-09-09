@@ -40,7 +40,7 @@
 
 		0xE6 is known as an Empty Item ID.
 */
-namespace S2Editor {
+namespace S2Core {
 	class GBAItem {
 	public:
 		GBAItem(const uint32_t Offset)

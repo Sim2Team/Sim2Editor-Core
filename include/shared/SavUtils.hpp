@@ -31,7 +31,7 @@
 #include "Sav.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	/*
 		SavUtils for common things.
 

@@ -28,7 +28,7 @@
 #include "../shared/SavUtils.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	/*
 		Get and Set the Room Design.
 		Only 0 - 3 SHOULD be used at all, the others aren't actual room designs and instead may cause issues.

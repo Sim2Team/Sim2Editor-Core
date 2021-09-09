@@ -27,7 +27,7 @@
 #include "DataHelper.hpp"
 
 
-namespace S2Editor {
+namespace S2Core {
 	/*
 		Return a bit from a Buffer.
 
