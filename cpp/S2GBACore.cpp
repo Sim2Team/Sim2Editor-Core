@@ -1,5 +1,5 @@
 /*
-*   This file is part of Sim2Editor-CPPCore
+*   This file is part of S2GBACore
 *   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@
 #include "S2GBACore.hpp" // main include.
 #include <unistd.h> // access().
 
+
 /*
 	--------------------------------------------------
 	The Sims 2 Game Boy Advance Save File Editing Core
@@ -34,53 +35,51 @@
 
 	File: B46P.sav
 	Authors: SuperSaiyajinStackZ, Sim2Team
-	Version: 0.2
+	Version: 0.3
 	Purpose: Easy editing of a The Sims 2 Game Boy Advance Savefile.
 	Category: Save File Editing Core
-	Last Updated: 21 August 2021
+	Last Updated: 21 October 2021
 	--------------------------------------------------
 
-	Research used from here: https://github.com/Sim2Team/Sim2Research.
-
+	Research used from here: https://sim2team.github.io/wiki/research/sims2gba.
 
 	-----------------------
 	Explanation of the Core
 	-----------------------
 
-	* Use S2GBACore::SaveHandler::LoadSav(const std::string &) to load a SAVFile from your SD Card.
-	* Use S2GBACore::SaveHandler::LoadSav(const std::unique_ptr<uint8_t[]> &) to load a SAVFile from an already existing Buffer.
-	* Use S2GBACore::SaveHandler::Finish() to update all the Checksums.
-	* Use S2GBACore::SaveHandler::WriteBack(const std::string &) to write your changes back to the File.
-	* Use S2GBACore::Sav to access the Save Pointer and with that.. all the sub classes if needed. DO NOT ACCESS THOSE OUTSIDE, BECAUSE THEY RELY ON S2GBACore::Sav's POINTER!!!
+	- Use S2GBACore::SaveHandler::LoadSav(const std::string &) to load a SAVFile from from a file.
+	- Use S2GBACore::SaveHandler::LoadSav(const std::unique_ptr<uint8_t[]> &) to load a SAVFile from an already existing Buffer.
+	- Use S2GBACore::Sav::Finish() to update all the Checksums.
+	- Use S2GBACore::SaveHandler::WriteBack(const std::string &) to write your changes back to the File.
+	- Use S2GBACore::Sav to access the Save Pointer and with that.. all the sub classes if needed. DO NOT ACCESS THOSE OUTSIDE, BECAUSE THEY RELY ON S2GBACore::Sav's POINTER!!!
 
 	Another Note about THIS Core:
-		THIS IS NOT THREAD-SAFE!!!, because I don't care about it, since I don't really work with Threads anyways.
+		THIS IS NOT THREAD-SAFE!!!, because I (SuperSaiyajinStackZ) don't care about it, since I don't really work with Threads anyways.
 
 	To compile, you need to compile this with C++17 or above.
-
 
 	-------------------------------
 	Notes about the GBA Save itself
 	-------------------------------
 
-	* Only 0x5000 of 0x10000 / 0x20000 are used at all. 0x5000+ is unused / 0xFF padding so far I could see.
-	* The Savefile has 5 Checksums in place. (See the Checksum namespace for reference on how to calculate it).
+	- Only 0x5000 of 0x10000 / 0x20000 are used at all. 0x5000+ is unused / 0xFF padding so far I could see.
+	- The Savefile has 5 Checksums in place. (See the Checksum namespace for reference on how to calculate it).
 
 	The Checksum locations are the following:
-	* 0xE - 0xF (Range: 0x0 - 0x18) -- That is the Settings Checksum. This should always be valid or it formats the complete Savefile!
-	* 0x1FFE - 0x1FFF (Range: 0x1000 - 0x1FFF) -- That is the first Save Slot Checksum.
-	* 0x2FFE - 0x2FFF (Range: 0x2000 - 0x2FFF) -- That is the second Save Slot Checksum.
-	* 0x3FFE - 0x3FFF (Range: 0x3000 - 0x3FFF) -- That is the third Save Slot Checksum.
-	* 0x4FFE - 0x4FFF (Range: 0x4000 - 0x4FFF) -- That is the fourth Save Slot Checksum.
+		- 0xE - 0xF (Range: 0x0 - 0x18) -- That is the Settings Checksum. This should always be valid or it formats the complete Savefile!
+		- 0x1FFE - 0x1FFF (Range: 0x1000 - 0x1FFF) -- That is the first Save Slot Checksum.
+		- 0x2FFE - 0x2FFF (Range: 0x2000 - 0x2FFF) -- That is the second Save Slot Checksum.
+		- 0x3FFE - 0x3FFF (Range: 0x3000 - 0x3FFF) -- That is the third Save Slot Checksum.
+		- 0x4FFE - 0x4FFF (Range: 0x4000 - 0x4FFF) -- That is the fourth Save Slot Checksum.
 
 
 	--------------------------
 	Notes about the Save Slots
 	--------------------------
 
-	* Each Slot has a size of 0x1000.
-	* There exist 4 Slots -- so the Slot Size together is 0x4000.
-	* The House Items affect Offsets from the Save Slots. It can be found at offset 0xD6 of the Save Slot.
+	- Each Slot has a size of 0x1000.
+	- There exist 4 Slots -- so the Slot Size together is 0x4000.
+	- The House Items affect Offsets from the Save Slots. It can be found at offset 0xD6 of the Save Slot.
 	-- Per House Item, the things after 0xD7 of the Save Slot move up for 0x6, this needs to be kept in mind.
 	--- It is unsure yet, for how much the things move. I still have to research this part, but the Checksum stays at the same place.
 
@@ -90,9 +89,9 @@
 	----------------------------
 
 	To check that the Savefile is a The Sims 2 GBA Save, check for the following things:
-	1.) Make sure the Savefile has a size of 64 / 128 KB. (0x10000 / 0x20000)
-	2.) Make sure the first 7 byte are those: (0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34).
-	2.1) So far, all of my Savefile contains the following bytes from Offset 0x0 - 0x7, so probably a good check to make sure.
+	1. Make sure the Savefile has a size of 64 / 128 KB. (0x10000 / 0x20000)
+	2. Make sure the first 7 byte are those: (0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34).
+		- So far, all of my Savefile contains the following bytes from Offset 0x0 - 0x7, so probably a good check to make sure.
 */
 
 namespace S2GBACore {
@@ -100,15 +99,14 @@ namespace S2GBACore {
 
 	/*
 		////////////////////////////////////////////////
-
 		The Sims 2 GBA Checksum namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////
 	*/
 
 	/*
-		I rewrote the Checksum calculation function, to WORK with both, GBA and NDS versions.
+		Calculate the Checksum from the Savefile.
 
 		const uint8_t *Buffer: The Save Buffer.
 		const uint16_t StartOffs: The Start offset. (NOTE: You'll have to do '/ 2', because it's 2 byte based).
@@ -137,10 +135,9 @@ namespace S2GBACore {
 
 	/*
 		///////////////////////////////////////////////////
-
 		The Sims 2 GBA SaveHandler namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		///////////////////////////////////////////////////
 	*/
 
@@ -205,10 +202,9 @@ namespace S2GBACore {
 
 	/*
 		///////////////////////////////////////////////////
-
 		The Sims 2 GBA SimUtils namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		///////////////////////////////////////////////////
 	*/
 
@@ -234,10 +230,11 @@ namespace S2GBACore {
 		Returns the current Simoleon amount as a string.
 
 		const uint32_t Simoleons: The current Simoleons.
+		const bool SimoleonSignAfter: If placing the Simoleons sign after the number, or before. Defaults to true (after).
 
 		This results in 123.456$.
 	*/
-	const std::string SimUtils::SimoleonsString(const uint32_t Simoleons) {
+	const std::string SimUtils::SimoleonsString(const uint32_t Simoleons, const bool SimoleonSignAfter) {
 		std::string SString = std::to_string(Simoleons);
 
 		/* Here we'll add the periods. */
@@ -259,7 +256,10 @@ namespace S2GBACore {
 				break;
 		}
 
-		SString += "§"; // Simoleons sign.
+		/* Simoleons Sign. */
+		if (SimoleonSignAfter) SString += "§";
+		else SString = "§" + SString;
+
 		return SString;
 	};
 
@@ -281,10 +281,9 @@ namespace S2GBACore {
 
 	/*
 		////////////////////////////////////////////////
-
 		The Sims 2 GBA Strings namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////
 	*/
 	const std::vector<std::string> Strings::CastNames = {
@@ -370,10 +369,9 @@ namespace S2GBACore {
 
 	/*
 		////////////////////////////////////////////////////
-
 		The Sims 2 GBA Cast Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////////
 	*/
 
@@ -408,10 +406,9 @@ namespace S2GBACore {
 
 	/*
 		///////////////////////////////////////////////////////
-
 		The Sims 2 GBA Episode Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		///////////////////////////////////////////////////////
 	*/
 
@@ -430,10 +427,9 @@ namespace S2GBACore {
 
 	/*
 		/////////////////////////////////////////////////////
-
 		The Sims 2 GBA House Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		/////////////////////////////////////////////////////
 	*/
 
@@ -450,10 +446,9 @@ namespace S2GBACore {
 
 	/*
 		//////////////////////////////////////////////////////////
-
 		The Sims 2 GBA House Item Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		//////////////////////////////////////////////////////////
 	*/
 
@@ -635,10 +630,9 @@ namespace S2GBACore {
 
 	/*
 		////////////////////////////////////////////////////////////
-
 		The Sims 2 GBA Item Package Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////////////////
 	*/
 
@@ -673,10 +667,9 @@ namespace S2GBACore {
 
 	/*
 		////////////////////////////////////////////////////////
-
 		The Sims 2 GBA Minigame Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////////////
 	*/
 
@@ -696,10 +689,9 @@ namespace S2GBACore {
 
 	/*
 		///////////////////////////////////////////////////
-
 		The Sims 2 GBA SAV Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		///////////////////////////////////////////////////
 	*/
 
@@ -774,6 +766,7 @@ namespace S2GBACore {
 
 		return (this->GetData()[Offs] >> BitIndex & 1) != 0;
 	};
+
 	/*
 		Set a bit to the Save Buffer.
 
@@ -802,6 +795,7 @@ namespace S2GBACore {
 		if (First) return (this->GetData()[Offs] & 0xF); // Bit 0 - 3.
 		else return (this->GetData()[Offs] >> 4); // Bit 4 - 7.
 	};
+
 	/*
 		Write Lower / Upper Bits to the Save Buffer.
 
@@ -837,6 +831,7 @@ namespace S2GBACore {
 
 		return Str;
 	};
+
 	/*
 		Write a string to the Save Buffer.
 
@@ -901,10 +896,9 @@ namespace S2GBACore {
 
 	/*
 		////////////////////////////////////////////////////////
-
 		The Sims 2 GBA Settings Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////////////
 	*/
 
@@ -944,10 +938,9 @@ namespace S2GBACore {
 
 	/*
 		////////////////////////////////////////////////////
-
 		The Sims 2 GBA Slot Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////////
 	*/
 
@@ -1220,10 +1213,9 @@ namespace S2GBACore {
 
 	/*
 		//////////////////////////////////////////////////////////
-
 		The Sims 2 GBA Social Move Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		//////////////////////////////////////////////////////////
 	*/
 

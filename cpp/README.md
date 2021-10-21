@@ -29,9 +29,9 @@ The first example shows you, how you load the SavData from a File by providing t
 ```cpp
 #include "S2GBACore.hpp"
 
-int main(int ARGC, char *ARGV[]) {
-	if (ARGC == 2) { // Ensure 2 arguments have been provided.
-		const std::string FName = ARGV[1];
+int main(int Argc, char *Argv[]) {
+	if (Argc == 2) { // Ensure 2 arguments have been provided.
+		const std::string FName = Argv[1];
 
 		if (S2GBACore::SaveHandler::LoadSav(FName)) {
 			/* SAV is good. */
@@ -62,9 +62,9 @@ The second example shows the second way, how to load the SavData directly from a
 ```cpp
 #include "S2GBACore.hpp"
 
-int main(int ARGC, char *ARGV[]) {
-	if (ARGC == 2) { // Ensure 2 arguments have been provided.
-		const std::string FName = ARGV[1];
+int main(int Argc, char *Argv[]) {
+	if (Argc == 2) { // Ensure 2 arguments have been provided.
+		const std::string FName = Argv[1];
 
 		FILE *In = fopen(FName.c_str(), "rb");
 

@@ -1,5 +1,5 @@
 /*
-*   This file is part of Sim2Editor-CPPCore
+*   This file is part of S2GBACore
 *   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,8 @@
 *         reasonable ways as different from the original version.
 */
 
-#ifndef _SIM2EDITOR_GBA_CORE_HPP
-#define _SIM2EDITOR_GBA_CORE_HPP
+#ifndef _S2GBA_CORE_HPP
+#define _S2GBA_CORE_HPP
 
 
 #include <cstring> // memcpy(...).
@@ -56,7 +56,7 @@ namespace S2GBACore {
 	class SocialMove;
 
 
-	/* A few variables for the S2Editor GBA Core. */
+	/* Some used pointers / objects from the Core. */
 	extern std::unique_ptr<SAV> Sav;
 
 
@@ -92,7 +92,7 @@ namespace S2GBACore {
 	*/
 	namespace SimUtils {
 		const std::string TimeString(const uint16_t Time, const bool AMPM = false);
-		const std::string SimoleonsString(const uint32_t Simoleons);
+		const std::string SimoleonsString(const uint32_t Simoleons, const bool SimoleonSignAfter = true);
 		const std::string RatingString(const uint16_t Ratings);
 	};
 

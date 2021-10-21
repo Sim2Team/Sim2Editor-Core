@@ -1,5 +1,5 @@
 /*
-*   This file is part of Sim2Editor-CPPCore
+*   This file is part of S2NDSCore
 *   Copyright (C) 2020-2021 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@
 #include "S2NDSCore.hpp" // main include.
 #include <unistd.h> // access().
 
+
 /*
 	---------------------------------------------
 	The Sims 2 Nintendo DS Save File Editing Core
@@ -34,46 +35,47 @@
 
 	File: ASJP.sav
 	Authors: SuperSaiyajinStackZ, Sim2Team
-	Version: 0.3
+	Version: 0.4
 	Purpose: Easy editing of a The Sims 2 Nintendo DS Savefile.
 	Category: Save File Editing Core
 	Last Updated: 04 September 2021
 	---------------------------------------------
 
-	Research used from here: https://github.com/Sim2Team/Sim2Research.
+	Research used from here: https://sim2team.github.io/wiki/research/sims2nds.
 
 	If you want to display the Painting Images from the Painting class, you can find the Palette for it to display here:
-		https://github.com/Sim2Team/Sim2Research/blob/main/Research/NDS/Painting.md#imagedata-pixels.
+		https://sim2team.github.io/wiki/research/sims2nds/painting#imagedata-pixels.
 
 	-----------------------
 	Explanation of the Core
 	-----------------------
 
-	* Use S2NDSCore::SaveHandler::LoadSav(const std::string &) to load a Savefile from your SD Card.
-	* Use S2NDSCore::SaveHandler::LoadSav(std::unique_ptr<uint8_t[]> &, const uint32_t) to load a Savefile from an already existing Buffer.
-	* Use S2NDSCore::SaveHandler::WriteBack(const std::string &) to update the checksums + write your changes back to the Savefile.
-	* Use S2NDSCore::Sav to access the Save Pointer and with that.. all the sub classes if needed. DO NOT ACCESS THOSE OUTSIDE, BECAUSE THEY RELY ON S2NDSCore::Sav's POINTER!!!
+	- Use S2NDSCore::SaveHandler::LoadSav(const std::string &) to load a Savefile from a file.
+	- Use S2NDSCore::SaveHandler::LoadSav(std::unique_ptr<uint8_t[]> &, const uint32_t) to load a Savefile from an already existing Buffer.
+	- Use S2NDSCore::Sav::Finish() to update all the Checksums.
+	- Use S2NDSCore::SaveHandler::WriteBack(const std::string &) to update the checksums + write your changes back to the Savefile.
+	- Use S2NDSCore::Sav to access the Save Pointer and with that.. all the sub classes if needed. DO NOT ACCESS THOSE OUTSIDE, BECAUSE THEY RELY ON S2NDSCore::Sav's POINTER!!!
 
 	Another Note about THIS Core:
-		THIS IS NOT THREAD-SAFE!!!, because I don't care about it, since I don't really work with Threads anyways.
+		THIS IS NOT THREAD-SAFE!!!, because I (SuperSaiyajinStackZ) don't care about it, since I don't really work with Threads anyways.
 
 	To compile, you need to compile this with C++17 or above.
 */
+
 
 namespace S2NDSCore {
 	std::unique_ptr<SAV> Sav = nullptr;
 
 	/*
 		////////////////////////////////////////////////
-
 		The Sims 2 NDS Checksum namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////
 	*/
 
 	/*
-		I rewrote the Checksum calculation function, to WORK with both, GBA and NDS versions.
+		Calculate the Checksum from the Savefile.
 
 		const uint8_t *Buffer: The Save Buffer.
 		const uint16_t StartOffs: The Start offset. (NOTE: You'll have to do '/ 2', because it's 2 byte based).
@@ -114,10 +116,9 @@ namespace S2NDSCore {
 
 	/*
 		////////////////////////////////////////////////////
-
 		The Sims 2 NDS SaveHandler namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////////
 	*/
 
@@ -182,10 +183,9 @@ namespace S2NDSCore {
 
 	/*
 		/////////////////////////////////////////////////
-
 		The Sims 2 NDS SimUtils namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		/////////////////////////////////////////////////
 	*/
 
@@ -211,10 +211,11 @@ namespace S2NDSCore {
 		Returns the current Simoleon amount as a string.
 
 		const uint32_t Simoleons: The current Simoleons.
+		const bool SimoleonSignAfter: If placing the Simoleons sign after the number, or before. Defaults to true (after).
 
 		This results in 123.456$.
 	*/
-	const std::string SimUtils::SimoleonsString(const uint32_t Simoleons) {
+	const std::string SimUtils::SimoleonsString(const uint32_t Simoleons, const bool SimoleonSignAfter) {
 		std::string SString = std::to_string(Simoleons);
 
 		/* Here we'll add the periods. */
@@ -236,17 +237,19 @@ namespace S2NDSCore {
 				break;
 		}
 
-		SString += "§"; // Simoleons sign.
+		/* Simoleons Sign. */
+		if (SimoleonSignAfter) SString += "§";
+		else SString = "§" + SString;
+
 		return SString;
 	};
 
 
 	/*
 		////////////////////////////////////////////////
-
 		The Sims 2 NDS Strings namespace implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		/////////////////////////////////////////////////
 	*/
 	const std::vector<std::string> Strings::PaintingRankNames = { "Blank Canvas", "Garbage", "Ordinary", "Respectable", "Masterpiece", "Magnum Opus" };
@@ -255,16 +258,13 @@ namespace S2NDSCore {
 
 	/*
 		//////////////////////////////////////////////////////////
-
 		The Sims 2 NDS Painting Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		//////////////////////////////////////////////////////////
 	*/
 
-	/*
-		Checks, if the Painting is valid by checking it's 5 byte Identifier.
-	*/
+	/* Checks, if the Painting is valid by checking it's 5 byte Identifier. */
 	bool Painting::Valid() const {
 		for (uint8_t Idx = 0; Idx < 5; Idx++) {
 			if (S2NDSCore::Sav->Read<uint8_t>(this->Offs + Idx) != this->Identifier[Idx]) return false; // Invalid.
@@ -341,10 +341,9 @@ namespace S2NDSCore {
 
 	/*
 		///////////////////////////////////////////////////
-
 		The Sims 2 NDS SAV Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		///////////////////////////////////////////////////
 	*/
 
@@ -447,7 +446,7 @@ namespace S2NDSCore {
 
 			/* If 8, then it properly passed the slot existence check. */
 			if (IDCount == 8) {
-				/* Check, if current slot is also the actual SAVSlot. It seems 0xC and 0xD added is the Slot, however 0xD seems never be touched from the game and hence like all the time 0x0? */
+				/* Check, if current slot is also the actual Saveslot. It seems 0xC and 0xD added is the Slot, however 0xD seems never be touched from the game and hence like all the time 0x0? */
 				if ((this->GetData()[(Slot * 0x1000) + 0xC] + this->GetData()[(Slot * 0x1000) + 0xD]) == SavSlot) {
 					/* Now get the SAVCount. */
 					SavCount[Slot] = this->Read<uint32_t>((Slot * 0x1000) + 0x8, true);
@@ -482,6 +481,7 @@ namespace S2NDSCore {
 
 		return (this->GetData()[Offs] >> BitIndex & 1) != 0;
 	};
+
 	/*
 		Set a bit to the Save Buffer.
 
@@ -510,6 +510,7 @@ namespace S2NDSCore {
 		if (First) return (this->GetData()[Offs] & 0xF); // Bit 0 - 3.
 		else return (this->GetData()[Offs] >> 4); // Bit 4 - 7.
 	};
+
 	/*
 		Write Lower / Upper Bits to the Save Buffer.
 
@@ -547,6 +548,7 @@ namespace S2NDSCore {
 
 		return Str;
 	};
+
 	/*
 		Write a string to the Save Buffer.
 
@@ -622,10 +624,9 @@ namespace S2NDSCore {
 
 	/*
 		////////////////////////////////////////////////////
-
 		The Sims 2 NDS Slot Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
-
+		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////////
 	*/
 
