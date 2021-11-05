@@ -75,7 +75,7 @@ Kitchen Counter (Pink)
 Kitchen Counter (Red)
 ??? (Crash)
 Treasure Chest
-Mailbox // Contains the same functionality, as the Mailbox outside your House.
+Mailbox
 Luxury Refrigerator (Green)
 Luxury Refrigerator (Blue)
 Luxury Refrigerator (Orange)
