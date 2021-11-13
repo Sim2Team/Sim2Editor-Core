@@ -42,7 +42,7 @@ int main(int Argc, char *Argv[]) {
 				printf("Name: %s\n", Slot->Name().c_str());
 				printf("Simoleons: %d\n", Slot->Simoleons());
 				printf("Ratings: %d\n", Slot->Ratings());
-				printf("Time: %s\n", S2GBACore::SimUtils::TimeString(Slot->Time()).c_str());
+				printf("Time: %02d:%02d:02d\n", Slot->Hour(), Slot->Minute(), Slot->Seconds());
 			}
 
 			/* When you're done, use the function below to update checksums etc and write back to file. */
@@ -86,7 +86,7 @@ int main(int Argc, char *Argv[]) {
 					printf("Name: %s\n", Slot->Name().c_str());
 					printf("Simoleons: %d\n", Slot->Simoleons());
 					printf("Ratings: %d\n", Slot->Ratings());
-					printf("Time: %s\n", S2GBACore::SimUtils::TimeString(Slot->Time()).c_str());
+					printf("Time: %02d:%02d:02d\n", Slot->Hour(), Slot->Minute(), Slot->Seconds());
 				}
 
 				/* When you're done, use the function below to update checksums etc. */
@@ -99,9 +99,7 @@ int main(int Argc, char *Argv[]) {
 
 					Alternatively, use memcpy if you want.
 				*/
-				for (size_t Idx = 0; Idx < S2GBACore::Sav->GetSize(); Idx++) {
-					YourData[Idx] = S2GBACore::Sav->GetData()[Idx];
-				}
+				for (size_t Idx = 0; Idx < S2GBACore::Sav->GetSize(); Idx++) YourData[Idx] = S2GBACore::Sav->GetData()[Idx];
 			}
 
 			fclose(In);

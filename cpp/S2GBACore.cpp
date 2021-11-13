@@ -35,10 +35,10 @@
 
 	File: B46P.sav
 	Authors: SuperSaiyajinStackZ, Sim2Team
-	Version: 0.3
+	Version: 0.4
 	Purpose: Easy editing of a The Sims 2 Game Boy Advance Savefile.
 	Category: Save File Editing Core
-	Last Updated: 21 October 2021
+	Last Updated: 13 November 2021
 	--------------------------------------------------
 
 	Research used from here: https://sim2team.github.io/wiki/research/sims2gba.
@@ -940,7 +940,7 @@ namespace S2GBACore {
 		////////////////////////////////////////////////////
 		The Sims 2 GBA Slot Save Editing class implementation.
 		Main Author: SuperSaiyajinStackZ.
-		Last Updated: 21 October 2021.
+		Last Updated: 13 November 2021.
 		////////////////////////////////////////////////////
 	*/
 
@@ -954,9 +954,17 @@ namespace S2GBACore {
 		return (this->Offs + DefaultOffs) + (S2GBACore::Sav->Read<uint8_t>(this->Offs + 0xD6) * 0x6);
 	};
 
-	/* Get and Set Time. */
-	uint16_t Slot::Time() const { return S2GBACore::Sav->Read<uint16_t>(this->Offs + 0x2); };
-	void Slot::Time(const uint16_t V) { S2GBACore::Sav->Write<uint16_t>(this->Offs + 0x2, V); };
+	/* Get and Set Hour. */
+	uint8_t Slot::Hour() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x2); };
+	void Slot::Hour(const uint8_t V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x2, V); };
+
+	/* Get and Set Minute. */
+	uint8_t Slot::Minute() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x3); };
+	void Slot::Minute(const uint8_t V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x3, V); };
+
+	/* Get and Set Seconds. */
+	uint8_t Slot::Seconds() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x4); };
+	void Slot::Seconds(const uint8_t V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x4, V); };
 
 	/* Get and Set Simoleons. */
 	uint32_t Slot::Simoleons() const { return S2GBACore::Sav->Read<uint32_t>(this->Offs + 0x5) >> 8; };

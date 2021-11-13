@@ -372,8 +372,12 @@ namespace S2GBACore {
 			: Slt(Slt), Offs(Slt * 0x1000) { };
 
 		/* Main things. */
-		uint16_t Time() const;
-		void Time(const uint16_t V);
+		uint8_t Hour() const;
+		void Hour(const uint8_t V);
+		uint8_t Minute() const;
+		void Minute(const uint8_t V);
+		uint8_t Seconds() const;
+		void Seconds(const uint8_t V);
 		uint32_t Simoleons() const;
 		void Simoleons(const uint32_t V);
 		uint16_t Ratings() const;
