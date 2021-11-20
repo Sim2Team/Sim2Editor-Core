@@ -36,25 +36,15 @@
 export function Checksum_Calc(Buffer, StartOffs, EndOffs, SkipOffs) {
 	if (!Buffer) return -1;
 
-	let Byte1 = 0, Byte2 = 0;
+	let Checksum = 0;
 
 	for(let Index = StartOffs; Index < EndOffs; Index++) {
 		if (SkipOffs != undefined && SkipOffs.includes(Index)) continue; // Skip, if found in the Skip Offsets.
 
-		Byte1 = (Byte1 + Buffer.getUint8(Index * 2));
-
-		if (Byte1 > 255) {
-			Byte1 = Byte1 % 256;
-			Byte2++;
-		}
-
-		Byte2 = (Byte2 + Buffer.getUint8((Index * 2) + 1)) % 256;
+		Checksum = (Checksum + Buffer.getUint16(Index * 2, true)) % 0x10000; // Don't go over an uint16_t, hence % 0x10000.
 	}
 
-	Byte2++;
-	if (Byte2 > 255) Byte2 = 0;
-
-	return (256 * (256 - Byte2)) + (256 - Byte1); // Return it as an uint16_t.
+	return (0x10000 - Checksum) % 0x10000;
 };
 
 

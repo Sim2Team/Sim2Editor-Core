@@ -56,7 +56,7 @@ export const PaintingPalette = [
 
 
 /*
-	For reference, see here: https://github.com/Sim2Team/Sim2Research/blob/main/Research/NDS/Painting.md.
+	For reference, see here: https://sim2team.github.io/wiki/research/sims2nds/painting.
 */
 
 export class S2Editor_NDSPainting {
