@@ -60,22 +60,18 @@ export class S2Editor_GBASlot {
 		return this.Offs + DefaultOffs + (SavUtils_Read("uint8_t", (this.Offs + 0xD6)) * 0x6);
 	};
 
-	/* Get and Set Hour. */
-	Hour(V) {
-		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x2, Math.min(23, V));
-		else return SavUtils_Read("uint8_t", this.Offs + 0x2);
-	};
+	/* Get and Set Time. */
+	Time(V) {
+		if (V != undefined) {
+			SavUtils_Write("uint8_t", this.Offs + 0x2, Math.min(23, V[0]));
+			SavUtils_Write("uint8_t", this.Offs + 0x3, Math.min(59, V[1]));
+			SavUtils_Write("uint8_t", this.Offs + 0x4, Math.min(59, V[2]));
 
-	/* Get and Set Minute. */
-	Minute(V) {
-		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x3, Math.min(59, V));
-		else return SavUtils_Read("uint8_t", this.Offs + 0x3);
-	};
-
-	/* Get and Set Seconds. */
-	Seconds(V) {
-		if (V != undefined) SavUtils_Write("uint8_t", this.Offs + 0x4, Math.min(59, V));
-		else return SavUtils_Read("uint8_t", this.Offs + 0x4);
+		} else {
+			let TM = new Uint8Array(0x3);
+			for (let Idx = 0; Idx < 3; Idx++) TM[Idx] = SavUtils_Read("uint8_t", this.Offs + 0x2 + Idx);
+			return TM;
+		}
 	};
 
 	/* Get and Set Simoleons. */

@@ -25,7 +25,7 @@
 */
 
 
-export const GBAIdent = [ 0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34 ]; // GBA Header Identifier.
+export const GBAIdent = [ 0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34, 0x0 ]; // GBA Header Identifier.
 export const NDSIdent = [ 0x64, 0x61, 0x74, 0x0, 0x1F, 0x0, 0x0, 0x0 ]; // NDS Slot Header Identifier.
 
 
@@ -94,11 +94,11 @@ export function SavUtils_DetectType(Data, Size) {
 	switch(Size) {
 		case 0x10000:
 		case 0x20000: // 64, 128 KB is a GBA Size.
-			for (let ID = 0; ID < 7; ID++) {
+			for (let ID = 0; ID < 8; ID++) {
 				if (Data.getUint8(ID) == GBAIdent[ID]) Count++;
 			}; // Identifier Checks.
 
-			if (Count == 7) return 0;
+			if (Count == 8) return 0;
 			else return -1;
 
 		case 0x40000:
@@ -348,10 +348,10 @@ export function SavUtils_ReadString(Offs, Length) {
 	if (SavType == undefined || SavType == -1 || SavData == undefined) return ""; // -1 -> Invalid.
 	let Str = '';
 
-	for (let i = 0; i < Length; i++) {
-		if (SavData.getUint8(Offs + i) == 0x0) break; // Do not continue to read.
+	for (let Idx = 0; Idx < Length; Idx++) {
+		if (SavData.getUint8(Offs + Idx) == 0x0) break; // Do not continue to read.
 
-		Str += String.fromCharCode(SavData.getUint8(Offs + i));
+		Str += String.fromCharCode(SavData.getUint8(Offs + Idx));
 	}
 
 	return Str;
@@ -374,8 +374,8 @@ export function SavUtils_WriteString(Offs, Length, Str) {
 		let CouldFind = false;
 
 		if (!Filler) { // As long as it's not the filler, we're able to do this action, else we fill with ZEROs.
-			for (let i = 0; i < 72; i++) {
-				if (Str.charAt(Index - 1) == SavUtils_CharWhiteList[i]) {
+			for (let Idx = 0; Idx < 72; Idx++) {
+				if (Str.charAt(Index - 1) == SavUtils_CharWhiteList[Idx]) {
 					SavData.setUint8(Offs + (Index - 1), Str.charCodeAt(Index - 1));
 					CouldFind = true;
 					break;

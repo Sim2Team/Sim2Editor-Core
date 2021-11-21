@@ -139,6 +139,7 @@ export class S2Editor_NDSSlot {
 		/* First: Fix the main part. */
 		let CurCHKS = SavUtils_Read("uint16_t", this.Offs + 0x28);
 		let Calced = Checksum_CalcNDSSlotMain(SavData, this.Slot);
+		//console.log("MAIN CurCHKS: " + CurCHKS.toString() + " -- Calced: " + Calced.toString());
 
 		if (Calced != CurCHKS) {
 			SavUtils_Write("uint16_t", this.Offs + 0x28, Calced);
@@ -148,6 +149,7 @@ export class S2Editor_NDSSlot {
 		/* Second: Fix the shared part. */
 		Calced = Checksum_CalcNDSSlotShared(SavData, this.Slot);
 		CurCHKS = SavUtils_Read("uint16_t", this.Offs + 0x10);
+		//console.log("SHARED CurCHKS: " + CurCHKS.toString() + " -- Calced: " + Calced.toString());
 
 		if (CurCHKS != Calced) {
 			SavUtils_Write("uint16_t", this.Offs + 0x10, Calced);
@@ -157,6 +159,7 @@ export class S2Editor_NDSSlot {
 		/* Third: Fix the header part. */
 		Calced = Checksum_CalcNDSSlotHeader(SavData, this.Slot);
 		CurCHKS = SavUtils_Read("uint16_t", this.Offs + 0xE);
+		//console.log("HEADER CurCHKS: " + CurCHKS.toString() + " -- Calced: " + Calced.toString());
 
 		if (CurCHKS != Calced) {
 			SavUtils_Write("uint16_t", this.Offs + 0xE, Calced);

@@ -44,18 +44,19 @@ export function SimUtils_NumberFormat(Value, Nums) {
 /*
 	Convert the Time into a 'XX:XX' string.
 
-	Time: An uint16_t Value of the Time.
+	Time: A Uint8Array of length 3, while 0 is Hour, 1 is Minute and 2 Seconds.
 	AMPM: If using 12 Hour or 24 Hour mode.
+	ShowSeconds: If showing seconds (which is normally not visible in game) or not.
 
-	Example output: 23:59 / 11:59 PM.
+	Example output: 23:59:59 / 11:59:59 PM.
 */
-export function SimUtils_TimeString(Time, AMPM = false) {
+export function SimUtils_TimeString(Time, AMPM = false, ShowSeconds = false) {
 	/* 24 Hour Handle. */
-	if (!AMPM) return SimUtils_NumberFormat(Time[0x0], 2) + ':' + SimUtils_NumberFormat(Time[0x1], 2);
+	if (!AMPM) return SimUtils_NumberFormat(Time[0x0], 2) + ':' + SimUtils_NumberFormat(Time[0x1], 2) + (ShowSeconds ? SimUtils_NumberFormat(Time[0x2], 2) : "");
 	else { // 12 Hour handle.
 		const IsPM = (Hour > 11);
 
-		return SimUtils_NumberFormat((IsPM ? Time[0x0] - 12 : Time[0x0]), 2) + ':' + SimUtils_NumberFormat(Time[0x1], 2) + (IsPM ? " PM" : " AM");
+		return SimUtils_NumberFormat((IsPM ? Time[0x0] - 12 : Time[0x0]), 2) + ':' + SimUtils_NumberFormat(Time[0x1], 2) + (ShowSeconds ? SimUtils_NumberFormat(Time[0x2], 2) : "") + (IsPM ? " PM" : " AM");
 	}
 };
 
