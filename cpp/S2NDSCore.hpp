@@ -1,6 +1,6 @@
 /*
 *   This file is part of S2NDSCore
-*   Copyright (C) 2020-2021 Sim2Team
+*   Copyright (C) 2020-2022 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ namespace S2NDSCore {
 
 	/*
 		The Sims 2 NDS Checksum namespace implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 
 		Just containing a function, which handles the Checksum calculation, that returns an uint16_t.
 	*/
@@ -63,7 +63,7 @@ namespace S2NDSCore {
 
 	/*
 		The Sims 2 NDS SaveHandler namespace implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 
 		This is used to load a save and some other utility functions.
 	*/
@@ -76,7 +76,7 @@ namespace S2NDSCore {
 
 	/*
 		The Sims 2 NDS SimUtils namespace implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 
 		This is used for some formatting related things.
 	*/
@@ -88,7 +88,7 @@ namespace S2NDSCore {
 
 	/*
 		The Sims 2 NDS Strings namespace implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 
 		This is used for some string related things.
 	*/
@@ -100,7 +100,7 @@ namespace S2NDSCore {
 
 	/*
 		The Sims 2 NDS Painting Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 	*/
 	class Painting {
 	public:
@@ -136,7 +136,7 @@ namespace S2NDSCore {
 
 	/*
 		The Sims 2 NDS SAV Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 
 		NOTE: NEVER ACCESS THIS CLASS AND OTHER SUB CLASSES OUTSIDE THE S2NDSCore::SaveHandler AND S2NDSCore::Sav CALL!!!
 	*/
@@ -203,7 +203,7 @@ namespace S2NDSCore {
 
 	/*
 		The Sims 2 NDS Slot Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 	*/
 	class Slot {
 	public:

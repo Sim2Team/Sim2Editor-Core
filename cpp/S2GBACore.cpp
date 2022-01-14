@@ -1,6 +1,6 @@
 /*
 *   This file is part of S2GBACore
-*   Copyright (C) 2020-2021 Sim2Team
+*   Copyright (C) 2020-2022 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -33,12 +33,12 @@
 	The Sims 2 Game Boy Advance Save File Editing Core
 	--------------------------------------------------
 
-	File: B46P.sav
-	Authors: SuperSaiyajinStackZ, Sim2Team
-	Version: 0.4
+	File: B46E.sav
+	Contributors: SuperSaiyajinStackZ, Sim2Team
+	Version: 0.5
 	Purpose: Easy editing of a The Sims 2 Game Boy Advance Savefile.
 	Category: Save File Editing Core
-	Last Updated: 13 November 2021
+	Last Updated: 14 January 2022
 	--------------------------------------------------
 
 	Research used from here: https://sim2team.github.io/wiki/research/sims2gba.
@@ -95,12 +95,20 @@
 */
 
 namespace S2GBACore {
+	const std::vector<std::string> EncodingTable = {
+		/* Special. */
+		"©", "œ", "¡", "¿", "À", "Á", "Â", "Ã", "Ä", "Å", "Æ", "Ç", "È", "É", "Ê", "Ë",
+		"Ì", "Í", "Î", "Ï", "Ñ", "Ò", "Ó", "Ô", "Õ", "Ö", "Ø", "Ù", "Ú", "Ü", "ß", "à",
+		"á", "â", "ã", "ä", "å", "æ", "ç", "è", "é", "ê", "ë", "ì", "í", "î", "ï", "ñ",
+		"ò", "ó", "ô", "õ", "ö", "ø", "ù", "ú", "û", "ü", "º", "ª", "…", "™", "", "®", ""
+	};
+
 	std::unique_ptr<SAV> Sav = nullptr;
 
 	/*
 		////////////////////////////////////////////////
 		The Sims 2 GBA Checksum namespace implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////
 	*/
@@ -136,7 +144,7 @@ namespace S2GBACore {
 	/*
 		///////////////////////////////////////////////////
 		The Sims 2 GBA SaveHandler namespace implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		///////////////////////////////////////////////////
 	*/
@@ -203,7 +211,7 @@ namespace S2GBACore {
 	/*
 		///////////////////////////////////////////////////
 		The Sims 2 GBA SimUtils namespace implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		///////////////////////////////////////////////////
 	*/
@@ -282,7 +290,7 @@ namespace S2GBACore {
 	/*
 		////////////////////////////////////////////////
 		The Sims 2 GBA Strings namespace implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////
 	*/
@@ -370,7 +378,7 @@ namespace S2GBACore {
 	/*
 		////////////////////////////////////////////////////
 		The Sims 2 GBA Cast Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////////
 	*/
@@ -407,8 +415,8 @@ namespace S2GBACore {
 	/*
 		///////////////////////////////////////////////////////
 		The Sims 2 GBA Episode Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
-		Last Updated: 21 October 2021.
+		Main Contributor: SuperSaiyajinStackZ.
+		Last Updated: 14 January 2022.
 		///////////////////////////////////////////////////////
 	*/
 
@@ -421,14 +429,18 @@ namespace S2GBACore {
 	};
 
 	/* Get and Set the Unlocked State. */
-	bool Episode::State() const { return S2GBACore::Sav->Read<uint8_t>(this->Offs + 0x4); };
-	void Episode::State(const bool V) { S2GBACore::Sav->Write<uint8_t>(this->Offs + 0x4, V); };
+	bool Episode::Unlocked() const { return S2GBACore::Sav->ReadBit(this->Offs + 0x4, 0); };
+	void Episode::Unlocked(const bool V) { S2GBACore::Sav->WriteBit(this->Offs + 0x4, 0, V); };
+
+	/* Get and Set the Played State. */
+	bool Episode::Played() const { return S2GBACore::Sav->ReadBit(this->Offs + 0x4, 1); };
+	void Episode::Played(const bool V) { S2GBACore::Sav->WriteBit(this->Offs + 0x4, 1, V); };
 
 
 	/*
 		/////////////////////////////////////////////////////
 		The Sims 2 GBA House Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		/////////////////////////////////////////////////////
 	*/
@@ -447,7 +459,7 @@ namespace S2GBACore {
 	/*
 		//////////////////////////////////////////////////////////
 		The Sims 2 GBA House Item Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		//////////////////////////////////////////////////////////
 	*/
@@ -631,7 +643,7 @@ namespace S2GBACore {
 	/*
 		////////////////////////////////////////////////////////////
 		The Sims 2 GBA Item Package Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////////////////
 	*/
@@ -668,7 +680,7 @@ namespace S2GBACore {
 	/*
 		////////////////////////////////////////////////////////
 		The Sims 2 GBA Minigame Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////////////
 	*/
@@ -690,8 +702,8 @@ namespace S2GBACore {
 	/*
 		///////////////////////////////////////////////////
 		The Sims 2 GBA SAV Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
-		Last Updated: 21 October 2021.
+		Main Contributor: SuperSaiyajinStackZ.
+		Last Updated: 14 January 2021.
 		///////////////////////////////////////////////////
 	*/
 
@@ -738,7 +750,7 @@ namespace S2GBACore {
 
 		/* Now do the Validation check through the Save Header with the GBAIdents. */
 		bool Res = true;
-		for (uint8_t Idx = 0; Idx < 7; Idx++) {
+		for (uint8_t Idx = 0; Idx < 8; Idx++) {
 			if (this->GetData()[Idx] != this->GBAIdent[Idx]) {
 				Res = false;
 				break;
@@ -821,12 +833,20 @@ namespace S2GBACore {
 	std::string SAV::ReadString(const uint32_t Offs, const uint32_t Length) const {
 		if (!this->GetValid() || !this->GetData()) return "";
 
-		std::string Str;
+		std::string Str = "";
 
-		for (int Idx = 0; Idx < (int)Length; Idx++) {
-			if (this->GetData()[Offs + Idx] == 0x0) break; // 0x0 -> End.
+		for (size_t Idx = 0; Idx < Length; Idx++) {
+			const uint8_t Byte = this->GetData()[Offs + Idx];
 
-			Str += this->GetData()[Offs + Idx];
+			/* Out of range, or the last check being a new line which may not be great on names. */
+			if ((Byte >= 0x1 && Byte <= 0x9) || (Byte >= 0xB && Byte <= 0x1F) || (Byte >= 0xBC) || (Byte == 0xA)) break;
+
+			/* 0x7B - 0xBB is custom encoding, the other one is ASCII. */
+			else if (Byte >= 0x7B && Byte <= 0xBB) Str += S2GBACore::EncodingTable[Byte - 0x7B];
+			else {
+				Str += Byte;
+				if (Byte == 0x0) break;
+			}
 		}
 
 		return Str;
@@ -842,9 +862,64 @@ namespace S2GBACore {
 	void SAV::WriteString(const uint32_t Offs, const uint32_t Length, const std::string &Str) {
 		if (!this->GetValid() || !this->GetData()) return;
 
-		for (int Idx = 0; Idx < (int)Length; Idx++) {
-			if (Idx < (int)Str.size()) this->GetData()[Offs + Idx] = Str[Idx]; // The index is inside the string length, so write that.
-			else this->GetData()[Offs + Idx] = 0; // Index outside the string length.. so write 0.
+		bool Found = false;
+		size_t EncodingLen = 0, EncodingMatchCount = 0;
+		std::vector<uint8_t> StringBytes = { };
+
+		/* Get the StringBytes that we would write. */
+		for (size_t StrIdx = 0; StrIdx < Str.size(); StrIdx++) {
+			const uint8_t Byte = (uint8_t)Str[StrIdx];
+
+			/* Values that are too low for ASCII and 0xA for a new line may not be the greatest, so it's blocked for now until there is a valid reason to use one lol. */
+			if ((Byte >= 0x1 && Byte <= 0x9) || (Byte >= 0xB && Byte <= 0x1F) || (Byte == 0xA)) break;
+			else {
+				Found = false;
+
+				/* Check for ASCII. */
+				for (size_t ASCIIIdx = 0x20; ASCIIIdx < 0x7A; ASCIIIdx++) {
+					if (ASCIIIdx == Byte) {
+						Found = true;
+						StringBytes.push_back(ASCIIIdx);
+						break;
+					}
+				}
+
+				if (!Found) {
+					/* Check for the Special Encoding. */
+					for (size_t EncodingIdx = 0x0; EncodingIdx < S2GBACore::EncodingTable.size(); EncodingIdx++) {
+						EncodingLen = S2GBACore::EncodingTable[EncodingIdx].size(); // Get the length of the encoding character.
+						EncodingMatchCount = 0;
+
+						if (EncodingLen == 0) continue; // There are also characters that have a size of 0, so skip those to not cause an infinity loop.
+
+						for (size_t EncodingLenIdx = 0; EncodingLenIdx < EncodingLen; EncodingLenIdx++) {
+							if (Str.size() - 1 < StrIdx + EncodingLenIdx) break;
+							if (Str[StrIdx + EncodingLenIdx] == S2GBACore::EncodingTable[EncodingIdx][EncodingLenIdx]) EncodingMatchCount++;
+							else break;
+						}
+
+						/* If the encoding length matches with the equal characters, then we got the right character. */
+						if (EncodingMatchCount == EncodingLen) {
+							Found = true;
+							StringBytes.push_back(EncodingIdx + 0x7B);
+							StrIdx += EncodingLen - 1;
+							break;
+						}
+					}
+
+					/* If nothing matches here either, end it with a NULL Terminator. */
+					if (!Found) {
+						StringBytes.push_back(0);
+						break;
+					}
+				}
+			}
+		}
+
+		/* Now write the actual bytes to the SaveData. */
+		for (size_t Idx = 0; Idx < Length; Idx++) {
+			if (Idx < StringBytes.size()) this->GetData()[Offs + Idx] = StringBytes[Idx];
+			else this->GetData()[Offs + Idx] = 0x0;
 		}
 
 		if (!this->ChangesMade) this->ChangesMade = true;
@@ -897,7 +972,7 @@ namespace S2GBACore {
 	/*
 		////////////////////////////////////////////////////////
 		The Sims 2 GBA Settings Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////////////
 	*/
@@ -939,8 +1014,8 @@ namespace S2GBACore {
 	/*
 		////////////////////////////////////////////////////
 		The Sims 2 GBA Slot Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
-		Last Updated: 13 November 2021.
+		Main Contributor: SuperSaiyajinStackZ.
+		Last Updated: 14 January 2022.
 		////////////////////////////////////////////////////
 	*/
 
@@ -975,8 +1050,8 @@ namespace S2GBACore {
 	void Slot::Ratings(const uint16_t V) { S2GBACore::Sav->Write<uint16_t>(this->Offs + 0xA, std::min<uint16_t>(9999, V)); };
 
 	/* Get and Set Name. */
-	std::string Slot::Name() const { return S2GBACore::Sav->ReadString(this->Offs + 0xD, 0x8); };
-	void Slot::Name(const std::string &V) { S2GBACore::Sav->WriteString(this->Offs + 0xD, 0x8, V); };
+	std::string Slot::Name() const { return S2GBACore::Sav->ReadString(this->Offs + 0xD, 16); };
+	void Slot::Name(const std::string &V) { S2GBACore::Sav->WriteString(this->Offs + 0xD, 16, V); };
 
 
 	/* Get and Set Hairstyle. */
@@ -1222,7 +1297,7 @@ namespace S2GBACore {
 	/*
 		//////////////////////////////////////////////////////////
 		The Sims 2 GBA Social Move Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		//////////////////////////////////////////////////////////
 	*/

@@ -1,6 +1,6 @@
 /*
 *   This file is part of S2NDSCore
-*   Copyright (C) 2020-2021 Sim2Team
+*   Copyright (C) 2020-2022 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@
 	---------------------------------------------
 
 	File: ASJP.sav
-	Authors: SuperSaiyajinStackZ, Sim2Team
+	Contributors: SuperSaiyajinStackZ, Sim2Team
 	Version: 0.4
 	Purpose: Easy editing of a The Sims 2 Nintendo DS Savefile.
 	Category: Save File Editing Core
@@ -69,7 +69,7 @@ namespace S2NDSCore {
 	/*
 		////////////////////////////////////////////////
 		The Sims 2 NDS Checksum namespace implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////
 	*/
@@ -117,7 +117,7 @@ namespace S2NDSCore {
 	/*
 		////////////////////////////////////////////////////
 		The Sims 2 NDS SaveHandler namespace implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////////
 	*/
@@ -184,7 +184,7 @@ namespace S2NDSCore {
 	/*
 		/////////////////////////////////////////////////
 		The Sims 2 NDS SimUtils namespace implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		/////////////////////////////////////////////////
 	*/
@@ -259,7 +259,7 @@ namespace S2NDSCore {
 	/*
 		//////////////////////////////////////////////////////////
 		The Sims 2 NDS Painting Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		//////////////////////////////////////////////////////////
 	*/
@@ -342,7 +342,7 @@ namespace S2NDSCore {
 	/*
 		///////////////////////////////////////////////////
 		The Sims 2 NDS SAV Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		///////////////////////////////////////////////////
 	*/
@@ -625,7 +625,7 @@ namespace S2NDSCore {
 	/*
 		////////////////////////////////////////////////////
 		The Sims 2 NDS Slot Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 		Last Updated: 21 October 2021.
 		////////////////////////////////////////////////////
 	*/

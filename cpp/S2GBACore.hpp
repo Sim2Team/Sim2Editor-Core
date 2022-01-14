@@ -1,6 +1,6 @@
 /*
 *   This file is part of S2GBACore
-*   Copyright (C) 2020-2021 Sim2Team
+*   Copyright (C) 2020-2022 Sim2Team
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -42,7 +42,6 @@ namespace S2GBACore {
 	enum class Langs : uint8_t { EN = 0x0, NL = 0x1, FR = 0x2, DE = 0x3, IT = 0x4, ES = 0x5 }; // Settings Languages.
 	enum class SocialMoveFlag : uint8_t { Locked = 0x0, Unlocked = 0x1, Blocked = 0x2 }; // Social Move Flags.
 
-
 	/* Declare all used classes here. */
 	class Cast;
 	class Episode;
@@ -58,11 +57,12 @@ namespace S2GBACore {
 
 	/* Some used pointers / objects from the Core. */
 	extern std::unique_ptr<SAV> Sav;
+	extern const std::vector<std::string> EncodingTable;
 
 
 	/*
 		The Sims 2 GBA Checksum namespace implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 
 		Just containing a function, which handles the Checksum calculation, that returns an uint16_t.
 	*/
@@ -73,7 +73,7 @@ namespace S2GBACore {
 
 	/*
 		The Sims 2 GBA SaveHandler namespace implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 
 		This is used to load a save and some other utility functions.
 	*/
@@ -86,7 +86,7 @@ namespace S2GBACore {
 
 	/*
 		The Sims 2 GBA SimUtils namespace implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 
 		This is used for some formatting related things.
 	*/
@@ -99,7 +99,7 @@ namespace S2GBACore {
 
 	/*
 		The Sims 2 GBA Strings namespace implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 
 		This is used for some string related things.
 	*/
@@ -114,7 +114,7 @@ namespace S2GBACore {
 
 	/*
 		The Sims 2 GBA Cast Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 	*/
 	class Cast {
 	public:
@@ -150,7 +150,7 @@ namespace S2GBACore {
 
 	/*
 		The Sims 2 GBA Episode Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 	*/
 	class Episode {
 	public:
@@ -162,8 +162,10 @@ namespace S2GBACore {
 		uint8_t Rating(const uint8_t Category) const;
 		void Rating(const uint8_t Category, const uint8_t V);
 
-		bool State() const;
-		void State(const bool V);
+		bool Unlocked() const;
+		void Unlocked(const bool V);
+		bool Played() const;
+		void Played(const bool V);
 	private:
 		uint8_t EP = 0;
 		uint32_t Offs = 0;
@@ -177,7 +179,7 @@ namespace S2GBACore {
 
 	/*
 		The Sims 2 GBA House Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 	*/
 	class House {
 	public:
@@ -195,7 +197,7 @@ namespace S2GBACore {
 
 	/*
 		The Sims 2 GBA HouseItem Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 	*/
 	class HouseItem {
 	public:
@@ -233,7 +235,7 @@ namespace S2GBACore {
 
 	/*
 		The Sims 2 GBA Item Package Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 	*/
 	class ItemPackage {
 	public:
@@ -258,7 +260,7 @@ namespace S2GBACore {
 
 	/*
 		The Sims 2 GBA Minigame Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 	*/
 	class Minigame {
 	public:
@@ -280,7 +282,7 @@ namespace S2GBACore {
 
 	/*
 		The Sims 2 GBA SAV Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 
 		NOTE: NEVER ACCESS THIS CLASS AND OTHER SUB CLASSES OUTSIDE THE S2GBACore::SaveHandler AND S2GBACore::Sav CALL!!!
 	*/
@@ -334,13 +336,13 @@ namespace S2GBACore {
 		std::unique_ptr<uint8_t[]> SavData;
 		uint32_t SavSize = 0;
 		bool ChangesMade = false, SavValid = false;
-		static constexpr uint8_t GBAIdent[7] = { 0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34 };
+		static constexpr uint8_t GBAIdent[8] = { 0x53, 0x54, 0x57, 0x4E, 0x30, 0x32, 0x34, 0x0 };
 	};
 
 
 	/*
 		The Sims 2 GBA Settings Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 	*/
 	class Settings {
 	public:
@@ -364,7 +366,7 @@ namespace S2GBACore {
 
 	/*
 		The Sims 2 GBA Slot Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 	*/
 	class Slot {
 	public:
@@ -502,7 +504,7 @@ namespace S2GBACore {
 
 	/*
 		The Sims 2 GBA Social Move Save Editing class implementation.
-		Main Author: SuperSaiyajinStackZ.
+		Main Contributor: SuperSaiyajinStackZ.
 	*/
 	class SocialMove {
 	public:
